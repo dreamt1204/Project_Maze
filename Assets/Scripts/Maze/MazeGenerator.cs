@@ -47,7 +47,7 @@ public class MazeGenerator : MonoBehaviour {
     int GetTileGeoType(int Y, int X, MazeBlueprint MazeBP)
     {
         int type = 0;
-
+		// tests
 
 
 
