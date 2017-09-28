@@ -1,0 +1,213 @@
+fileFormatVersion: 2
+guid: 24e2934fa3676414a93021e3f0d0d718
+timeCreated: 1486092317
+licenseType: Store
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Cuboctahedron
+    100002: Diamond
+    100004: dobj
+    100006: Gem
+    100008: Icosidodecahedron
+    100010: Icosphere
+    100012: Icosphere.001
+    100014: //RootNode
+    100016: Pyramid
+    100018: Rhombic Dodecahedron
+    100020: Rhombicosidodecahedron
+    100022: Snub Cube
+    100024: Snub Dodecahedron
+    100026: Sponge
+    100028: Sponge.001
+    100030: Star.001
+    100032: Star.002
+    100034: Star.003
+    100036: Star.005
+    100038: SuperToroid
+    100040: Torus
+    100042: Torus Knot
+    100044: Truncated Cube
+    100046: Truncated Dodecahedron
+    100048: Truncated Icosahedron
+    100050: Truncated Icosidodecahedron
+    100052: Truncated Octahedron
+    100054: Truncated Tetrahedron
+    100056: TwistedTorus
+    400000: Cuboctahedron
+    400002: Diamond
+    400004: dobj
+    400006: Gem
+    400008: Icosidodecahedron
+    400010: Icosphere
+    400012: Icosphere.001
+    400014: //RootNode
+    400016: Pyramid
+    400018: Rhombic Dodecahedron
+    400020: Rhombicosidodecahedron
+    400022: Snub Cube
+    400024: Snub Dodecahedron
+    400026: Sponge
+    400028: Sponge.001
+    400030: Star.001
+    400032: Star.002
+    400034: Star.003
+    400036: Star.005
+    400038: SuperToroid
+    400040: Torus
+    400042: Torus Knot
+    400044: Truncated Cube
+    400046: Truncated Dodecahedron
+    400048: Truncated Icosahedron
+    400050: Truncated Icosidodecahedron
+    400052: Truncated Octahedron
+    400054: Truncated Tetrahedron
+    400056: TwistedTorus
+    2300000: Cuboctahedron
+    2300002: Diamond
+    2300004: dobj
+    2300006: Gem
+    2300008: Icosidodecahedron
+    2300010: Icosphere
+    2300012: Icosphere.001
+    2300014: Pyramid
+    2300016: Rhombic Dodecahedron
+    2300018: Rhombicosidodecahedron
+    2300020: Snub Cube
+    2300022: Snub Dodecahedron
+    2300024: Sponge
+    2300026: Sponge.001
+    2300028: Star.001
+    2300030: Star.002
+    2300032: Star.003
+    2300034: Star.005
+    2300036: SuperToroid
+    2300038: Torus
+    2300040: Torus Knot
+    2300042: Truncated Cube
+    2300044: Truncated Dodecahedron
+    2300046: Truncated Icosahedron
+    2300048: Truncated Icosidodecahedron
+    2300050: Truncated Octahedron
+    2300052: Truncated Tetrahedron
+    2300054: TwistedTorus
+    3300000: Cuboctahedron
+    3300002: Diamond
+    3300004: dobj
+    3300006: Gem
+    3300008: Icosidodecahedron
+    3300010: Icosphere
+    3300012: Icosphere.001
+    3300014: Pyramid
+    3300016: Rhombic Dodecahedron
+    3300018: Rhombicosidodecahedron
+    3300020: Snub Cube
+    3300022: Snub Dodecahedron
+    3300024: Sponge
+    3300026: Sponge.001
+    3300028: Star.001
+    3300030: Star.002
+    3300032: Star.003
+    3300034: Star.005
+    3300036: SuperToroid
+    3300038: Torus
+    3300040: Torus Knot
+    3300042: Truncated Cube
+    3300044: Truncated Dodecahedron
+    3300046: Truncated Icosahedron
+    3300048: Truncated Icosidodecahedron
+    3300050: Truncated Octahedron
+    3300052: Truncated Tetrahedron
+    3300054: TwistedTorus
+    4300000: Snub Dodecahedron
+    4300002: Truncated Icosidodecahedron
+    4300004: Rhombicosidodecahedron
+    4300006: Truncated Icosahedron
+    4300008: Truncated Dodecahedron
+    4300010: Icosidodecahedron
+    4300012: Snub Cube
+    4300014: Truncated Octahedron
+    4300016: Truncated Cube
+    4300018: Cuboctahedron
+    4300020: Truncated Tetrahedron
+    4300022: Rhombic Dodecahedron
+    4300024: TwistedTorus
+    4300026: Torus
+    4300028: SuperToroid
+    4300030: Torus Knot
+    4300032: dobj
+    4300034: Diamond
+    4300036: Gem
+    4300038: Star.001
+    4300040: Star.002
+    4300042: Star.003
+    4300044: Pyramid
+    4300046: Sponge
+    4300048: Sponge.001
+    4300050: Star.005
+    4300052: Icosphere
+    4300054: Icosphere.001
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
