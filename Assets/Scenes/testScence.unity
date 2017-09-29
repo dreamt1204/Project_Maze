@@ -736,7 +736,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 10
   length: 10
-  MazeSetting: {fileID: 0}
+  m_setting: {fileID: 114690698242918930, guid: 917fe6d0109bb5942bfdb0a04e7f6396,
+    type: 2}
 --- !u!4 &376402739
 Transform:
   m_ObjectHideFlags: 0
@@ -1150,7 +1151,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &614290056
 Transform:
   m_ObjectHideFlags: 0
@@ -4131,7 +4132,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1892512214
 Transform:
   m_ObjectHideFlags: 0

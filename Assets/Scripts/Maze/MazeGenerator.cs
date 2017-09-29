@@ -6,21 +6,16 @@ public class MazeGenerator : MonoBehaviour {
 
     public int width = 10;
     public int length = 10;
-    public MazeSetting MazeSetting;
+    public MazeSetting m_setting;
 
     [HideInInspector]
     public Tile[,] Maze;
 
-    // (1)-N, (2)-E, (3)-S, (4)-W
-    // (5)-NS, (6)-EW
-    // (7)-NE, (8)-ES, (9)-SW, (10)-WN
-    // (11)-NES, (12)-ESW, (13)-SWN, (14)-WNE
-    private int tile_geo_type;
 
     // Use this for initialization
     void Start ()
     {
-        MazeBlueprint MazeBP = new MazeBlueprint(length, width);
+        MazeBlueprint MazeBP = new MazeBlueprint(width, length);
         BuildMaze(MazeBP);
     }
 	
@@ -32,44 +27,154 @@ public class MazeGenerator : MonoBehaviour {
 
     void BuildMaze(MazeBlueprint MazeBP)
     {
-        Maze = new Tile[length, width];
+		Maze = new Tile[width, length];
 
-        for (int i = 0; i < length; i++)
+		for (int i = 0; i < width; i++)
         {
-            for (int j = 0; j < width; j++)
+			for (int j = 0; j < length; j++)
             {
-                Maze[i,j].Y = i;
-                Maze[i,j].X = j;
+				Maze [i, j] = GenerateTile (i, j, MazeBP);
             }
         }
     }
 
-    int GetTileGeoType(int Y, int X, MazeBlueprint MazeBP)
+	Tile GenerateTile(int pos_id_x, int pos_id_z, MazeBlueprint MazeBP)
+	{
+		//Tile tile = new Tile (){ X=pos_id_x, Z=pos_id_z };
+
+		GenerateTileGeo (pos_id_x, pos_id_z, MazeBP);
+
+		return null;
+	}
+
+    GameObject GenerateTileGeo(int X, int Z, MazeBlueprint MazeBP)
     {
-        int type = 0;
-		// tests
+		GameObject final_geo = new GameObject();
+		GameObject geo = m_setting.TileGeoI [Random.Range(0, m_setting.TileGeoI.Length)];
+		int rot_count = 0;
 
+		bool[] walls = new bool[4];
+		walls[0] = MazeBP.wall_h [X, Z + 1];	// N
+		walls[1] = MazeBP.wall_v [X + 1, Z];	// E
+		walls[2] = MazeBP.wall_h [X, Z];		// S
+		walls[3] = MazeBP.wall_v [X, Z];		// W
 
+		int nb_walls = 0;
+		for (int i = 0; i < walls.Length; i++)
+		{
+			if (walls[i])
+				nb_walls++;
+		}
 
-        return type;
+		switch (nb_walls)
+		{
+			default:
+			case 1:
+			{
+				geo = m_setting.TileGeoI [Random.Range(0, m_setting.TileGeoI.Length)];
+				rot_count = GetGeoRotationCount (walls, "I");
+				break;
+			}
+			case 2:
+			{
+				if ( (walls[0] == walls[2]) && (walls[1] == walls[3]) )
+				{
+					geo = m_setting.TileGeoII [Random.Range(0, m_setting.TileGeoII.Length)];
+					rot_count = GetGeoRotationCount (walls, "II");
+					break;
+				}
+				else
+				{
+					geo = m_setting.TileGeoL [Random.Range(0, m_setting.TileGeoL.Length)];
+					rot_count = GetGeoRotationCount (walls, "L");
+					break;
+				}
+			}
+			case 3:
+			{
+				geo = m_setting.TileGeoC [Random.Range(0, m_setting.TileGeoC.Length)];
+				rot_count = GetGeoRotationCount (walls, "C");
+				break;
+			}
+		}
+
+		// debug
+		//Debug.Log(X + " " + Z + " " + walls[0] + " " + walls[1] + " " + walls[2] + " " + walls[3] + " : " + rot_count);
+
+		final_geo = (GameObject)Instantiate (geo, new Vector3 (X * 10, 0, Z * 10), Quaternion.Euler (0, 90 * rot_count, 0));
+
+		return null;
     }
+
+	int GetGeoRotationCount(bool[] walls, string geo_type)
+	{
+		int count = 0;
+
+		if (geo_type == "II") 
+		{
+			int rnd = Random.Range (0, 2);
+			if (walls [0] == true)
+				count = 2 * rnd;
+			else
+				count = 2 * rnd + 1;
+		}
+		else if (geo_type == "L") 
+		{
+			for (int i = 0; i < walls.Length; i++) 
+			{
+				int j = i + 1 < walls.Length ? (i + 1) : (i + 1 - walls.Length);
+				if (walls [i] && walls [j])
+				{
+					count = i;
+					break;
+				}
+			}
+		}
+		else if (geo_type == "C") 
+		{
+			for (int i = 0; i < walls.Length; i++) 
+			{
+				int j = i + 1 < walls.Length ? (i + 1) : (i + 1 - walls.Length);
+				int k = j + 1 < walls.Length ? (j + 1) : (j + 1 - walls.Length);
+
+				if (walls [i] && walls [j] && walls [k])
+				{
+					count = i;
+					break;
+				}
+			}
+		}
+		else 	//(geo_type == "I") 
+		{
+			for (int i = 0; i < walls.Length; i++) 
+			{
+				if (walls [i])
+				{
+					count = i;
+					break;
+				}
+			}
+		}
+
+		return count;
+	}
 }
 
 public class MazeBlueprint
 {
     public int m_length = 10;
     public int m_width = 10;
-    public bool[,] wall_v;
-    public bool[,] wall_h;
-    public int[,] cell;
+    public bool[,] wall_v;	// X, Z
+	public bool[,] wall_h;	// X, Z
+	public int[,] cell;		// X, Z
     
-    public MazeBlueprint(int length, int width)
+    public MazeBlueprint(int width, int length)
     {
-        m_length = length;
-        m_width = width;
-        wall_v = new bool[m_length, m_width + 1];
-        wall_h = new bool[m_length + 1, m_width];
-        cell = new int[m_length, m_width];
+		m_width = width;
+		m_length = length;
+		wall_v = new bool[m_width + 1, m_length];
+		wall_h = new bool[m_width, m_length + 1];
+		cell = new int[m_width, m_length];
         for (int i = 0; i < wall_v.GetLength(0); i++)
         {
             for (int j = 0; j < wall_v.GetLength(1); j++)
@@ -80,11 +185,11 @@ public class MazeBlueprint
             for (int j = 0; j < wall_h.GetLength(1); j++)
                 wall_h[i, j] = true;
         }
-        for (int i = 0; i < m_length; i++)
+        for (int i = 0; i < m_width; i++)
         {
-            for (int j = 0; j < m_width; j++)
+            for (int j = 0; j < m_length; j++)
             {
-                cell[i, j] = m_width * i + j;
+                cell[i, j] = m_width * j + i;
             }
         }
 
@@ -92,7 +197,7 @@ public class MazeBlueprint
     }
 
     // Generate BP maze using kruskal's algorithm
-    public void GenerateBPLayout()
+    void GenerateBPLayout()
     {
         while (true)
         {
@@ -100,21 +205,21 @@ public class MazeBlueprint
 
             if (Random.Range(0, 2) >= 1)
             {
-                int y = Random.Range(0, wall_v.GetLength(0));
-                int x = Random.Range(1, wall_v.GetLength(1) - 1);
-                if (cell[y, x] == cell[y, x - 1])
+                int x = Random.Range(1, wall_v.GetLength(0) - 1);
+				int z = Random.Range(0, wall_v.GetLength(1));
+				if (cell[x, z] == cell[x - 1, z])
                     continue;
-                repl = new int[] { cell[y, x], cell[y, x - 1] };
-                wall_v[y, x] = false;
+				repl = new int[] { cell[x, z], cell[x - 1, z] };
+                wall_v[x, z] = false;
             }
             else
             {
-                int y = Random.Range(1, wall_h.GetLength(0) - 1);
-                int x = Random.Range(0, wall_h.GetLength(1));
-                if (cell[y, x] == cell[y - 1, x])
+				int x = Random.Range(0, wall_h.GetLength(0));
+				int z = Random.Range(1, wall_h.GetLength(1) - 1);
+				if (cell[x, z] == cell[x, z - 1])
                     continue;
-                repl = new int[] { cell[y, x], cell[y - 1, x] };
-                wall_h[y, x] = false;
+				repl = new int[] { cell[x, z], cell[x, z - 1] };
+                wall_h[x, z] = false;
             }
             System.Array.Sort(repl);
             ReplaceIDs(repl);
@@ -125,25 +230,25 @@ public class MazeBlueprint
 
     void ReplaceIDs(int[] repl)
     {
-        for (int d = 0; d < m_length; d++)
+        for (int w = 0; w < m_width; w++)
         {
-            for (int w = 0; w < m_width; w++)
+            for (int l = 0; l < m_length; l++)
             {
-                if (cell[d, w] == repl[1])
-                    cell[d, w] = repl[0];
+                if (cell[w, l] == repl[1])
+                    cell[w, l] = repl[0];
             }
         }
     }
 
     bool IDsAllZero(int[] repl)
     {
-        if (repl[0] != 0 && repl[0] != 0)
+        if (repl[0] != 0 && repl[1] != 0)
             return false;
-        for (int k = 0; k < m_length; k++)
+        for (int w = 0; w < m_width; w++)
         {
-            for (int j = 0; j < m_width; j++)
+            for (int l = 0; l < m_length; l++)
             {
-                if (cell[k, j] != 0)
+                if (cell[w, l] != 0)
                     return false;
             }
         }

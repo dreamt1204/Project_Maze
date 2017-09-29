@@ -9,8 +9,8 @@ public class Tile : MonoBehaviour {
     //=======================================
     //      Variables
     //=======================================
-    public int Y;
     public int X;
+    public int Z;
 
     //=======================================
     //      Functions
