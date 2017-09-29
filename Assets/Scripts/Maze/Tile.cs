@@ -11,6 +11,8 @@ public class Tile : MonoBehaviour {
     //=======================================
     public int X;
     public int Z;
+    public bool[] wall = new bool[4];
+    public GameObject[] wall_obj = new GameObject[4];
 
     //=======================================
     //      Functions

@@ -15,8 +15,7 @@ public class MazeGenerator : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-        MazeBlueprint MazeBP = new MazeBlueprint(width, length);
-        BuildMaze(MazeBP);
+        BuildMaze();
     }
 	
 	// Update is called once per frame
@@ -25,9 +24,11 @@ public class MazeGenerator : MonoBehaviour {
 		
 	}
 
-    void BuildMaze(MazeBlueprint MazeBP)
+    void BuildMaze()
     {
-		Maze = new Tile[width, length];
+        MazeBlueprint MazeBP = new MazeBlueprint(width, length);
+
+        Maze = new Tile[width, length];
 
 		for (int i = 0; i < width; i++)
         {
@@ -38,35 +39,43 @@ public class MazeGenerator : MonoBehaviour {
         }
     }
 
-	Tile GenerateTile(int pos_id_x, int pos_id_z, MazeBlueprint MazeBP)
-	{
-		//Tile tile = new Tile (){ X=pos_id_x, Z=pos_id_z };
-
-		GenerateTileGeo (pos_id_x, pos_id_z, MazeBP);
-
-		return null;
-	}
-
-    GameObject GenerateTileGeo(int X, int Z, MazeBlueprint MazeBP)
+    /*
+    Tile GenerateTile(int X, int Z, MazeBlueprint MazeBP)
     {
-        GameObject final_geo;
-		GameObject geo = m_setting.TileGeoO [Random.Range(0, m_setting.TileGeoO.Length)];
+        GameObject tile_object = GenerateTileObecjt(X, Z, MazeBP);
+        tile_object.AddComponent<Tile>();
+        
+        Tile tile = tile_object.GetComponent<Tile>();
+        tile.X = X;
+        tile.Z = Z;
+
+        return tile;
+    }
+    */
+
+
+    Tile GenerateTile(int X, int Z, MazeBlueprint MazeBP)
+    {
+        bool[] walls = new bool[4];
+        int nb_walls = 0;
+        GameObject geo = m_setting.TileGeoO [Random.Range(0, m_setting.TileGeoO.Length)];
         string geo_type = "O";
 		int rot_count = 0;
 
-		bool[] walls = new bool[4];
-		walls[0] = MazeBP.wall_h [X, Z + 1];	// N
+        // Get wall info from Maze Blueprint
+        walls[0] = MazeBP.wall_h [X, Z + 1];	// N
 		walls[1] = MazeBP.wall_v [X + 1, Z];	// E
 		walls[2] = MazeBP.wall_h [X, Z];		// S
-		walls[3] = MazeBP.wall_v [X, Z];		// W
+		walls[3] = MazeBP.wall_v [X, Z];        // W
 
-		int nb_walls = 0;
-		for (int i = 0; i < walls.Length; i++)
+        // Get number of walls
+        for (int i = 0; i < walls.Length; i++)
 		{
 			if (walls[i])
 				nb_walls++;
 		}
 
+        // Get geo object and type
 		switch (nb_walls)
 		{
 			default:
@@ -104,17 +113,25 @@ public class MazeGenerator : MonoBehaviour {
 			}
 		}
 
+        // Get rotation count for based on wall layout so we can rotate the geo later.
         rot_count = GetGeoRotationCount(walls, geo_type);
 
-        // debug
-        //Debug.Log(X + " " + Z + " " + walls[0] + " " + walls[1] + " " + walls[2] + " " + walls[3] + " : " + rot_count);
+        // Spawn tile object
+        GameObject tile_object = (GameObject)Instantiate (geo, new Vector3 (X * 10, 0, Z * 10), Quaternion.Euler (0, 90 * rot_count, 0));
+        tile_object.name = "Tile [" + X + "]" + "[" + Z + "] " + "(" + geo_type + ")";
+        tile_object.AddComponent<Tile>();
 
-        final_geo = (GameObject)Instantiate (geo, new Vector3 (X * 10, 0, Z * 10), Quaternion.Euler (0, 90 * rot_count, 0));
-        final_geo.name = "Tile [" + X + "]" + "[" + Z + "] " + "(" + geo_type + ")";
-        
-        return final_geo;
+        // Generate Tile class data
+        Tile tile = tile_object.GetComponent<Tile>();
+        tile.X = X;
+        tile.Z = Z;
+        tile.wall = walls;
+
+        AssignWallObjToTile(tile, geo_type, rot_count);
+
+        return tile;
     }
-
+    
 	int GetGeoRotationCount(bool[] walls, string geo_type)
 	{
 		int count = 0;
@@ -167,6 +184,20 @@ public class MazeGenerator : MonoBehaviour {
 
 		return count;
 	}
+
+    void AssignWallObjToTile(Tile tile, string geo_type, int rot_count)
+    {
+        GameObject tile_obj = tile.gameObject;
+        //Transform[] wall_obj = new Transform[3];
+
+        foreach (Transform child in tile_obj.transform)
+        {
+            if (child.name.Contains("Wall_"))
+            {
+
+            }
+        }
+    }
 }
 
 public class MazeBlueprint
