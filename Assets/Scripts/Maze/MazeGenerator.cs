@@ -49,8 +49,9 @@ public class MazeGenerator : MonoBehaviour {
 
     GameObject GenerateTileGeo(int X, int Z, MazeBlueprint MazeBP)
     {
-		GameObject final_geo = new GameObject();
-		GameObject geo = m_setting.TileGeoI [Random.Range(0, m_setting.TileGeoI.Length)];
+        GameObject final_geo;
+		GameObject geo = m_setting.TileGeoO [Random.Range(0, m_setting.TileGeoO.Length)];
+        string geo_type = "O";
 		int rot_count = 0;
 
 		bool[] walls = new bool[4];
@@ -69,48 +70,67 @@ public class MazeGenerator : MonoBehaviour {
 		switch (nb_walls)
 		{
 			default:
-			case 1:
+            {
+                geo = m_setting.TileGeoO[Random.Range(0, m_setting.TileGeoO.Length)];
+                geo_type = "O";
+                break;
+            }
+            case 1:
 			{
 				geo = m_setting.TileGeoI [Random.Range(0, m_setting.TileGeoI.Length)];
-				rot_count = GetGeoRotationCount (walls, "I");
-				break;
+                geo_type = "I";
+                break;
 			}
 			case 2:
 			{
 				if ( (walls[0] == walls[2]) && (walls[1] == walls[3]) )
 				{
 					geo = m_setting.TileGeoII [Random.Range(0, m_setting.TileGeoII.Length)];
-					rot_count = GetGeoRotationCount (walls, "II");
-					break;
+                    geo_type = "II";
+                    break;
 				}
 				else
 				{
 					geo = m_setting.TileGeoL [Random.Range(0, m_setting.TileGeoL.Length)];
-					rot_count = GetGeoRotationCount (walls, "L");
-					break;
+                    geo_type = "L";
+                    break;
 				}
 			}
 			case 3:
 			{
 				geo = m_setting.TileGeoC [Random.Range(0, m_setting.TileGeoC.Length)];
-				rot_count = GetGeoRotationCount (walls, "C");
+                geo_type = "C";
 				break;
 			}
 		}
 
-		// debug
-		//Debug.Log(X + " " + Z + " " + walls[0] + " " + walls[1] + " " + walls[2] + " " + walls[3] + " : " + rot_count);
+        rot_count = GetGeoRotationCount(walls, geo_type);
 
-		final_geo = (GameObject)Instantiate (geo, new Vector3 (X * 10, 0, Z * 10), Quaternion.Euler (0, 90 * rot_count, 0));
+        // debug
+        //Debug.Log(X + " " + Z + " " + walls[0] + " " + walls[1] + " " + walls[2] + " " + walls[3] + " : " + rot_count);
 
-		return null;
+        final_geo = (GameObject)Instantiate (geo, new Vector3 (X * 10, 0, Z * 10), Quaternion.Euler (0, 90 * rot_count, 0));
+        final_geo.name = "Tile [" + X + "]" + "[" + Z + "] " + "(" + geo_type + ")";
+        
+        return final_geo;
     }
 
 	int GetGeoRotationCount(bool[] walls, string geo_type)
 	{
 		int count = 0;
 
-		if (geo_type == "II") 
+        if (geo_type == "I")
+        {
+            for (int i = 0; i < walls.Length; i++)
+            {
+                if (walls[i])
+                {
+                    count = i;
+                    break;
+                }
+            }
+        }
+        else if (geo_type == "II") 
 		{
 			int rnd = Random.Range (0, 2);
 			if (walls [0] == true)
@@ -138,17 +158,6 @@ public class MazeGenerator : MonoBehaviour {
 				int k = j + 1 < walls.Length ? (j + 1) : (j + 1 - walls.Length);
 
 				if (walls [i] && walls [j] && walls [k])
-				{
-					count = i;
-					break;
-				}
-			}
-		}
-		else 	//(geo_type == "I") 
-		{
-			for (int i = 0; i < walls.Length; i++) 
-			{
-				if (walls [i])
 				{
 					count = i;
 					break;

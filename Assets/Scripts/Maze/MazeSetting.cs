@@ -6,6 +6,7 @@ public class MazeSetting : MonoBehaviour {
     //=======================================
     //      Variables
     //=======================================
+    public GameObject[] TileGeoO = new GameObject[1];
     public GameObject[] TileGeoI = new GameObject[1];
     public GameObject[] TileGeoII = new GameObject[1];
     public GameObject[] TileGeoL = new GameObject[1];
