@@ -3,44 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MazeGenerator : MonoBehaviour {
-
+    //=======================================
+    //      Variables
+    //=======================================
     public int width = 10;
     public int length = 10;
     public MazeSetting m_setting;
 
-    [HideInInspector]
-    public Tile[,] Maze;
-
-
-    // Use this for initialization
-    void Start ()
-    {
-        BuildMaze();
-    }
-	
-	// Update is called once per frame
-	void Update ()
-    {
-		
-	}
-
-    void BuildMaze()
+    //=======================================
+    //      Functions
+    //======================================= 
+    public Maze BuildMaze()
     {
         MazeBlueprint MazeBP = new MazeBlueprint(width, length);
+        Maze maze = new Maze(width, length);
 
-        Maze = new Tile[width, length];
-
-		for (int i = 0; i < width; i++)
+        for (int i = 0; i < width; i++)
         {
 			for (int j = 0; j < length; j++)
             {
-				Maze [i, j] = GenerateTile (i, j, MazeBP);
+                maze.tile[i, j] = GenerateTile (i, j, MazeBP);
             }
         }
+
+        return maze;
     }
 
-	// Generate script tile based on maze blueprint
-    Tile GenerateTile(int X, int Z, MazeBlueprint MazeBP)
+    // Generate script tile based on maze blueprint
+    public Tile GenerateTile(int X, int Z, MazeBlueprint MazeBP)
     {
 		bool[] walls = new bool[4];
 		int nb_walls = 0;
@@ -86,11 +76,11 @@ public class MazeGenerator : MonoBehaviour {
 
         return tile;
     }
-    
-	// Instead of creating multiple type of geo, we rotate existing geo to match the wall layout.
-	// This function calculate the rot_count that can be used later to spawn the tile geo.
-	// ex: Quaternion.Euler (0, 90 * rot_count, 0))
-	int GetGeoRotationCount(bool[] walls, GeoType geo_type)
+
+    // Instead of creating multiple type of geo, we rotate existing geo to match the wall layout.
+    // This function calculate the rot_count that can be used later to spawn the tile geo.
+    // ex: Quaternion.Euler (0, 90 * rot_count, 0))
+    private int GetGeoRotationCount(bool[] walls, GeoType geo_type)
 	{
 		int count = 0;
 
@@ -127,8 +117,8 @@ public class MazeGenerator : MonoBehaviour {
 		return count;
 	}
 
-	// Store wall object in tile class
-    void AssignWallObjToTile(Tile tile, GeoType geo_type, int rot_count)
+    // Store wall object in tile class
+    private void AssignWallObjToTile(Tile tile, GeoType geo_type, int rot_count)
     {
 		if (geo_type == GeoType.O)
 			return;
@@ -207,7 +197,7 @@ public class MazeBlueprint
     }
 
     // Generate maze blueprint using kruskal's algorithm
-    void GenerateBPLayout()
+    private void GenerateBPLayout()
     {
         while (true)
         {
@@ -238,7 +228,7 @@ public class MazeBlueprint
         }
     }
 
-    void ReplaceIDs(int[] repl)
+    private void ReplaceIDs(int[] repl)
     {
         for (int w = 0; w < m_width; w++)
         {
@@ -250,7 +240,7 @@ public class MazeBlueprint
         }
     }
 
-    bool IDsAllZero(int[] repl)
+    private bool IDsAllZero(int[] repl)
     {
         if (repl[0] != 0 && repl[1] != 0)
             return false;

@@ -2,17 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//enum Direction { North, East, South, West };
-//enum WallState { Empty, Wall, Edge, Broken };
-
-public class Tile : MonoBehaviour {
+public class Maze : MonoBehaviour {
     //=======================================
     //      Variables
     //=======================================
-    public int X;
-    public int Z;
-    public bool[] wall = new bool[4];
-    public GameObject[] wall_obj = new GameObject[4];
+    public Tile[,] tile;
+
+    public Maze(int width, int length)
+    {
+        tile = new Tile[width, length];
+    }
+
+    public Maze(Tile[,] tile_list)
+    {
+        tile = tile_list;
+    }
 
     //=======================================
     //      Functions
