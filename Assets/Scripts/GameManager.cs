@@ -9,6 +9,11 @@ public class GameManager : MonoBehaviour {
     public Maze maze;
     private MazeGenerator maze_generator;
 
+	public GameObject playerCharacterObject;
+
+	[HideInInspector]
+	public PlayerCharacter playerCharacter;
+
     //=======================================
     //      Functions
     //=======================================   
@@ -23,6 +28,9 @@ public class GameManager : MonoBehaviour {
     {
         // Generate a maze
         StartCoroutine("BuildMazeCoroutine");
+
+		// Spawn player character
+		SpawnPlayerCharacter();
     }
 
     // Update is called once per frame
@@ -37,4 +45,14 @@ public class GameManager : MonoBehaviour {
 
         yield return null;
     }
+
+	void SpawnPlayerCharacter()
+	{
+		playerCharacter = Instantiate (playerCharacterObject, new Vector3 (0, 0, 0), Quaternion.Euler(0, 0, 0)).GetComponent<PlayerCharacter>();
+		GameObject camera_obj = (GameObject)Instantiate (Resources.Load ("PlayerCamera"));
+		camera_obj.transform.parent = playerCharacter.gameObject.transform;
+
+		playerCharacter.GM = this;
+		playerCharacter.current_tile = maze.tile [0, 0];
+	}
 }

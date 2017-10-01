@@ -16,13 +16,17 @@ public class MazeGenerator : MonoBehaviour {
     public Maze BuildMaze()
     {
         MazeBlueprint MazeBP = new MazeBlueprint(width, length);
-        Maze maze = new Maze(width, length);
+		GameObject mazeObj = new GameObject ();
+		mazeObj.name = "Maze";
+		Maze maze = mazeObj.AddComponent<Maze>();
+		maze.tile = new Tile[width, length];
 
         for (int i = 0; i < width; i++)
         {
 			for (int j = 0; j < length; j++)
             {
                 maze.tile[i, j] = GenerateTile (i, j, MazeBP);
+				maze.tile[i, j].transform.parent = mazeObj.transform;
             }
         }
 
