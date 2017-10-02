@@ -38,6 +38,9 @@ public class PlayerCharacter : Unit {
 
 		// Setup player camera
 		playerCamera = ((GameObject)Instantiate (Resources.Load ("PlayerCamera"))).GetComponent<Camera>();
-		playerCamera.transform.parent = this.transform;
+        Vector3 cameraPos = playerCamera.transform.position;
+        Vector3 playerPos = this.transform.position;
+        playerCamera.transform.position = new Vector3(cameraPos.x + playerPos.x, cameraPos.y + playerPos.y, cameraPos.z + playerPos.z);
+        playerCamera.transform.parent = this.transform;
 	}
 }

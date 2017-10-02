@@ -67,7 +67,7 @@ public class Unit : MonoBehaviour {
 
 		while(Vector3.Distance(transform.position, target) > 0.25f)
 		{
-            transform.Translate((target - transform.position).normalized * Time.deltaTime * (moveSpeed / 7.5f));
+            transform.Translate((target - transform.position).normalized * Time.deltaTime * (moveSpeed / 7.0f));
 
             yield return null;
 		}

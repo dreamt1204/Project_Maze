@@ -109,4 +109,31 @@ public class Maze  {
 			}	
 		}
 	}
+
+    // Get a random tile from maze
+    public Tile GetRandomTile()
+    {
+        return tile[Random.Range(0, tile.GetLength(0)), Random.Range(0, tile.GetLength(1))];
+    }
+
+    // Get a random tile from maze
+    // Make sure the tile is at least 'distance' away from the origin tile
+    // This function also supports exclusiveList
+    public Tile GetRandomTileWithDistance(Tile org, int distance, List<Tile> exclusiveList)
+    {
+        List<Tile> possibleList = new List<Tile>();
+
+        for (int i = 0; i < tile.GetLength(0); i++)
+        {
+            for (int j = 0; j < tile.GetLength(1); j++)
+            {
+                if (((i < (org.X - distance)) || (i > (org.X + distance))) &&
+                    ((j < (org.Z - distance)) || (j > (org.Z + distance))) &&
+                    (!exclusiveList.Contains(tile[i, j])))
+                    possibleList.Add(tile[i, j]);
+            }
+        }
+
+        return possibleList[Random.Range(0, possibleList.Count)];
+    }
 }

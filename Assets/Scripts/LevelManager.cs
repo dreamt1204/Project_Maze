@@ -21,6 +21,10 @@ public class LevelManager : MonoBehaviour {
 	public Maze maze;
 	[HideInInspector]
 	public PlayerCharacter playerCharacter;
+    [HideInInspector]
+    Tile startTile;
+    [HideInInspector]
+    Tile objectiveTile;
 
     // State variables
     private bool finsiedInit = false;
@@ -80,7 +84,7 @@ public class LevelManager : MonoBehaviour {
 	//---------------------------------------
 	public void SpawnStartingCharacter()
 	{
-		playerCharacter = SpawnPlayerCharacter(playerCharacterPrefab, maze.tile[0, 0]);
+		playerCharacter = SpawnPlayerCharacter(playerCharacterPrefab, startTile);
 	}
 
 	public PlayerCharacter SpawnPlayerCharacter(GameObject prefab, Tile targetTile)
@@ -96,10 +100,10 @@ public class LevelManager : MonoBehaviour {
     //---------------------------------------
     public void InitGameMode()
 	{
-		Tile startTile = maze.tile [0, 0];
-		Tile objectiveTile = maze.tile [2, 0];
+		startTile = maze.GetRandomTile();
+        objectiveTile = maze.GetRandomTileWithDistance(startTile, (int)Mathf.Ceil(maze.tile.GetLength(0) / 2), new List<Tile>());
 
-		startTile.SpawnTileItem (startPointPrefab);
+        startTile.SpawnTileItem (startPointPrefab);
 		objectiveTile.SpawnTileItem (levelObjectivePrefab);
 	}
 
