@@ -3,29 +3,42 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Unit : MonoBehaviour {
-	//=======================================
-	//      Variables
-	//=======================================
-	public LevelManager levelManager;
+    //=======================================
+    //      Variables
+    //=======================================
+    protected LevelManager levelManager;
 
-	protected float health = 100;
-	protected float moveSpeed = 100;
+    [SerializeField]
+    protected float health = 100;
+    [SerializeField]
+    protected float moveSpeed = 100;
 	protected Tile currentTile;
-	public bool isWalking = false;
+	private bool isWalking = false;
 
 	//---------------------------------------
 	//      Properties
 	//---------------------------------------
 	public virtual float Health {get; set;}
 	public virtual float MoveSpeed {get; set;}
-	public virtual Tile CurrentTile {get; set;}
+    public virtual Tile CurrentTile
+    {
+        get
+        {
+            return currentTile;
+        }
+        set
+        {
+            currentTile = value;
+            currentTile.CheckTileAction();
+        }
+    }
 
-	//=======================================
-	//      Functions
-	//=======================================
+    //=======================================
+    //      Functions
+    //=======================================
 
-	// Use this for initialization
-	public virtual void Init (LevelManager lm, Tile spawnTile)
+    // Use this for initialization
+    public virtual void Init (LevelManager lm, Tile spawnTile)
 	{
 		levelManager = lm;
 		CurrentTile = spawnTile;
@@ -52,14 +65,14 @@ public class Unit : MonoBehaviour {
 		isWalking = true;
 		Vector3 target = targetTile.gameObject.transform.position;
 
-		while(Vector3.Distance(transform.position, target) > 0.05f)
+		while(Vector3.Distance(transform.position, target) > 0.25f)
 		{
-			transform.position = Vector3.Lerp(transform.position, target, (moveSpeed/10) * Time.deltaTime);
+            transform.Translate((target - transform.position).normalized * Time.deltaTime * (moveSpeed / 7.5f));
 
-			yield return null;
+            yield return null;
 		}
-
-		CurrentTile = targetTile;
-		isWalking = false;
+        transform.position = target;
+        CurrentTile = targetTile;
+        isWalking = false;
 	}
 }

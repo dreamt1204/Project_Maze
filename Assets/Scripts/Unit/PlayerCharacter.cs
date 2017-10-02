@@ -6,7 +6,8 @@ public class PlayerCharacter : Unit {
 	//=======================================
 	//      Variables
 	//=======================================
-	public Camera playerCamera;
+	private Camera playerCamera;
+    [HideInInspector]
 	public bool hasObjective = false;
 
 	//---------------------------------------
@@ -14,15 +15,17 @@ public class PlayerCharacter : Unit {
 	//---------------------------------------
 	public override Tile CurrentTile
 	{
-		get
+        get
 		{
 			return currentTile;
 		}
 		set
 		{
 			currentTile = value;
-			levelManager.maze.UpdateWalkableTiles (currentTile);
-		}
+            currentTile.CheckTileAction();
+            currentTile.CheckPlayerTileAction();
+            levelManager.maze.UpdateWalkableTiles(currentTile);
+        }
 	}
 
 	//=======================================

@@ -20,7 +20,7 @@ public class Tile : MonoBehaviour {
     public bool[] wall = new bool[4];
     public GameObject[] wall_obj = new GameObject[4];
 	private TileState state = TileState.None;
-	public GameObject item;
+	public TileItem item;
 
 	//---------- Properties -----------
 	public TileState State
@@ -38,7 +38,7 @@ public class Tile : MonoBehaviour {
     //=======================================
     //      Functions
     //=======================================
-	void Start()
+	void Awake()
 	{
 		levelManager = GameObject.Find ("LevelManager").GetComponent<LevelManager>();
 
@@ -55,13 +55,42 @@ public class Tile : MonoBehaviour {
 			levelManager.playerCharacter.TryMoveToTile (this);
 	}
 
-	public void SpawnTileItem(GameObject itemPrefab)
+	public TileItem SpawnTileItem(GameObject itemPrefab)
 	{
-		item = Instantiate (itemPrefab, transform.position, Quaternion.Euler (0, 0, 0));
+		item = Instantiate (itemPrefab, transform.position, Quaternion.Euler (0, 0, 0)).GetComponent<TileItem>();
+
+        return item;
 	}
 
+    public void DestroyTileItem()
+    {
+        if (item == null)
+            return;
+
+        Destroy(item.gameObject);
+        item = null;
+    }
+
+    // Apply tile action when stepped on
 	public void CheckTileAction()
 	{
-		
-	}
+        
+    }
+
+    // Player specific tile action
+    public void CheckPlayerTileAction()
+    {
+        if (item == null)
+            return;
+
+        if (item.type == ItemType.Objective)
+        {
+            levelManager.playerCharacter.hasObjective = true;
+            DestroyTileItem();
+        }
+        else if (item.type == ItemType.StartPortal)
+        {
+            levelManager.CheckWinningCondition();
+        }
+    }
 }

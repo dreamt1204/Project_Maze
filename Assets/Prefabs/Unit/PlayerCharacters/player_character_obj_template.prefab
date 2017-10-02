@@ -121,6 +121,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34b22d85c4ee1460fb1fe09b7d664c35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelManager: {fileID: 0}
-  isWalking: 0
-  playerCamera: {fileID: 0}
+  health: 100
+  moveSpeed: 500
+  hasObjective: 0

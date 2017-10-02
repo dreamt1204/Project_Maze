@@ -22,6 +22,9 @@ public class LevelManager : MonoBehaviour {
 	[HideInInspector]
 	public PlayerCharacter playerCharacter;
 
+    // State variables
+    private bool finsiedInit = false;
+
 
     //=======================================
     //      Functions
@@ -59,6 +62,9 @@ public class LevelManager : MonoBehaviour {
 
 		// Spawn player character
 		SpawnStartingCharacter();
+
+        // Set finsiedInit
+        finsiedInit = true;
     }
 
 	//---------------------------------------
@@ -85,10 +91,10 @@ public class LevelManager : MonoBehaviour {
 		return character;
 	}
 
-	//---------------------------------------
-	//      Game Mode
-	//---------------------------------------
-	public void InitGameMode()
+    //---------------------------------------
+    //      Game Mode
+    //---------------------------------------
+    public void InitGameMode()
 	{
 		Tile startTile = maze.tile [0, 0];
 		Tile objectiveTile = maze.tile [2, 0];
@@ -97,13 +103,14 @@ public class LevelManager : MonoBehaviour {
 		objectiveTile.SpawnTileItem (levelObjectivePrefab);
 	}
 
-	public void CheckGrabObjective(PlayerCharacter character)
+	public void CheckWinningCondition()
 	{
-		
-	}
+        if (!finsiedInit)
+            return;
 
-	public void CheckWinningCondition(PlayerCharacter character)
-	{
-		
+        if (playerCharacter.hasObjective)
+        {
+            Debug.Log("Level Finished!!");  // Debug: tmp message        
+        }   
 	}
 }
