@@ -718,7 +718,7 @@ GameObject:
   - component: {fileID: 376402740}
   - component: {fileID: 376402738}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: LevelManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -763,6 +763,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dacbabb6b832964498355a434ee45653, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startPointPrefab: {fileID: 1319595478763322, guid: b84cedb6474764ae681a2ff96801b519,
+    type: 2}
+  levelObjectivePrefab: {fileID: 1322906879363412, guid: f448fef0f8ba6419b89e1f5ac8315c1a,
+    type: 2}
   playerCharacterPrefab: {fileID: 1939110594383500, guid: 545609bd057804c62b92c81b2c1c1775,
     type: 2}
   playerCharacter: {fileID: 0}

@@ -7,6 +7,7 @@ public class PlayerCharacter : Unit {
 	//      Variables
 	//=======================================
 	public Camera playerCamera;
+	public bool hasObjective = false;
 
 	//---------------------------------------
 	//      Properties
@@ -20,7 +21,7 @@ public class PlayerCharacter : Unit {
 		set
 		{
 			currentTile = value;
-			gameManager.maze.UpdateWalkableTiles (currentTile);
+			levelManager.maze.UpdateWalkableTiles (currentTile);
 		}
 	}
 
@@ -28,7 +29,7 @@ public class PlayerCharacter : Unit {
 	//      Functions
 	//=======================================
 	// Use this for initialization
-	public override void Init (GameManager gm, Tile spawnTile)
+	public override void Init (LevelManager gm, Tile spawnTile)
 	{
 		base.Init(gm, spawnTile);
 

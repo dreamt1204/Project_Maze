@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour {
+public class LevelManager : MonoBehaviour {
     //=======================================
     //      Variables
     //=======================================
-	public static GameManager instance = null;
+	public static LevelManager instance = null;
 
 	// Preset prefab
+	public GameObject startPointPrefab;
+	public GameObject levelObjectivePrefab;
 	public GameObject playerCharacterPrefab;
 
 	// Helper class that attached to the GM object
@@ -20,13 +22,14 @@ public class GameManager : MonoBehaviour {
 	[HideInInspector]
 	public PlayerCharacter playerCharacter;
 
+
     //=======================================
     //      Functions
     //=======================================   
     // Use this for initialization
     void Awake()
     {
-		// This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
+		// This enforces our singleton pattern, meaning there can only ever be one instance of a LevelManager.
 		if (instance == null)
 			instance = this;
 		else if (instance != this)
@@ -48,14 +51,14 @@ public class GameManager : MonoBehaviour {
         // Generate a maze
 		GenerateMaze();
 
+		// Spawn game mode object
+		InitGameMode();
+
 		// Spawn enemies
 		// .....
 
 		// Spawn player character
 		SpawnStartingCharacter();
-
-		// Spawn game mode object
-		// .....
     }
 
 	//---------------------------------------
@@ -80,5 +83,27 @@ public class GameManager : MonoBehaviour {
 		character.Init(this, targetTile);
 
 		return character;
+	}
+
+	//---------------------------------------
+	//      Game Mode
+	//---------------------------------------
+	public void InitGameMode()
+	{
+		Tile startTile = maze.tile [0, 0];
+		Tile objectiveTile = maze.tile [2, 0];
+
+		startTile.SpawnTileItem (startPointPrefab);
+		objectiveTile.SpawnTileItem (levelObjectivePrefab);
+	}
+
+	public void CheckGrabObjective(PlayerCharacter character)
+	{
+		
+	}
+
+	public void CheckWinningCondition(PlayerCharacter character)
+	{
+		
 	}
 }

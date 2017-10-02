@@ -13,13 +13,14 @@ public class Tile : MonoBehaviour {
     //=======================================
     //      Variables
     //=======================================
-	private GameManager gameManager;
+	private LevelManager levelManager;
 
 	public int X;
     public int Z;
     public bool[] wall = new bool[4];
     public GameObject[] wall_obj = new GameObject[4];
 	private TileState state = TileState.None;
+	public GameObject item;
 
 	//---------- Properties -----------
 	public TileState State
@@ -39,7 +40,7 @@ public class Tile : MonoBehaviour {
     //=======================================
 	void Start()
 	{
-		gameManager = GameObject.Find ("GameManager").GetComponent<GameManager>();
+		levelManager = GameObject.Find ("LevelManager").GetComponent<LevelManager>();
 
 		BoxCollider tile_collider = this.gameObject.AddComponent<BoxCollider> ();
 		tile_collider.size = new Vector3 (10, 2, 10);
@@ -51,6 +52,16 @@ public class Tile : MonoBehaviour {
 			return;
 
 		if (state == TileState.Walkable)
-			gameManager.playerCharacter.TryMoveToTile (this);
+			levelManager.playerCharacter.TryMoveToTile (this);
+	}
+
+	public void SpawnTileItem(GameObject itemPrefab)
+	{
+		item = Instantiate (itemPrefab, transform.position, Quaternion.Euler (0, 0, 0));
+	}
+
+	public void CheckTileAction()
+	{
+		
 	}
 }

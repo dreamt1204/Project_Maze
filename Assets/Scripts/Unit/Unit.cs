@@ -6,7 +6,7 @@ public class Unit : MonoBehaviour {
 	//=======================================
 	//      Variables
 	//=======================================
-	public GameManager gameManager;
+	public LevelManager levelManager;
 
 	protected float health = 100;
 	protected float moveSpeed = 100;
@@ -25,9 +25,9 @@ public class Unit : MonoBehaviour {
 	//=======================================
 
 	// Use this for initialization
-	public virtual void Init (GameManager gm, Tile spawnTile)
+	public virtual void Init (LevelManager lm, Tile spawnTile)
 	{
-		gameManager = gm;
+		levelManager = lm;
 		CurrentTile = spawnTile;
 	}
 
