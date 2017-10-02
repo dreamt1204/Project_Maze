@@ -13,78 +13,80 @@ public class MazeGenerator : MonoBehaviour {
     //=======================================
     //      Functions
     //======================================= 
-    public Maze BuildMaze()
+	public Maze BuildMaze()
     {
-        MazeBlueprint MazeBP = new MazeBlueprint(width, length);
-        Maze maze = new Maze(width, length);
+        MazeBlueprint mazeBP = new MazeBlueprint(width, length);
+		GameObject mazeObj = new GameObject (){name = "Maze"};
+		Maze maze = new Maze(width, length);
 
         for (int i = 0; i < width; i++)
         {
 			for (int j = 0; j < length; j++)
             {
-                maze.tile[i, j] = GenerateTile (i, j, MazeBP);
+				maze.tile[i, j] = GenerateTile (i, j, mazeBP);
+				maze.tile[i, j].transform.parent = mazeObj.transform;
             }
         }
 
-        return maze;
+		return maze;
     }
 
     // Generate script tile based on maze blueprint
-    public Tile GenerateTile(int X, int Z, MazeBlueprint MazeBP)
+    public Tile GenerateTile(int X, int Z, MazeBlueprint mazeBP)
     {
-		bool[] walls = new bool[4];
-		int nb_walls = 0;
-		GeoType geo_type;
-		GameObject geo_obj;
-		int rot_count = 0;
+		bool[] wall = new bool[4];
+		int nbWalls = 0;
+		GeoType geoType;
+		GameObject geoObj;
+		int rotCount = 0;
 
         // Get wall info from maze blueprint
-        walls[0] = MazeBP.wall_h [X, Z + 1];	// N
-		walls[1] = MazeBP.wall_v [X + 1, Z];	// E
-		walls[2] = MazeBP.wall_h [X, Z];		// S
-		walls[3] = MazeBP.wall_v [X, Z];        // W
+		wall[0] = mazeBP.wall_h [X, Z + 1];	// N
+		wall[1] = mazeBP.wall_v [X + 1, Z];	// E
+		wall[2] = mazeBP.wall_h [X, Z];		// S
+		wall[3] = mazeBP.wall_v [X, Z];        // W
 
         // Get number of walls
-        for (int i = 0; i < walls.Length; i++)
+		for (int i = 0; i < wall.Length; i++)
 		{
-			if (walls[i])
-				nb_walls++;
+			if (wall[i])
+				nbWalls++;
 		}
 
         // Get geo type, then setup geo object
-		if ((walls [0] != walls [1]) && (walls [0] == walls [2]) && (walls [1] == walls [3]))
-			geo_type = GeoType.II;
+		if ((wall [0] != wall [1]) && (wall [0] == wall [2]) && (wall [1] == wall [3]))
+			geoType = GeoType.II;
 		else
-			geo_type = (GeoType)nb_walls;
+			geoType = (GeoType)nbWalls;
 		
-		geo_obj = m_setting.GetGeoObj (geo_type);
+		geoObj = m_setting.GetGeoObj (geoType);
 
         // Get rotation count for based on wall layout so we can rotate the geo later.
-        rot_count = GetGeoRotationCount(walls, geo_type);
+		rotCount = GetGeoRotationCount(wall, geoType);
 
         // Spawn tile object
-        GameObject tile_object = (GameObject)Instantiate (geo_obj, new Vector3 (X * 10, 0, Z * 10), Quaternion.Euler (0, 90 * rot_count, 0));
-        tile_object.name = "Tile [" + X + "]" + "[" + Z + "] " + "(" + geo_type + ")";
-        tile_object.AddComponent<Tile>();
+        GameObject tileObj = (GameObject)Instantiate (geoObj, new Vector3 (X * 10, 0, Z * 10), Quaternion.Euler (0, 90 * rotCount, 0));
+        tileObj.name = "Tile [" + X + "]" + "[" + Z + "] " + "(" + geoType + ")";
+        tileObj.AddComponent<Tile>();
 
         // Generate Tile class data
-        Tile tile = tile_object.GetComponent<Tile>();
+        Tile tile = tileObj.GetComponent<Tile>();
         tile.X = X;
         tile.Z = Z;
-        tile.wall = walls;
-        AssignWallObjToTile(tile, geo_type, rot_count);
+		tile.wall = wall;
+        AssignWallObjToTile(tile, geoType, rotCount);
 
         return tile;
     }
 
     // Instead of creating multiple type of geo, we rotate existing geo to match the wall layout.
-    // This function calculate the rot_count that can be used later to spawn the tile geo.
-    // ex: Quaternion.Euler (0, 90 * rot_count, 0))
-    private int GetGeoRotationCount(bool[] walls, GeoType geo_type)
+    // This function calculate the rotCount that can be used later to spawn the tile geo.
+    // ex: Quaternion.Euler (0, 90 * rotCount, 0))
+	private int GetGeoRotationCount(bool[] walls, GeoType geoType)
 	{
 		int count = 0;
 
-		if (geo_type == GeoType.II)
+		if (geoType == GeoType.II)
 		{
 			int rnd = Random.Range (0, 2);
 			if (walls [0] == true)
@@ -97,17 +99,17 @@ public class MazeGenerator : MonoBehaviour {
 
 		for (int i = 0; i < walls.Length; i++) 
 		{
-			int wall_index = i;
+			int wallID = i;
 			bool match = false;
-			for (int j = 0; j < (int)geo_type; j++) 
+			for (int j = 0; j < (int)geoType; j++) 
 			{
-				if (!walls [wall_index])
+				if (!walls [wallID])
 					break;
 
-				if (j == ((int)geo_type - 1))
+				if (j == ((int)geoType - 1))
 					match = true;
 
-				wall_index = wall_index + 1 < walls.Length ? (wall_index + 1) : (wall_index + 1 - walls.Length);
+				wallID = wallID + 1 < walls.Length ? (wallID + 1) : (wallID + 1 - walls.Length);
 			}
 
 			if (match)
@@ -118,9 +120,9 @@ public class MazeGenerator : MonoBehaviour {
 	}
 
     // Store wall object in tile class
-    private void AssignWallObjToTile(Tile tile, GeoType geo_type, int rot_count)
+    private void AssignWallObjToTile(Tile tile, GeoType geoType, int rotCount)
     {
-		if (geo_type == GeoType.O)
+		if (geoType == GeoType.O)
 			return;
 
 		// Get wall objects
@@ -136,20 +138,20 @@ public class MazeGenerator : MonoBehaviour {
         }
 
 		// Assign wall objects to Tile class based on geo type and geo rotation
-		int wall_index = rot_count;
-		tile.wall_obj [wall_index] = wall_obj_list [0];
+		int wallID = rotCount;
+		tile.wall_obj [wallID] = wall_obj_list [0];
 
-		if (geo_type == GeoType.II)
+		if (geoType == GeoType.II)
 		{
-			wall_index = wall_index + 2 < 4 ? (wall_index + 2) : (wall_index + 2 - 4);
-			tile.wall_obj [wall_index] = wall_obj_list [1];
+			wallID = wallID + 2 < 4 ? (wallID + 2) : (wallID + 2 - 4);
+			tile.wall_obj [wallID] = wall_obj_list [1];
 		}
 		else
 		{
 			for (int i = 1; i < wall_obj_list.Count; i++)
 			{
-				wall_index = wall_index + 1 < 4 ? (wall_index + 1) : (wall_index + 1 - 4);
-				tile.wall_obj [wall_index] = wall_obj_list [i];
+				wallID = wallID + 1 < 4 ? (wallID + 1) : (wallID + 1 - 4);
+				tile.wall_obj [wallID] = wall_obj_list [i];
 			}
 		}
     }

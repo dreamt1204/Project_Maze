@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Tile geo type
 public enum GeoType
 {
-	O,
-	I,
-	L,
-	C,
-	II
+	O,	// No wall
+	I,	// 1 wall
+	L,	// 2 walls form L shape
+	C,	// 3 walls form C shape
+	II	// 2 walls parallel to each other
 }
 
 public class MazeSetting : MonoBehaviour {
@@ -24,18 +25,6 @@ public class MazeSetting : MonoBehaviour {
     //=======================================
     //      Functions
     //=======================================   
-    // Use this for initialization
-    void Start()
-    {
-		
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
 	public GameObject GetGeoObj(GeoType geo_type)
 	{
 		GameObject geo_obj;
