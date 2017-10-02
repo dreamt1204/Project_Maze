@@ -101,7 +101,11 @@ public class LevelManager : MonoBehaviour {
     public void InitGameMode()
 	{
 		startTile = maze.GetRandomTile();
-        objectiveTile = maze.GetRandomTileWithDistance(startTile, (int)Mathf.Ceil(maze.tile.GetLength(0) / 2), new List<Tile>());
+
+        // Make sure the objective is at least half map aways from the start point. Also, make it spawn at C shape wall layout. 
+        List<Tile> tileList = maze.GetTileListOutOfDistance(startTile, (int)Mathf.Floor(maze.tile.GetLength(0) / 2));
+        tileList = maze.GetTileListWithDesiredWallLayout(tileList, WallLayout.C);
+        objectiveTile = maze.GetRandomTileFromList(tileList);
 
         startTile.SpawnTileItem (startPointPrefab);
 		objectiveTile.SpawnTileItem (levelObjectivePrefab);

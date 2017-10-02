@@ -19,11 +19,14 @@ public class Tile : MonoBehaviour {
     public int Z;
     public bool[] wall = new bool[4];
     public GameObject[] wall_obj = new GameObject[4];
+    public WallLayout wallLayout;
 	private TileState state = TileState.None;
 	public TileItem item;
 
-	//---------- Properties -----------
-	public TileState State
+    //---------------------------------------
+    //      Properties
+    //---------------------------------------
+    public TileState State
 	{
 		get
 		{

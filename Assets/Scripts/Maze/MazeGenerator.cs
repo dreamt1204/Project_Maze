@@ -36,8 +36,8 @@ public class MazeGenerator : MonoBehaviour {
     {
 		bool[] wall = new bool[4];
 		int nbWalls = 0;
-		GeoType geoType;
-		GameObject geoObj;
+		WallLayout wallLayout;
+		GameObject wallLayoutObj;
 		int rotCount = 0;
 
         // Get wall info from maze blueprint
@@ -53,20 +53,20 @@ public class MazeGenerator : MonoBehaviour {
 				nbWalls++;
 		}
 
-        // Get geo type, then setup geo object
+        // Get wall layout, then setup object
 		if ((wall [0] != wall [1]) && (wall [0] == wall [2]) && (wall [1] == wall [3]))
-			geoType = GeoType.II;
+			wallLayout = WallLayout.II;
 		else
-			geoType = (GeoType)nbWalls;
-		
-		geoObj = m_setting.GetGeoObj (geoType);
+			wallLayout = (WallLayout)nbWalls;
 
-        // Get rotation count for based on wall layout so we can rotate the geo later.
-		rotCount = GetGeoRotationCount(wall, geoType);
+        wallLayoutObj = m_setting.GetWallLayoutObj(wallLayout);
+
+        // Get rotation count for based on wall layout so we can rotate the wall layout later.
+        rotCount = GetGeoRotationCount(wall, wallLayout);
 
         // Spawn tile object
-        GameObject tileObj = (GameObject)Instantiate (geoObj, new Vector3 (X * 10, 0, Z * 10), Quaternion.Euler (0, 90 * rotCount, 0));
-        tileObj.name = "Tile [" + X + "]" + "[" + Z + "] " + "(" + geoType + ")";
+        GameObject tileObj = (GameObject)Instantiate (wallLayoutObj, new Vector3 (X * 10, 0, Z * 10), Quaternion.Euler (0, 90 * rotCount, 0));
+        tileObj.name = "Tile [" + X + "]" + "[" + Z + "] " + "(" + wallLayout + ")";
         tileObj.AddComponent<Tile>();
 
         // Generate Tile class data
@@ -74,19 +74,20 @@ public class MazeGenerator : MonoBehaviour {
         tile.X = X;
         tile.Z = Z;
 		tile.wall = wall;
-        AssignWallObjToTile(tile, geoType, rotCount);
+        tile.wallLayout = wallLayout;
+        AssignWallObjToTile(tile, wallLayout, rotCount);
 
         return tile;
     }
 
-    // Instead of creating multiple type of geo, we rotate existing geo to match the wall layout.
-    // This function calculate the rotCount that can be used later to spawn the tile geo.
+    // Instead of creating multiple type of wall layout, we rotate existing object to match the wall layout.
+    // This function calculate the rotCount that can be used later to spawn the wall layout.
     // ex: Quaternion.Euler (0, 90 * rotCount, 0))
-	private int GetGeoRotationCount(bool[] walls, GeoType geoType)
+    private int GetGeoRotationCount(bool[] walls, WallLayout wallLayout)
 	{
 		int count = 0;
 
-		if (geoType == GeoType.II)
+		if (wallLayout == WallLayout.II)
 		{
 			int rnd = Random.Range (0, 2);
 			if (walls [0] == true)
@@ -101,12 +102,12 @@ public class MazeGenerator : MonoBehaviour {
 		{
 			int wallID = i;
 			bool match = false;
-			for (int j = 0; j < (int)geoType; j++) 
+			for (int j = 0; j < (int)wallLayout; j++) 
 			{
 				if (!walls [wallID])
 					break;
 
-				if (j == ((int)geoType - 1))
+				if (j == ((int)wallLayout - 1))
 					match = true;
 
 				wallID = wallID + 1 < walls.Length ? (wallID + 1) : (wallID + 1 - walls.Length);
@@ -120,9 +121,9 @@ public class MazeGenerator : MonoBehaviour {
 	}
 
     // Store wall object in tile class
-    private void AssignWallObjToTile(Tile tile, GeoType geoType, int rotCount)
+    private void AssignWallObjToTile(Tile tile, WallLayout wallLayout, int rotCount)
     {
-		if (geoType == GeoType.O)
+		if (wallLayout == WallLayout.O)
 			return;
 
 		// Get wall objects
@@ -137,11 +138,11 @@ public class MazeGenerator : MonoBehaviour {
             }
         }
 
-		// Assign wall objects to Tile class based on geo type and geo rotation
-		int wallID = rotCount;
+        // Assign wall objects to Tile class based on wall layout and rotation
+        int wallID = rotCount;
 		tile.wall_obj [wallID] = wall_obj_list [0];
 
-		if (geoType == GeoType.II)
+		if (wallLayout == WallLayout.II)
 		{
 			wallID = wallID + 2 < 4 ? (wallID + 2) : (wallID + 2 - 4);
 			tile.wall_obj [wallID] = wall_obj_list [1];

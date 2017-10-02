@@ -7,11 +7,22 @@ public class Maze  {
 	//      Variables
 	//=======================================
 	public Tile[,] tile;
-	private List<Tile> inUsingTiles;
+    public List<Tile> tileList;
+    private List<Tile> inUsingTiles;
 
 	public Maze(int width, int length)
 	{
 		tile = new Tile[width, length];
+        tileList = new List<Tile>();
+
+        for (int i = 0; i < tile.GetLength(0); i++)
+        {
+            for (int j = 0; j < tile.GetLength(1); j++)
+            {
+                tileList.Add(tile[i,j]);
+        }
+        }
+
 		inUsingTiles = new List<Tile> ();
 	}
 
@@ -116,24 +127,66 @@ public class Maze  {
         return tile[Random.Range(0, tile.GetLength(0)), Random.Range(0, tile.GetLength(1))];
     }
 
-    // Get a random tile from maze
-    // Make sure the tile is at least 'distance' away from the origin tile
-    // This function also supports exclusiveList
-    public Tile GetRandomTileWithDistance(Tile org, int distance, List<Tile> exclusiveList)
+    // Get a random tile from input list
+    public Tile GetRandomTileFromList(List<Tile> tmpList)
     {
-        List<Tile> possibleList = new List<Tile>();
+        return tmpList[Random.Range(0, tmpList.Count)];
+    }
 
+    //---------------------------------------
+    //      Get tile list
+    //---------------------------------------
+
+    // Get tiles 'distance' away from the org tile
+    public List<Tile> GetTileListOutOfDistance(Tile org, int distance)
+    {
+        List<Tile> newList = new List<Tile>();
+
+        // Make sure distance is not out of bounds
+        if (distance > (int)Mathf.Floor(tile.GetLength(0) / 2))
+            distance = (int)Mathf.Floor(tile.GetLength(0) / 2);
+        
         for (int i = 0; i < tile.GetLength(0); i++)
         {
             for (int j = 0; j < tile.GetLength(1); j++)
             {
-                if (((i < (org.X - distance)) || (i > (org.X + distance))) &&
-                    ((j < (org.Z - distance)) || (j > (org.Z + distance))) &&
-                    (!exclusiveList.Contains(tile[i, j])))
-                    possibleList.Add(tile[i, j]);
+                if (((i <= (org.X - distance)) || (i >= (org.X + distance))) ||
+                    ((j <= (org.Z - distance)) || (j >= (org.Z + distance))))
+                    newList.Add(tile[i, j]);
             }
         }
 
-        return possibleList[Random.Range(0, possibleList.Count)];
+        return newList;
+    }
+
+    // Get tiles with desired wall layout from input list
+    public List<Tile> GetTileListWithDesiredWallLayout(List<Tile> oldList, WallLayout desiredWallLayout)
+    {
+        List<Tile> newList = new List<Tile>();
+
+        foreach (Tile t in oldList)
+        {
+            if (t.wallLayout == desiredWallLayout)
+                newList.Add(t);
+        }
+
+        if (newList.Count <= 0)
+            Debug.LogError("ERROR: There is no such wall layout in the input list.");
+
+        return newList;
+    }
+
+    // Update tile list with exclusive list
+    public List<Tile> UpdateTileListWithExclusiveList(List<Tile> oldList, List<Tile> exclusiveList)
+    {
+        List<Tile> newList = new List<Tile>();
+
+        foreach (Tile t in oldList)
+        {
+            if (!exclusiveList.Contains(t))
+                newList.Add(t);
+        }
+
+        return newList;
     }
 }

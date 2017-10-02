@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Tile geo type
-public enum GeoType
+// Tile wall layout
+public enum WallLayout
 {
 	O,	// No wall
 	I,	// 1 wall
@@ -25,30 +25,30 @@ public class MazeSetting : MonoBehaviour {
     //=======================================
     //      Functions
     //=======================================   
-	public GameObject GetGeoObj(GeoType geo_type)
+	public GameObject GetWallLayoutObj(WallLayout wallLayout)
 	{
-		GameObject geo_obj;
+		GameObject obj;
 
-		switch ((int)geo_type)
+		switch ((int)wallLayout)
 		{
 		default:
 		case 0:
-			geo_obj = TileGeoO [Random.Range (0, TileGeoO.Length)];
+            obj = TileGeoO [Random.Range (0, TileGeoO.Length)];
 			break;
 		case 1:
-			geo_obj = TileGeoI [Random.Range (0, TileGeoI.Length)];
+            obj = TileGeoI [Random.Range (0, TileGeoI.Length)];
 			break;
 		case 2:
-			geo_obj = TileGeoL [Random.Range (0, TileGeoL.Length)];
+			obj = TileGeoL [Random.Range (0, TileGeoL.Length)];
 			break;
 		case 3:
-			geo_obj = TileGeoC [Random.Range (0, TileGeoC.Length)];
+			obj = TileGeoC [Random.Range (0, TileGeoC.Length)];
 			break;
 		case 4:
-			geo_obj = TileGeoII [Random.Range (0, TileGeoII.Length)];
+			obj = TileGeoII [Random.Range (0, TileGeoII.Length)];
 			break;
 		}
 
-		return geo_obj;
+		return obj;
 	}
 }
