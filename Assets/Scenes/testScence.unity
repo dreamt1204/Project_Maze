@@ -767,7 +767,7 @@ MonoBehaviour:
     type: 2}
   levelObjectivePrefab: {fileID: 1322906879363412, guid: f448fef0f8ba6419b89e1f5ac8315c1a,
     type: 2}
-  playerCharacterPrefab: {fileID: 1939110594383500, guid: 545609bd057804c62b92c81b2c1c1775,
+  playerCharacterPrefab: {fileID: 1580977563646686, guid: b6007ed5a665c594f900229921919ff8,
     type: 2}
   playerCharacter: {fileID: 0}
 --- !u!1001 &396791446
