@@ -6,61 +6,60 @@ public class Unit : MonoBehaviour {
 	//=======================================
 	//      Variables
 	//=======================================
-	public GameManager GM;
+	public GameManager gameManager;
 
-	public float health = 100;
-	public float move_speed = 100;
-	public Tile current_tile;
+	protected float health = 100;
+	protected float moveSpeed = 100;
+	protected Tile currentTile;
 	public bool isWalking = false;
+
+	//---------------------------------------
+	//      Properties
+	//---------------------------------------
+	public virtual float Health {get; set;}
+	public virtual float MoveSpeed {get; set;}
+	public virtual Tile CurrentTile {get; set;}
 
 	//=======================================
 	//      Functions
 	//=======================================
 
 	// Use this for initialization
-	void Start ()
+	public virtual void Init (GameManager gm, Tile spawnTile)
 	{
-		
+		gameManager = gm;
+		CurrentTile = spawnTile;
 	}
 
-	// Update is called once per frame
-	void Update ()
-	{
-
-	}
-
-	public void TryMoveToNeighborTile(Tile target_tile)
+	//---------------------------------------
+	//      Movement
+	//---------------------------------------
+	public void TryMoveToTile(Tile targetTile)
 	{
 		if (isWalking)
 			return;
 
-		if (!GM.maze.TilesAreNeighbors (current_tile, target_tile))
-			return;
-
-		if (GM.maze.WallInBetween (current_tile, target_tile))
-			return;
-		
-		MoveToTile(target_tile);
+		MoveToTile (targetTile);
 	}
 
-	public void MoveToTile(Tile target_tile)
+	public void MoveToTile(Tile targetTile)
 	{
-		StartCoroutine ("MoveToTileCoroutine", target_tile);
+		StartCoroutine ("MoveToTileCoroutine", targetTile);
 	}
 
-	IEnumerator MoveToTileCoroutine (Tile target_tile)
+	IEnumerator MoveToTileCoroutine (Tile targetTile)
 	{
 		isWalking = true;
-		Vector3 target = target_tile.gameObject.transform.position;
+		Vector3 target = targetTile.gameObject.transform.position;
 
 		while(Vector3.Distance(transform.position, target) > 0.05f)
 		{
-			transform.position = Vector3.Lerp(transform.position, target, (move_speed/10) * Time.deltaTime);
+			transform.position = Vector3.Lerp(transform.position, target, (moveSpeed/10) * Time.deltaTime);
 
 			yield return null;
 		}
 
-		current_tile = target_tile;
+		CurrentTile = targetTile;
 		isWalking = false;
 	}
 }

@@ -3,16 +3,37 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerCharacter : Unit {
+	//=======================================
+	//      Variables
+	//=======================================
+	public Camera playerCamera;
 
-	// Use this for initialization
-	void Start ()
+	//---------------------------------------
+	//      Properties
+	//---------------------------------------
+	public override Tile CurrentTile
 	{
-		
+		get
+		{
+			return currentTile;
+		}
+		set
+		{
+			currentTile = value;
+			gameManager.maze.UpdateWalkableTiles (currentTile);
+		}
 	}
-	
-	// Update is called once per frame
-	void Update ()
+
+	//=======================================
+	//      Functions
+	//=======================================
+	// Use this for initialization
+	public override void Init (GameManager gm, Tile spawnTile)
 	{
-		
+		base.Init(gm, spawnTile);
+
+		// Setup player camera
+		playerCamera = ((GameObject)Instantiate (Resources.Load ("PlayerCamera"))).GetComponent<Camera>();
+		playerCamera.transform.parent = this.transform;
 	}
 }
