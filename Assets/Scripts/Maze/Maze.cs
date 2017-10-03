@@ -84,6 +84,22 @@ public class Maze  {
 		return dir;
 	}
 
+	// Return the neighbor tile with input direction 
+	public Tile GetDirNeighborTile(Tile org, int dir)
+	{
+		int dir_x = dir == 1 ? 1 : dir == 3 ? -1 : 0;
+		int dir_z = dir == 0 ? 1 : dir == 2 ? -1 : 0;
+		int x = org.X + dir_x;
+		int z = org.Z + dir_z;
+
+		if ((x < 0) || (x > (tile.GetLength (0) - 1)))
+			return null;
+		if ((z < 0) || (z > (tile.GetLength (1) - 1)))
+			return null;
+
+		return tile [x, z];
+	}
+
 	// Return a list of walkable neighbor tiles
 	public List<Tile> GetWalkableTiles(Tile org)
 	{

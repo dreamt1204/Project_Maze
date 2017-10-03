@@ -12,8 +12,9 @@ public class Unit : MonoBehaviour {
     protected float health = 100;
     [SerializeField]
     protected float moveSpeed = 100;
+	private float movementMultiplier = 0.15f;
 	protected Tile currentTile;
-	private bool isWalking = false;
+	protected bool isWalking = false;
 
 	//---------------------------------------
 	//      Properties
@@ -52,6 +53,9 @@ public class Unit : MonoBehaviour {
 		if (isWalking)
 			return;
 
+		if (targetTile == CurrentTile)
+			return;
+
 		MoveToTile (targetTile);
 	}
 
@@ -67,7 +71,7 @@ public class Unit : MonoBehaviour {
 
 		while(Vector3.Distance(transform.position, target) > 0.25f)
 		{
-            transform.Translate((target - transform.position).normalized * Time.deltaTime * (moveSpeed / 7.0f));
+			transform.Translate((target - transform.position).normalized * Time.deltaTime * moveSpeed * movementMultiplier);
 
             yield return null;
 		}

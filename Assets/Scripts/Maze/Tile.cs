@@ -49,6 +49,9 @@ public class Tile : MonoBehaviour {
 		tile_collider.size = new Vector3 (10, 2, 10);
 	}
 
+	//---------------------------------------
+	//      Tile select detection
+	//---------------------------------------
 	void OnMouseDown()
 	{
 		if (state == TileState.None)
@@ -58,6 +61,9 @@ public class Tile : MonoBehaviour {
 			levelManager.playerCharacter.TryMoveToTile (this);
 	}
 
+	//---------------------------------------
+	//      Tile item
+	//---------------------------------------
 	public TileItem SpawnTileItem(GameObject itemPrefab)
 	{
 		item = Instantiate (itemPrefab, transform.position, Quaternion.Euler (0, 0, 0)).GetComponent<TileItem>();
