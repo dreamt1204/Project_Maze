@@ -8,8 +8,6 @@ public class PlayerCharacter : Unit {
 	//=======================================
 	private Camera playerCamera;
 	[HideInInspector]
-	private bool holdingWalkingButton = false;
-	[HideInInspector]
 	public bool hasObjective = false;
 
 	//---------------------------------------
@@ -47,38 +45,40 @@ public class PlayerCharacter : Unit {
 	}
 
 	// Update function
-	void Update()
+	public override void Update()
 	{
-		HoldingMove ();
+        base.Update();
+
+        HoldingMove ();
 	}
 
 	// This feature lets player move to the next time while player is holding the mouse during movement.
 	// The direction is calculate based on the mouse and character origin.
 	public void HoldingMove()
 	{
-		// Check if player is holding the mouse during movement. If true, set holdingWalkingButton flag.
-		if (!holdingWalkingButton)
+        // Check if player is holding the mouse during movement. If true, set KeepWalking flag.
+        if (!KeepWalking)
 		{
 			if (isWalking && Input.GetMouseButton(0))
-				holdingWalkingButton = true;
+                KeepWalking = true;
 		}
-		// If holdingWalkingButton is set...
-		else
-		{
-			// Unset holdingWalkingButton while player release the mouse.
-			if (Input.GetMouseButtonUp (0))
+        // If KeepWalking is set...
+        else
+        {
+            // Unset KeepWalking while player release the mouse.
+            if (Input.GetMouseButtonUp (0))
 			{
-				holdingWalkingButton = false;
+                KeepWalking = false;
 			}
 			// If player finished his movement and is ready for the next move, move the character to the walkable tile with holding direction.
-			else if (!isWalking)
+			else if (ArrivedNextTile)
 			{
 				Tile nextTile = levelManager.maze.GetDirNeighborTile (currentTile, GetHoldingMoveDir());
-				if ((nextTile != null) && (nextTile.State == TileState.Walkable))
-					TryMoveToTile (nextTile);
-			}
+                if ((nextTile != null) && (nextTile.State == TileState.Walkable))
+                    TryMoveToTile(nextTile);
+            }
 		}
-	}
+    }
 
 	// Get the direction calculated based on the mouse and character origin.
 	public int GetHoldingMoveDir()
