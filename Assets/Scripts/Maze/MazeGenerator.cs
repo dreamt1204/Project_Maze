@@ -8,7 +8,7 @@ public class MazeGenerator : MonoBehaviour {
     //=======================================
     private LevelManager levelManager;
 
-    [Header("Maze Layout")]
+    [Header("Layout")]
     public int width = 10;
     public int length = 10;
     public MazeSetting m_setting;

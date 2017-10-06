@@ -8,28 +8,28 @@ public class LevelManager : MonoBehaviour {
     //=======================================
 	public static LevelManager instance = null;
 
-	// Preset prefab
-	public GameObject startPointPrefab;
-	public GameObject levelObjectivePrefab;
-	public GameObject playerCharacterPrefab;
+    // Helper class that attached to the GM object
+    private MazeGenerator mazeGenerator;
+    private UnitSpawner unitSpawner;
 
-	// Helper class that attached to the GM object
-	private MazeGenerator mazeGenerator;
+    [Header("Game Mode")]
+    // Preset prefab
+    public GameObject startPointPrefab;
+	public GameObject levelObjectivePrefab;
 
 	// Global variables
 	[HideInInspector]
 	public Maze maze;
-	[HideInInspector]
-	public PlayerCharacter playerCharacter;
     [HideInInspector]
     public Tile tileStart;
     [HideInInspector]
     public Tile tileObjective;
+    [HideInInspector]
+    public PlayerCharacter playerCharacter;
 
     // State variables
     private bool finsiedInit = false;
-
-
+    
     //=======================================
     //      Functions
     //=======================================   
@@ -47,9 +47,10 @@ public class LevelManager : MonoBehaviour {
 
 		// Get component reference to the attached script
 		mazeGenerator = GetComponent<MazeGenerator>();
+        unitSpawner = GetComponent<UnitSpawner>();
 
-		// Start init the game
-		InitGame();
+        // Start init the game
+        InitGame();
     }
 
     // Game init function
@@ -59,30 +60,14 @@ public class LevelManager : MonoBehaviour {
         maze = mazeGenerator.GenerateMaze();
 
 		// Spawn enemies
-		// .....
+		// (WIP......)
 
 		// Spawn player character
-		SpawnStartingCharacter();
+		playerCharacter = unitSpawner.SpawnStartingCharacter(tileStart); 
 
         // Set finsiedInit
         finsiedInit = true;
     }
-
-	//---------------------------------------
-	//      Unit spawn functions
-	//---------------------------------------
-	public void SpawnStartingCharacter()
-	{
-		playerCharacter = SpawnPlayerCharacter(playerCharacterPrefab, tileStart);
-	}
-
-	public PlayerCharacter SpawnPlayerCharacter(GameObject prefab, Tile targetTile)
-	{
-		PlayerCharacter character = Instantiate (prefab, targetTile.transform.position, Quaternion.Euler(0, 0, 0)).GetComponent<PlayerCharacter>();
-		character.Init(this, targetTile);
-
-		return character;
-	}
 
     //---------------------------------------
     //      Game Mode
