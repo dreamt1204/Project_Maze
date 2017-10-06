@@ -14,15 +14,6 @@ public class Maze  {
 	{
 		tile = new Tile[width, length];
         tileList = new List<Tile>();
-
-        for (int i = 0; i < tile.GetLength(0); i++)
-        {
-            for (int j = 0; j < tile.GetLength(1); j++)
-            {
-                tileList.Add(tile[i,j]);
-        }
-        }
-
 		inUsingTiles = new List<Tile> ();
 	}
 
@@ -152,31 +143,34 @@ public class Maze  {
     //---------------------------------------
     //      Get tile list
     //---------------------------------------
-
-    // Get tiles 'distance' away from the org tile
-    public List<Tile> GetTileListOutOfDistance(Tile org, int distance)
+    // Get tiles 'distance' away from the org tiles
+    public List<Tile> UpdateTileListWithDistanceCondition(List<Tile> oldList, List<Tile> orgs, int distance)
     {
+        if (orgs.Count <= 0)
+            return oldList;
+
         List<Tile> newList = new List<Tile>();
 
         // Make sure distance is not out of bounds
         if (distance > (int)Mathf.Floor(tile.GetLength(0) / 2))
             distance = (int)Mathf.Floor(tile.GetLength(0) / 2);
-        
-        for (int i = 0; i < tile.GetLength(0); i++)
+
+        Tile org = orgs[orgs.Count - 1];
+        foreach (Tile t in oldList)
         {
-            for (int j = 0; j < tile.GetLength(1); j++)
-            {
-                if (((i <= (org.X - distance)) || (i >= (org.X + distance))) ||
-                    ((j <= (org.Z - distance)) || (j >= (org.Z + distance))))
-                    newList.Add(tile[i, j]);
-            }
+            if (((t.X <= (org.X - distance)) || (t.X >= (org.X + distance))) ||
+                ((t.Z <= (org.Z - distance)) || (t.Z >= (org.Z + distance))))
+                newList.Add(t);
         }
+        orgs.Remove(org);
+
+        newList = UpdateTileListWithDistanceCondition(newList, orgs, distance);
 
         return newList;
     }
 
     // Get tiles with desired wall layout from input list
-    public List<Tile> GetTileListWithDesiredWallLayout(List<Tile> oldList, WallLayout desiredWallLayout)
+    public List<Tile> UpdateTileListWithDesiredWallLayout(List<Tile> oldList, WallLayout desiredWallLayout)
     {
         List<Tile> newList = new List<Tile>();
 

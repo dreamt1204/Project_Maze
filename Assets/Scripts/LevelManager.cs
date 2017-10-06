@@ -22,9 +22,9 @@ public class LevelManager : MonoBehaviour {
 	[HideInInspector]
 	public PlayerCharacter playerCharacter;
     [HideInInspector]
-    Tile startTile;
+    public Tile tileStart;
     [HideInInspector]
-    Tile objectiveTile;
+    public Tile tileObjective;
 
     // State variables
     private bool finsiedInit = false;
@@ -56,7 +56,7 @@ public class LevelManager : MonoBehaviour {
 	void InitGame()
     {
         // Generate a maze
-		GenerateMaze();
+        maze = mazeGenerator.GenerateMaze();
 
 		// Spawn enemies
 		// .....
@@ -69,23 +69,11 @@ public class LevelManager : MonoBehaviour {
     }
 
 	//---------------------------------------
-	//      Maze
-	//---------------------------------------
-	public void GenerateMaze()
-    {
-		maze = mazeGenerator.BuildMaze();
-
-        SpawnGameModeItem();
-
-
-    }
-
-	//---------------------------------------
 	//      Unit spawn functions
 	//---------------------------------------
 	public void SpawnStartingCharacter()
 	{
-		playerCharacter = SpawnPlayerCharacter(playerCharacterPrefab, startTile);
+		playerCharacter = SpawnPlayerCharacter(playerCharacterPrefab, tileStart);
 	}
 
 	public PlayerCharacter SpawnPlayerCharacter(GameObject prefab, Tile targetTile)
@@ -99,19 +87,6 @@ public class LevelManager : MonoBehaviour {
     //---------------------------------------
     //      Game Mode
     //---------------------------------------
-    public void SpawnGameModeItem()
-	{
-		startTile = maze.GetRandomTile();
-
-        // Make sure the objective is at least half map aways from the start point. Also, make it spawn at C shape wall layout. 
-        List<Tile> tileList = maze.GetTileListOutOfDistance(startTile, (int)Mathf.Floor(maze.tile.GetLength(0) / 2));
-        tileList = maze.GetTileListWithDesiredWallLayout(tileList, WallLayout.C);
-        objectiveTile = maze.GetRandomTileFromList(tileList);
-
-        startTile.SpawnTileItem (startPointPrefab);
-		objectiveTile.SpawnTileItem (levelObjectivePrefab);
-	}
-
 	public void CheckWinningCondition()
 	{
         if (!finsiedInit)
