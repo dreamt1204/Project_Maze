@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Spine;
 using Spine.Unity;
 
 public class Unit : MonoBehaviour {
@@ -26,6 +28,15 @@ public class Unit : MonoBehaviour {
     protected SkeletonAnimation skeletonAnim;
     private const float walkAnimScaleMultiplier = 3f;
 
+    [Serializable]
+    public struct BodyPartStruct
+    {
+        public string type;
+        public BodyPart part;
+    }
+
+    public BodyPartStruct[] BodyPart;
+
     //---------------------------------------
     //      Properties
     //---------------------------------------
@@ -50,6 +61,8 @@ public class Unit : MonoBehaviour {
     void Start()
     {
         skeletonAnim = GetComponentInChildren<SkeletonAnimation>();
+
+        UpdateBody();
     }
 
     public virtual void Init (LevelManager lm, Tile spawnTile)
@@ -74,10 +87,50 @@ public class Unit : MonoBehaviour {
         skeletonAnim.state.SetAnimation(0, animName, true);
     }
 
-	//---------------------------------------
-	//      Movement
-	//---------------------------------------
-	public void TryMoveToTile(Tile targetTile)
+    //---------------------------------------
+    //      Body Part
+    //---------------------------------------
+    void UpdateBody()
+    {
+        Skin newBody = new Skin("");
+        SkeletonData skeletonData = skeletonAnim.skeletonDataAsset.GetSkeletonData(false);
+
+        foreach (BodyPartStruct data in BodyPart)
+        {
+            // Assign body part via name
+            if ((data.part != null) && (data.part.partType == data.type))
+                AddSkinEntries(skeletonData.FindSkin(data.part.partName), newBody);
+            // Try assign the default body part
+            else
+            {
+                Skin defaultPart = skeletonData.FindSkin(data.type + "_default");
+                if (defaultPart != null)
+                    AddSkinEntries(defaultPart, newBody);
+            }
+        }
+
+        // Now that your custom generated skin is complete, assign it to the skeleton...
+        var skeleton = skeletonAnim.skeleton;
+        skeleton.SetSkin(newBody);
+
+        // ...and make sure the changed attachments are visually applied.
+        skeleton.SetSlotsToSetupPose();
+        skeletonAnim.state.Apply(skeleton);
+    }
+
+    static void AddSkinEntries(Skin source, Skin destination)
+    {
+        var sourceAttachments = source.Attachments;
+        var destinationAttachments = destination.Attachments;
+        foreach (var m in sourceAttachments)
+            destinationAttachments[m.Key] = m.Value;
+    }
+
+
+    //---------------------------------------
+    //      Movement
+    //---------------------------------------
+    public void TryMoveToTile(Tile targetTile)
 	{
 		if (isWalking && !KeepWalking)
 			return;

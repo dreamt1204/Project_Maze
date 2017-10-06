@@ -1,0 +1,39 @@
+
+TestSize.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Rectangle 2
+  rotate: false
+  xy: 2, 2
+  size: 898, 856
+  orig: 898, 856
+  offset: 0, 0
+  index: -1
+
+TestSize2.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Rectangle 1
+  rotate: false
+  xy: 2, 2
+  size: 770, 756
+  orig: 770, 756
+  offset: 0, 0
+  index: -1
+
+TestSize3.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Layer 1
+  rotate: false
+  xy: 2, 2
+  size: 514, 514
+  orig: 514, 514
+  offset: 0, 0
+  index: -1

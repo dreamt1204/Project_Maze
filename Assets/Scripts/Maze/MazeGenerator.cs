@@ -17,7 +17,8 @@ public class MazeGenerator : MonoBehaviour {
     {
         MazeBlueprint mazeBP = new MazeBlueprint(width, length);
 		GameObject mazeObj = new GameObject (){name = "Maze"};
-		Maze maze = new Maze(width, length);
+        //mazeObj.transform.position = new Vector3(0, -0.5f, 0);
+        Maze maze = new Maze(width, length);
 
         for (int i = 0; i < width; i++)
         {
@@ -65,7 +66,7 @@ public class MazeGenerator : MonoBehaviour {
         rotCount = GetGeoRotationCount(wall, wallLayout);
 
         // Spawn tile object
-        GameObject tileObj = (GameObject)Instantiate (wallLayoutObj, new Vector3 (X * 10, 0, Z * 10), Quaternion.Euler (0, 90 * rotCount, 0));
+        GameObject tileObj = (GameObject)Instantiate (wallLayoutObj, new Vector3 (X * 10, -0, Z * 10), Quaternion.Euler (0, 90 * rotCount, 0));
         tileObj.name = "Tile [" + X + "]" + "[" + Z + "] " + "(" + wallLayout + ")";
         tileObj.AddComponent<Tile>();
 

@@ -36,13 +36,8 @@ public class PlayerCharacter : Unit {
 	{
 		base.Init(gm, spawnTile);
 
-		// Setup player camera
-		playerCamera = ((GameObject)Instantiate (Resources.Load ("PlayerCamera"))).GetComponent<Camera>();
-        Vector3 cameraPos = playerCamera.transform.position;
-        Vector3 playerPos = this.transform.position;
-        playerCamera.transform.position = new Vector3(cameraPos.x + playerPos.x, cameraPos.y + playerPos.y, cameraPos.z + playerPos.z);
-        playerCamera.transform.parent = this.transform;
-	}
+        playerCamera = GetComponentInChildren<Camera>();
+    }
 
 	// Update function
 	public override void Update()
@@ -59,9 +54,9 @@ public class PlayerCharacter : Unit {
         // Check if player is holding the mouse during movement. If true, set KeepWalking flag.
         if (!KeepWalking)
 		{
-			if (isWalking && Input.GetMouseButton(0))
+            if (isWalking && Input.GetMouseButton(0))
                 KeepWalking = true;
-		}
+        }
         // If KeepWalking is set...
         else
         {
@@ -69,13 +64,15 @@ public class PlayerCharacter : Unit {
             if (Input.GetMouseButtonUp (0))
 			{
                 KeepWalking = false;
-			}
+            }
 			// If player finished his movement and is ready for the next move, move the character to the walkable tile with holding direction.
 			else if (ArrivedNextTile)
 			{
 				Tile nextTile = levelManager.maze.GetDirNeighborTile (currentTile, GetHoldingMoveDir());
                 if ((nextTile != null) && (nextTile.State == TileState.Walkable))
                     TryMoveToTile(nextTile);
+                else
+                    isWalking = false;
             }
 		}
     }

@@ -6,7 +6,8 @@ public enum ItemType
 {
 	Pickup,
 	StartPortal,
-	Objective
+	Objective,
+    BodyPart
 }
 
 public class TileItem : MonoBehaviour {
@@ -15,14 +16,17 @@ public class TileItem : MonoBehaviour {
 	//=======================================
 	public string itemName;
 	public ItemType type;
+    public BodyPart bodyPart;
 
 	//=======================================
 	//      Functions
 	//=======================================
 	// Use this for initialization
-	void Start () {
-		
-	}
+	void Start ()
+    {
+        if (type != ItemType.BodyPart)
+            bodyPart = null;
+    }
 	
 	// Update is called once per frame
 	void Update () {

@@ -58,9 +58,6 @@ public class LevelManager : MonoBehaviour {
         // Generate a maze
 		GenerateMaze();
 
-		// Spawn game mode object
-		InitGameMode();
-
 		// Spawn enemies
 		// .....
 
@@ -77,6 +74,10 @@ public class LevelManager : MonoBehaviour {
 	public void GenerateMaze()
     {
 		maze = mazeGenerator.BuildMaze();
+
+        SpawnGameModeItem();
+
+
     }
 
 	//---------------------------------------
@@ -98,7 +99,7 @@ public class LevelManager : MonoBehaviour {
     //---------------------------------------
     //      Game Mode
     //---------------------------------------
-    public void InitGameMode()
+    public void SpawnGameModeItem()
 	{
 		startTile = maze.GetRandomTile();
 
