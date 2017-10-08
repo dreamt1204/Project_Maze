@@ -14,16 +14,10 @@ public class Maze  {
 	{
 		tile = new Tile[width, length];
         tileList = new List<Tile>();
-
-        for (int i = 0; i < tile.GetLength(0); i++)
-        {
-            for (int j = 0; j < tile.GetLength(1); j++)
-            {
-                tileList.Add(tile[i,j]);
-        }
-        }
-
 		inUsingTiles = new List<Tile> ();
+
+		// JY removed step for populating tileList, since at instantiation "tile" array is pointing to empty values now (causing error)
+		// Now, tileList is populated only after "tile" array is populated in BuildMaze function. (so reference is correct)
 	}
 
 	//=======================================
@@ -205,4 +199,48 @@ public class Maze  {
 
         return newList;
     }
+
+
+
+
+	// =======================================
+	// === Helper functions that Jay added ===
+	// =======================================
+
+
+	// Update tileList from tile array (has to be called everytime tile array changes);
+	public void updateTileList(){
+		for (int i = 0; i < tile.GetLength(0); i++)
+		{
+			for (int j = 0; j < tile.GetLength(1); j++)
+			{
+				tileList.Add(tile[i,j]);
+			}
+		}
+	}
+
+
+	// Distance between tiles by connectivity 4, without regard of wall (simple distance)
+	public static int DistBtwTiles (Tile t1, Tile t2){
+		int xDist = Mathf.RoundToInt (Mathf.Abs (t1.X - t2.X));
+		int zDist = Mathf.RoundToInt (Mathf.Abs (t1.Z - t2.Z));
+		return xDist + zDist;
+	}
+
+	public List<Tile> AllTilesAround(Tile centerTile, int distFrom){
+		// e.g. if distFrom = 0, list length is 1 tile
+		// e.g. if distFrom = 1, list length is 5 tiles
+		List<Tile> tilesAround = new List<Tile>();
+
+		foreach (Tile t in tileList) 
+		{
+			if (DistBtwTiles (t, centerTile) <= distFrom) 
+			{
+				tilesAround.Add (t);
+			}
+		}
+		return tilesAround;
+	}
+
+
 }

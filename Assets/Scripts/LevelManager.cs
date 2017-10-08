@@ -16,13 +16,17 @@ public class LevelManager : MonoBehaviour {
 	// Helper class that attached to the GM object
 	private MazeGenerator mazeGenerator;
 
+	private EnemyManager enemyManager;
+
 	// Global variables
 	[HideInInspector]
 	public Maze maze;
 	[HideInInspector]
 	public PlayerCharacter playerCharacter;
+	[HideInInspector]
+	public Enemy[] enemy;
     [HideInInspector]
-    Tile startTile;
+	public Tile startTile;  // JY added public accessibility; enemyManager need this info to avoid spawning around start tile
     [HideInInspector]
     Tile objectiveTile;
 
@@ -48,6 +52,8 @@ public class LevelManager : MonoBehaviour {
 		// Get component reference to the attached script
 		mazeGenerator = GetComponent<MazeGenerator>();
 
+		enemyManager = GetComponent<EnemyManager> ();
+
 		// Start init the game
 		InitGame();
     }
@@ -62,7 +68,7 @@ public class LevelManager : MonoBehaviour {
 		InitGameMode();
 
 		// Spawn enemies
-		// .....
+		SpawnInitEnemies();
 
 		// Spawn player character
 		SpawnStartingCharacter();
@@ -93,6 +99,11 @@ public class LevelManager : MonoBehaviour {
 		character.Init(this, targetTile);
 
 		return character;
+	}
+
+	public void SpawnInitEnemies()
+	{
+		enemyManager.SpawnInitEnemies ();
 	}
 
     //---------------------------------------

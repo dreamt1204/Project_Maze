@@ -28,6 +28,9 @@ public class MazeGenerator : MonoBehaviour {
             }
         }
 
+		//********* JY added ********//
+		maze.updateTileList(); // has to update tileList with new pointers/references created by "GenerateTile"
+
 		return maze;
     }
 
