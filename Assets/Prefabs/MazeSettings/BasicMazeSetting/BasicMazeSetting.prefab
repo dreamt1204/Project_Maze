@@ -51,13 +51,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 912bd4f944490fd41b23d4a534daca70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TileGeoO:
+  TileLayoutO:
   - {fileID: 1044712876967312, guid: adea242e53ba41a4e827513272a1ea5a, type: 2}
-  TileGeoI:
+  TileLayoutI:
   - {fileID: 1063996460872544, guid: d04656f0d1fae6e4b8661b34e0c5b9a0, type: 2}
-  TileGeoII:
+  TileLayoutII:
   - {fileID: 1835307683590062, guid: e65a1e9674233534aa2bb4a5276cb509, type: 2}
-  TileGeoL:
+  TileLayoutL:
   - {fileID: 1132896773378542, guid: 3f9a4401f0d980945914a7569320df4b, type: 2}
-  TileGeoC:
+  TileLayoutC:
   - {fileID: 1279900473387186, guid: ffd2d3ce27b1c3b4080d80e55026a741, type: 2}

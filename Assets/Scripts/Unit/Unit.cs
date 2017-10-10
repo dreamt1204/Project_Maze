@@ -11,23 +11,27 @@ public class Unit : MonoBehaviour {
     //=======================================
     protected LevelManager levelManager;
 
+    //Stat
     [SerializeField]
     protected float health = 100;
     [SerializeField]
     protected float moveSpeed = 100;
-	private const float movementMultiplier = 0.15f;
+
+	// Tile
 	protected Tile currentTile;
 
+    // Walking
 	protected bool isWalking = false;
     protected bool KeepWalking = false;
     protected bool ArrivedNextTile = false;
 
+    // Anim
     protected bool facingRight = false;
-
     protected string currentAnim;
     protected SkeletonAnimation skeletonAnim;
     private const float walkAnimScaleMultiplier = 3f;
 
+    // Body part
     [Serializable]
     public struct BodyPartStruct
     {
@@ -36,6 +40,9 @@ public class Unit : MonoBehaviour {
     }
 
     public BodyPartStruct[] BodyPart;
+
+    // Const
+    private const float movementMultiplier = 0.15f;
 
     //---------------------------------------
     //      Properties
@@ -79,6 +86,9 @@ public class Unit : MonoBehaviour {
             PlayLoopAnim("Idle");
     }
 
+    //---------------------------------------
+    //      Anim
+    //---------------------------------------
     public void PlayLoopAnim(string animName)
     {
         if (currentAnim == animName) return;
@@ -149,7 +159,7 @@ public class Unit : MonoBehaviour {
 
     public void TryTurn(Tile targetTile)
     {
-        int dir = levelManager.maze.GetNeighborTileDir(currentTile, targetTile);
+        int dir = Maze.GetNeighborTileDir(currentTile, targetTile);
         facingRight = dir == 1 ? false : dir == 3 ? true : facingRight;
 
         skeletonAnim.skeleton.FlipX = facingRight;

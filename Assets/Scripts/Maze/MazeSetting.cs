@@ -16,11 +16,12 @@ public class MazeSetting : MonoBehaviour {
     //=======================================
     //      Variables
     //=======================================
-    public GameObject[] TileGeoO = new GameObject[1];
-    public GameObject[] TileGeoI = new GameObject[1];
-    public GameObject[] TileGeoII = new GameObject[1];
-    public GameObject[] TileGeoL = new GameObject[1];
-    public GameObject[] TileGeoC = new GameObject[1];
+    [Header("Layout Set")]
+    public GameObject[] TileLayoutO = new GameObject[1];
+    public GameObject[] TileLayoutI = new GameObject[1];
+    public GameObject[] TileLayoutII = new GameObject[1];
+    public GameObject[] TileLayoutL = new GameObject[1];
+    public GameObject[] TileLayoutC = new GameObject[1];
 
     //=======================================
     //      Functions
@@ -33,19 +34,19 @@ public class MazeSetting : MonoBehaviour {
 		{
 		default:
 		case 0:
-            obj = TileGeoO [Random.Range (0, TileGeoO.Length)];
+            obj = TileLayoutO [Random.Range (0, TileLayoutO.Length)];
 			break;
 		case 1:
-            obj = TileGeoI [Random.Range (0, TileGeoI.Length)];
+            obj = TileLayoutI [Random.Range (0, TileLayoutI.Length)];
 			break;
 		case 2:
-			obj = TileGeoL [Random.Range (0, TileGeoL.Length)];
+			obj = TileLayoutL [Random.Range (0, TileLayoutL.Length)];
 			break;
 		case 3:
-			obj = TileGeoC [Random.Range (0, TileGeoC.Length)];
+			obj = TileLayoutC [Random.Range (0, TileLayoutC.Length)];
 			break;
 		case 4:
-			obj = TileGeoII [Random.Range (0, TileGeoII.Length)];
+			obj = TileLayoutII [Random.Range (0, TileLayoutII.Length)];
 			break;
 		}
 

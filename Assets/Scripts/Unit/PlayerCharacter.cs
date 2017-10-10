@@ -24,7 +24,7 @@ public class PlayerCharacter : Unit {
 			currentTile = value;
             currentTile.CheckTileAction();
             currentTile.CheckPlayerTileAction();
-            levelManager.maze.UpdateWalkableTiles(currentTile);
+            Maze.UpdateWalkableTiles(currentTile);
         }
 	}
 
@@ -68,7 +68,7 @@ public class PlayerCharacter : Unit {
 			// If player finished his movement and is ready for the next move, move the character to the walkable tile with holding direction.
 			else if (ArrivedNextTile)
 			{
-				Tile nextTile = levelManager.maze.GetDirNeighborTile (currentTile, GetHoldingMoveDir());
+				Tile nextTile = Maze.GetDirNeighborTile (currentTile, GetHoldingMoveDir());
                 if ((nextTile != null) && (nextTile.State == TileState.Walkable))
                     TryMoveToTile(nextTile);
                 else

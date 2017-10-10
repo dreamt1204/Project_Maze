@@ -2,33 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnitSpawner : MonoBehaviour {
+public class UnitSpawner {
     //=======================================
     //      Variables
     //=======================================
     private LevelManager levelManager;
 
-    [Header("Player Character")]
-    public GameObject playerCharacterPrefab;
+    public UnitSpawner()
+    {
+        levelManager = LevelManager.GetLevelManager();
+    }
 
     //=======================================
     //      Functions
     //=======================================
-    void Awake()
+    public Unit SpawnUnit(GameObject prefab, Tile targetTile)
     {
-        levelManager = GetComponent<LevelManager>();
+        Unit unit = GameObject.Instantiate(prefab, targetTile.transform.position, Quaternion.Euler(0, 0, 0)).GetComponent<Unit>();
+        unit.Init(levelManager, targetTile);
+
+        return unit;
     }
 
-    public PlayerCharacter SpawnStartingCharacter(Tile targetTile)
+    public PlayerCharacter SpawnPlayerCharacter(Tile targetTile)
     {
-        PlayerCharacter character = SpawnPlayerCharacter(playerCharacterPrefab, targetTile);
+        GameObject playerCharacterPrefab = levelManager.playerCharacterPrefab;
 
-        return character;
-    }
-
-    public PlayerCharacter SpawnPlayerCharacter(GameObject prefab, Tile targetTile)
-    {
-        PlayerCharacter character = Instantiate(prefab, targetTile.transform.position, Quaternion.Euler(0, 0, 0)).GetComponent<PlayerCharacter>();
+        PlayerCharacter character = GameObject.Instantiate(playerCharacterPrefab, targetTile.transform.position, Quaternion.Euler(0, 0, 0)).GetComponent<PlayerCharacter>();
         character.Init(levelManager, targetTile);
 
         return character;

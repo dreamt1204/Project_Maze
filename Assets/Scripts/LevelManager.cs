@@ -8,17 +8,30 @@ public class LevelManager : MonoBehaviour {
     //=======================================
 	public static LevelManager instance = null;
 
-    // Helper class that attached to the GM object
+    // Helper classes
     private MazeGenerator mazeGenerator;
     private UnitSpawner unitSpawner;
 
-    [Header("Game Mode")]
-    // Preset prefab
-    public GameObject startPointPrefab;
-	public GameObject levelObjectivePrefab;
+    #region Inspector
+    [Header("Player Character")]
+    public GameObject playerCharacterPrefab;
 
-	// Global variables
-	[HideInInspector]
+    [Header("Maze")]
+    public int mazeWidth = 10;
+    public int mazeLength = 10;
+    public MazeSetting mazeSetting;
+
+    [Header("Game Mode")]
+    public GameObject startPointPrefab;
+    public GameObject levelObjectivePrefab;
+
+    [Header("Items")]
+    public bool useItemGenerateLogic;
+    public int numberOfItems;
+    #endregion
+
+    // Global variables
+    [HideInInspector]
 	public Maze maze;
     [HideInInspector]
     public Tile tileStart;
@@ -40,14 +53,18 @@ public class LevelManager : MonoBehaviour {
 		if (instance == null)
 			instance = this;
 		else if (instance != this)
-			Destroy(gameObject);    
+			Destroy(gameObject);
 
-		// Sets this to not be destroyed when reloading scene
-		DontDestroyOnLoad(gameObject);
-
-		// Get component reference to the attached script
-		mazeGenerator = GetComponent<MazeGenerator>();
-        unitSpawner = GetComponent<UnitSpawner>();
+        // Get component reference to the attached script
+        mazeGenerator = new MazeGenerator
+                            (
+                                mazeWidth, 
+                                mazeLength, 
+                                mazeSetting, 
+                                startPointPrefab, 
+                                levelObjectivePrefab
+                             );
+        unitSpawner = new UnitSpawner();
 
         // Start init the game
         InitGame();
@@ -63,7 +80,7 @@ public class LevelManager : MonoBehaviour {
 		// (WIP......)
 
 		// Spawn player character
-		playerCharacter = unitSpawner.SpawnStartingCharacter(tileStart); 
+		playerCharacter = unitSpawner.SpawnPlayerCharacter(tileStart);
 
         // Set finsiedInit
         finsiedInit = true;
@@ -82,4 +99,12 @@ public class LevelManager : MonoBehaviour {
             Debug.Log("Level Finished!!");  // Debug: tmp message        
         }   
 	}
+
+    //---------------------------------------
+    //      Static Functions
+    //---------------------------------------
+    public static LevelManager GetLevelManager()
+    {
+        return GameObject.Find("LevelManager").GetComponent<LevelManager>();
+    }
 }

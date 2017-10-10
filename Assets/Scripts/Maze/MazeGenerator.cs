@@ -2,29 +2,42 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MazeGenerator : MonoBehaviour {
+public class MazeGenerator {
     //=======================================
     //      Variables
     //=======================================
     private LevelManager levelManager;
 
-    [Header("Layout")]
-    public int width = 10;
-    public int length = 10;
-    public MazeSetting m_setting;
+    // Maze Layout
+    private int width;
+    private int length;
+    private MazeSetting m_setting;
 
-    [Header("Items")]
-    public bool useItemGenerateLogic;
-    public int numberOfItems;
+    // Game mode
+    private GameObject startPrefab;
+    private GameObject objPrefab;
+
+    // Items
+    private bool useItemGenerateLogic;
+    private int numberOfItems;
+
+    //=======================================
+    //      Struct
+    //=======================================
+    public MazeGenerator(int mazeWidth, int mazeLength, MazeSetting mazeSetting, GameObject startPointPrefab, GameObject levelObjectivePrefa)
+    {
+        levelManager = LevelManager.GetLevelManager();
+
+        width = mazeWidth;
+        length = mazeLength;
+        m_setting = mazeSetting;
+        startPrefab = startPointPrefab;
+        objPrefab = levelObjectivePrefa;
+    }
 
     //=======================================
     //      Functions
     //======================================= 
-    void Awake()
-    {
-        levelManager = GetComponent<LevelManager>();
-    }
-
     public Maze GenerateMaze()
     {
         Maze maze = BuildPlainMaze();
@@ -87,10 +100,10 @@ public class MazeGenerator : MonoBehaviour {
         wallLayoutObj = m_setting.GetWallLayoutObj(wallLayout);
 
         // Get rotation count for based on wall layout so we can rotate the wall layout later.
-        rotCount = GetGeoRotationCount(wall, wallLayout);
+        rotCount = GetLayoutRotationCount(wall, wallLayout);
 
         // Spawn tile object
-        GameObject tileObj = (GameObject)Instantiate (wallLayoutObj, new Vector3 (X * 10, -0, Z * 10), Quaternion.Euler (0, 90 * rotCount, 0));
+        GameObject tileObj = GameObject.Instantiate (wallLayoutObj, new Vector3 (X * 10, -0, Z * 10), Quaternion.Euler (0, 90 * rotCount, 0));
         tileObj.name = "Tile [" + X + "]" + "[" + Z + "] " + "(" + wallLayout + ")";
         tileObj.AddComponent<Tile>();
 
@@ -108,7 +121,7 @@ public class MazeGenerator : MonoBehaviour {
     // Instead of creating multiple type of wall layout, we rotate existing object to match the wall layout.
     // This function calculate the rotCount that can be used later to spawn the wall layout.
     // ex: Quaternion.Euler (0, 90 * rotCount, 0))
-    private int GetGeoRotationCount(bool[] walls, WallLayout wallLayout)
+    private int GetLayoutRotationCount(bool[] walls, WallLayout wallLayout)
 	{
 		int count = 0;
 
@@ -186,17 +199,17 @@ public class MazeGenerator : MonoBehaviour {
     public void GenerateGameModeObjects(Maze maze)
     {
         Tile tileStart, tileObj;
-        tileStart = maze.GetRandomTile();
+        tileStart = Maze.GetRandomTileFromList(maze.tileList);
 
         // Make sure the objective is at least half map aways from the start point. Also, make it spawn at C shape wall layout. 
         List<Tile> orgs = new List<Tile>();
         orgs.Add(tileStart);
-        List<Tile> tileList = maze.UpdateTileListWithDistanceCondition(maze.tileList, orgs, (int)Mathf.Floor(maze.tile.GetLength(0) / 2));
-        tileList = maze.UpdateTileListWithDesiredWallLayout(tileList, WallLayout.C);
-        tileObj = maze.GetRandomTileFromList(tileList);
+        List<Tile> tileList = Maze.UpdateTileListWithDistanceCondition(maze.tileList, orgs, (int)Mathf.Floor(maze.tile.GetLength(0) / 2));
+        tileList = Maze.UpdateTileListWithDesiredWallLayout(tileList, WallLayout.C);
+        tileObj = Maze.GetRandomTileFromList(tileList);
 
-        tileStart.SpawnTileItem(levelManager.startPointPrefab);
-        tileObj.SpawnTileItem(levelManager.levelObjectivePrefab);
+        tileStart.SpawnTileItem(startPrefab);
+        tileObj.SpawnTileItem(objPrefab);
 
         levelManager.tileStart = tileStart;
         levelManager.tileObjective = tileObj;
@@ -212,9 +225,9 @@ public class MazeGenerator : MonoBehaviour {
         exclusiveList.Add(levelManager.tileStart);
         exclusiveList.Add(levelManager.tileObjective);
 
-        List<Tile> tileList = maze.UpdateTileListWithDistanceCondition(maze.tileList, orgs, (int)Mathf.Floor(maze.tile.GetLength(0) / 2));
-        tileList = maze.UpdateTileListWithExclusiveList(maze.tileList, exclusiveList);
-        tileList = maze.UpdateTileListWithDesiredWallLayout(tileList, WallLayout.C);
+        List<Tile> tileList = Maze.UpdateTileListWithDistanceCondition(maze.tileList, orgs, (int)Mathf.Floor(maze.tile.GetLength(0) / 2));
+        tileList = Maze.UpdateTileListWithExclusiveList(maze.tileList, exclusiveList);
+        tileList = Maze.UpdateTileListWithDesiredWallLayout(tileList, WallLayout.C);
     }
 }
 

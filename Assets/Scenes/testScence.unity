@@ -716,8 +716,6 @@ GameObject:
   m_Component:
   - component: {fileID: 376402739}
   - component: {fileID: 376402740}
-  - component: {fileID: 376402738}
-  - component: {fileID: 376402741}
   m_Layer: 0
   m_Name: LevelManager
   m_TagString: Untagged
@@ -725,23 +723,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &376402738
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 376402737}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f75f698c81e113b4fae8e8673896cf73, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  width: 10
-  length: 10
-  m_setting: {fileID: 114690698242918930, guid: 917fe6d0109bb5942bfdb0a04e7f6396,
-    type: 2}
-  useItemGenerateLogic: 0
-  numberOfItems: 0
 --- !u!4 &376402739
 Transform:
   m_ObjectHideFlags: 0
@@ -749,7 +730,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 376402737}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 50, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -766,26 +747,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dacbabb6b832964498355a434ee45653, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerCharacterPrefab: {fileID: 1580977563646686, guid: b6007ed5a665c594f900229921919ff8,
+    type: 2}
+  mazeWidth: 10
+  mazeLength: 10
+  mazeSetting: {fileID: 114690698242918930, guid: 917fe6d0109bb5942bfdb0a04e7f6396,
+    type: 2}
   startPointPrefab: {fileID: 1319595478763322, guid: b84cedb6474764ae681a2ff96801b519,
     type: 2}
   levelObjectivePrefab: {fileID: 1322906879363412, guid: f448fef0f8ba6419b89e1f5ac8315c1a,
     type: 2}
-  playerCharacter: {fileID: 0}
+  useItemGenerateLogic: 0
+  numberOfItems: 0
   tileStart: {fileID: 0}
   tileObjective: {fileID: 0}
---- !u!114 &376402741
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 376402737}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a54c60d8da6ffdc42bbd8d438cffa1b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerCharacterPrefab: {fileID: 1580977563646686, guid: b6007ed5a665c594f900229921919ff8,
-    type: 2}
+  playerCharacter: {fileID: 0}
 --- !u!1001 &396791446
 Prefab:
   m_ObjectHideFlags: 0
