@@ -786,8 +786,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelManager: {fileID: 376402740}
   initSpawnDensity: 0.04
-  startTileNoSpawnRadius: 5
+  startTileNoSpawnRadius: 3
   initSpawnMethod: 0
+  prefabA: {fileID: 1369328945872836, guid: 7974cbdfa581b4972a5f50571eac17b2, type: 2}
+  prefabB: {fileID: 1526060483942206, guid: 6784e458cde3b4c848934acabb40173f, type: 2}
+  prefabC: {fileID: 1291037138381934, guid: 30866f9c427dc47588ac23725bec778a, type: 2}
 --- !u!1001 &396791446
 Prefab:
   m_ObjectHideFlags: 0

@@ -18,7 +18,7 @@ public class EnemyManager : MonoBehaviour {
 
 	// public initEnemySpawnSetting m_setting;
 	public float initSpawnDensity = 0.04f; // roughly equals to number of enemies per tile
-	public int startTileNoSpawnRadius = 5;
+	public int startTileNoSpawnRadius = 3;
 	public InitSpawnMethod initSpawnMethod = InitSpawnMethod.Random;
 
 	// SpawningInfo is a struct that holds (1) type of spawning enemy, and (2) spawning location
@@ -32,6 +32,11 @@ public class EnemyManager : MonoBehaviour {
 			tile = tile0;
 		}
 	}
+
+	// Prefabs for each type of enemy
+	public GameObject prefabA;
+	public GameObject prefabB;
+	public GameObject prefabC;
 
 	//=======================================
 	//      Functions
@@ -48,15 +53,14 @@ public class EnemyManager : MonoBehaviour {
 			List<Tile> nonSpawnableTiles = levelManager.maze.AllTilesAround (levelManager.startTile, startTileNoSpawnRadius);
 
 			// Remove non-spawnable tiles: proximity to playerChar's initial location, physical objects, etc.
-			List<Tile> spawnableTiles = levelManager.maze.tileList; // all tiles
+			List<Tile> spawnableTiles = new List<Tile>(levelManager.maze.tileList); // all tiles
 			foreach (Tile t in nonSpawnableTiles) {
 				spawnableTiles.Remove (t);
 			}
 
 			// Calculate number of enemies to spawn
-			int numInitEnemy = Mathf.RoundToInt (1.0f / initSpawnDensity);
-
-			Debug.Log("number of enemy to spawn initially = " + numInitEnemy);
+			int numInitEnemy = Mathf.RoundToInt (initSpawnDensity * spawnableTiles.Count);
+			Debug.Log ("Initial spawn density = " + initSpawnDensity + "; num of spawnable tiles = " + spawnableTiles.Count + "; num of enemies spawned = " + numInitEnemy);
 
 			for (int i = 0; i < numInitEnemy; i++) {
 
@@ -88,7 +92,7 @@ public class EnemyManager : MonoBehaviour {
 		{
 			cumProb = cumProb + spawnProb[i];
 			cumulativeProb[i] = cumProb;
-			Debug.Log ("cumulativeProb[" + i + "] is " + cumProb);
+//			Debug.Log ("cumulativeProb[" + i + "] is " + cumProb);
 		}
 
 		// Determine enemy type by comparing rand(0,1) to cumulative prob list
@@ -108,9 +112,50 @@ public class EnemyManager : MonoBehaviour {
 			}
 		}
 
-		// Instantiation of enemies on locations based on plan
-
+		// Package type and location into SpawningInfo
+		if (spawningTiles.Count == spawningEnemyType.Length) {
+			List<spawningInfo> spawnList = new List<spawningInfo> ();
+			for (int i = 0; i < spawningTiles.Count; i++) {
+				// spawnList.Add (new spawningInfo (spawningEnemyType [i], spawningTiles [i]));
+				SpawnEnemy(spawningEnemyType [i], spawningTiles [i]);
+			}
+		} else {
+			Debug.LogError ("Inconsistent legnth between spawningTiles and spawningEnemyType.");
+		}
 
 	}
+
+
+	public Enemy SpawnEnemy (int enemyType, Tile targetTile)
+	{
+		Enemy enemy = new Enemy ();
+
+		switch (enemyType) {
+		case 0:
+			enemy = Instantiate (prefabA, targetTile.transform.position, Quaternion.Euler (0, 0, 0)).GetComponent<Enemy>();
+			break;
+		case 1:
+			enemy = Instantiate (prefabB, targetTile.transform.position, Quaternion.Euler (0, 0, 0)).GetComponent<Enemy>();
+			break;
+		case 2:
+			enemy = Instantiate (prefabC, targetTile.transform.position, Quaternion.Euler (0, 0, 0)).GetComponent<Enemy>();
+			break;
+		}
+
+		enemy.Init (levelManager, targetTile);
+		return enemy;
+
+		/*
+		GameObject prefab, 
+
+
+		PlayerCharacter character = Instantiate (prefab, targetTile.transform.position, Quaternion.Euler(0, 0, 0)).GetComponent<PlayerCharacter>();
+		character.Init(this, targetTile);
+
+		return character;
+		*/
+	}
+
+
 
 }
