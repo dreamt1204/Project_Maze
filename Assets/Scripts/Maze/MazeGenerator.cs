@@ -17,10 +17,6 @@ public class MazeGenerator {
     private GameObject startPrefab;
     private GameObject objPrefab;
 
-    // Items
-    private bool useItemGenerateLogic;
-    private int numberOfItems;
-
     //=======================================
     //      Struct
     //=======================================
@@ -47,7 +43,7 @@ public class MazeGenerator {
         return maze;
     }
 
-    #region Functions: Generate empty maze with wall layout
+    #region Generate maze layout
     // Public function that generates empty maze with wall layout
     public Maze BuildPlainMaze()
     {
@@ -196,6 +192,7 @@ public class MazeGenerator {
     }
     #endregion
 
+    #region Spawn Game Objects
     public void GenerateGameModeObjects(Maze maze)
     {
         Tile tileStart, tileObj;
@@ -214,8 +211,25 @@ public class MazeGenerator {
         levelManager.tileStart = tileStart;
         levelManager.tileObjective = tileObj;
     }
+    #endregion
 
+    #region Spawn Maze Items
     public void GenerateMazeItem(Maze maze)
+    {
+        // Calculate the number of items needed to spawn for this maze
+        int numItems = (int)Mathf.Floor(Mathf.Sqrt((maze.tile.GetLength(0) * maze.tile.GetLength(1) / 25)));
+
+        List<Tile> tiles = GetItemSpawnTiles(maze, numItems);
+        List<BodyPart> partList = GetBodyPartList(numItems);
+
+        for (int i = 0; i < numItems; i++)
+        {
+            TileItem item = tiles[i].SpawnTileItem(m_setting.bodyPartItem.gameObject);
+            item.bodyPart = partList[i];
+        }
+    }
+
+    public List<Tile> GetItemSpawnTiles(Maze maze, int numItems)
     {
         List<Tile> orgs = new List<Tile>();
         orgs.Add(levelManager.tileStart);
@@ -226,9 +240,33 @@ public class MazeGenerator {
         exclusiveList.Add(levelManager.tileObjective);
 
         List<Tile> tileList = Maze.UpdateTileListWithDistanceCondition(maze.tileList, orgs, (int)Mathf.Floor(maze.tile.GetLength(0) / 2));
-        tileList = Maze.UpdateTileListWithExclusiveList(maze.tileList, exclusiveList);
+        tileList = Maze.UpdateTileListWithExclusiveList(tileList, exclusiveList);
         tileList = Maze.UpdateTileListWithDesiredWallLayout(tileList, WallLayout.C);
+
+        List<Tile> newList = new List<Tile>();
+        int[] randomNumbers = Utilities.GetRandomUniqueNumbers(numItems, tileList.Count);
+        for (int i = 0; i < numItems; i++)
+        {
+            newList.Add(tileList[randomNumbers[i]]);
+        }
+
+        return newList;
     }
+    
+    public List<BodyPart> GetBodyPartList(int numItems)
+    {
+        List<BodyPart> newList = new List<BodyPart>();
+
+        int[] randomNumbers = Utilities.GetRandomUniqueNumbers(numItems, m_setting.bodyParts.Count);
+
+        for (int i = 0; i < numItems; i++)
+        {
+            newList.Add(m_setting.bodyParts[randomNumbers[i]]);
+        }
+
+        return newList;
+    }
+    #endregion
 }
 
 // A maze blueprint class with constructor.

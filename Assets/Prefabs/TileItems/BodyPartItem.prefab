@@ -189,3 +189,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Body Part
   type: 3
+  bodyPart: {fileID: 0}

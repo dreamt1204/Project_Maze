@@ -369,15 +369,15 @@ MonoBehaviour:
   health: 100
   moveSpeed: 100
   BodyPart:
-  - type: Head
+  - partType: Head
     part: {fileID: 0}
-  - type: Arms
+  - partType: Arms
     part: {fileID: 0}
-  - type: Body
+  - partType: Body
     part: {fileID: 0}
-  - type: Feet
+  - partType: Feet
     part: {fileID: 0}
-  - type: Misc
+  - partType: Misc
     part: {fileID: 0}
   hasObjective: 0
 --- !u!114 &114951310847072486

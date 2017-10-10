@@ -24,10 +24,6 @@ public class LevelManager : MonoBehaviour {
     [Header("Game Mode")]
     public GameObject startPointPrefab;
     public GameObject levelObjectivePrefab;
-
-    [Header("Items")]
-    public bool useItemGenerateLogic;
-    public int numberOfItems;
     #endregion
 
     // Global variables

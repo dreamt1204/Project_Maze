@@ -33,13 +33,13 @@ public class Unit : MonoBehaviour {
 
     // Body part
     [Serializable]
-    public struct BodyPartStruct
+    public struct BodyPartData
     {
-        public string type;
+        public string partType;
         public BodyPart part;
     }
 
-    public BodyPartStruct[] BodyPart;
+    public BodyPartData[] BodyPart;
 
     // Const
     private const float movementMultiplier = 0.15f;
@@ -100,20 +100,31 @@ public class Unit : MonoBehaviour {
     //---------------------------------------
     //      Body Part
     //---------------------------------------
-    void UpdateBody()
+    public void UpdateBodyPart(BodyPart newPart)
+    {
+        for (int i = 0; i < BodyPart.Length; i++)
+        {
+            if (BodyPart[i].partType == newPart.partType)
+                BodyPart[i].part = newPart;
+        }
+
+        UpdateBody();
+    }
+
+    public void UpdateBody()
     {
         Skin newBody = new Skin("");
         SkeletonData skeletonData = skeletonAnim.skeletonDataAsset.GetSkeletonData(false);
 
-        foreach (BodyPartStruct data in BodyPart)
+        foreach (BodyPartData data in BodyPart)
         {
             // Assign body part via name
-            if ((data.part != null) && (data.part.partType == data.type))
+            if ((data.part != null) && (data.part.partType == data.partType))
                 AddSkinEntries(skeletonData.FindSkin(data.part.partName), newBody);
             // Try assign the default body part
             else
             {
-                Skin defaultPart = skeletonData.FindSkin(data.type + "_default");
+                Skin defaultPart = skeletonData.FindSkin(data.partType + "_default");
                 if (defaultPart != null)
                     AddSkinEntries(defaultPart, newBody);
             }

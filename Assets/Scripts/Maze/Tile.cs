@@ -109,5 +109,10 @@ public class Tile : MonoBehaviour {
         {
             levelManager.CheckWinningCondition();
         }
+        else if (item.type == ItemType.BodyPart)
+        {
+            levelManager.playerCharacter.UpdateBodyPart(item.bodyPart);
+            DestroyTileItem();
+        }
     }
 }
