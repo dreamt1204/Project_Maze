@@ -2,22 +2,59 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MazeGenerator : MonoBehaviour {
+public class MazeGenerator {
     //=======================================
     //      Variables
     //=======================================
-    public int width = 10;
-    public int length = 10;
-    public MazeSetting m_setting;
+    private LevelManager levelManager;
+
+    // Maze Layout
+    private int width;
+    private int length;
+    private MazeSetting m_setting;
+
+    // Game mode
+    private GameObject startPrefab;
+    private GameObject objPrefab;
+
+    // Items
+    private bool useItemGenerateLogic;
+    private int numberOfItems;
+
+    //=======================================
+    //      Struct
+    //=======================================
+    public MazeGenerator(int mazeWidth, int mazeLength, MazeSetting mazeSetting, GameObject startPointPrefab, GameObject levelObjectivePrefa)
+    {
+        levelManager = LevelManager.GetLevelManager();
+
+        width = mazeWidth;
+        length = mazeLength;
+        m_setting = mazeSetting;
+        startPrefab = startPointPrefab;
+        objPrefab = levelObjectivePrefa;
+    }
 
     //=======================================
     //      Functions
     //======================================= 
-	public Maze BuildMaze()
+    public Maze GenerateMaze()
+    {
+        Maze maze = BuildPlainMaze();
+        GenerateGameModeObjects(maze);
+        GenerateMazeItem(maze);
+
+        return maze;
+    }
+
+    #region Functions: Generate empty maze with wall layout
+    // Public function that generates empty maze with wall layout
+    public Maze BuildPlainMaze()
     {
         MazeBlueprint mazeBP = new MazeBlueprint(width, length);
 		GameObject mazeObj = new GameObject (){name = "Maze"};
-		Maze maze = new Maze(width, length);
+        //mazeObj.transform.position = new Vector3(0, -0.5f, 0);
+        Maze maze = new Maze(width, length);
 
         for (int i = 0; i < width; i++)
         {
@@ -25,6 +62,7 @@ public class MazeGenerator : MonoBehaviour {
             {
 				maze.tile[i, j] = GenerateTile (i, j, mazeBP);
 				maze.tile[i, j].transform.parent = mazeObj.transform;
+                maze.tileList.Add(maze.tile[i, j]);
             }
         }
 
@@ -65,10 +103,10 @@ public class MazeGenerator : MonoBehaviour {
         wallLayoutObj = m_setting.GetWallLayoutObj(wallLayout);
 
         // Get rotation count for based on wall layout so we can rotate the wall layout later.
-        rotCount = GetGeoRotationCount(wall, wallLayout);
+        rotCount = GetLayoutRotationCount(wall, wallLayout);
 
         // Spawn tile object
-        GameObject tileObj = (GameObject)Instantiate (wallLayoutObj, new Vector3 (X * 10, 0, Z * 10), Quaternion.Euler (0, 90 * rotCount, 0));
+        GameObject tileObj = GameObject.Instantiate (wallLayoutObj, new Vector3 (X * 10, -0, Z * 10), Quaternion.Euler (0, 90 * rotCount, 0));
         tileObj.name = "Tile [" + X + "]" + "[" + Z + "] " + "(" + wallLayout + ")";
         tileObj.AddComponent<Tile>();
 
@@ -86,7 +124,7 @@ public class MazeGenerator : MonoBehaviour {
     // Instead of creating multiple type of wall layout, we rotate existing object to match the wall layout.
     // This function calculate the rotCount that can be used later to spawn the wall layout.
     // ex: Quaternion.Euler (0, 90 * rotCount, 0))
-    private int GetGeoRotationCount(bool[] walls, WallLayout wallLayout)
+    private int GetLayoutRotationCount(bool[] walls, WallLayout wallLayout)
 	{
 		int count = 0;
 
@@ -158,6 +196,41 @@ public class MazeGenerator : MonoBehaviour {
 				tile.wall_obj [wallID] = wall_obj_list [i];
 			}
 		}
+    }
+    #endregion
+
+    public void GenerateGameModeObjects(Maze maze)
+    {
+        Tile tileStart, tileObj;
+        tileStart = Maze.GetRandomTileFromList(maze.tileList);
+
+        // Make sure the objective is at least half map aways from the start point. Also, make it spawn at C shape wall layout. 
+        List<Tile> orgs = new List<Tile>();
+        orgs.Add(tileStart);
+        List<Tile> tileList = Maze.UpdateTileListWithDistanceCondition(maze.tileList, orgs, (int)Mathf.Floor(maze.tile.GetLength(0) / 2));
+        tileList = Maze.UpdateTileListWithDesiredWallLayout(tileList, WallLayout.C);
+        tileObj = Maze.GetRandomTileFromList(tileList);
+
+        tileStart.SpawnTileItem(startPrefab);
+        tileObj.SpawnTileItem(objPrefab);
+
+        levelManager.tileStart = tileStart;
+        levelManager.tileObjective = tileObj;
+    }
+
+    public void GenerateMazeItem(Maze maze)
+    {
+        List<Tile> orgs = new List<Tile>();
+        orgs.Add(levelManager.tileStart);
+        orgs.Add(levelManager.tileObjective);
+
+        List<Tile> exclusiveList = new List<Tile>();
+        exclusiveList.Add(levelManager.tileStart);
+        exclusiveList.Add(levelManager.tileObjective);
+
+        List<Tile> tileList = Maze.UpdateTileListWithDistanceCondition(maze.tileList, orgs, (int)Mathf.Floor(maze.tile.GetLength(0) / 2));
+        tileList = Maze.UpdateTileListWithExclusiveList(maze.tileList, exclusiveList);
+        tileList = Maze.UpdateTileListWithDesiredWallLayout(tileList, WallLayout.C);
     }
 }
 

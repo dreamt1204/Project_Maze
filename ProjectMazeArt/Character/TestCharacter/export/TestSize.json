@@ -1,0 +1,27 @@
+{
+"skeleton": { "hash": "uila3aQfevGk3yiKzG5K9HJGfzs", "spine": "3.6.43", "width": 1026, "height": 1026, "images": "./images/" },
+"bones": [
+	{ "name": "root" }
+],
+"slots": [
+	{ "name": "Layer 0", "bone": "root", "attachment": "Layer 0" },
+	{ "name": "Layer 2", "bone": "root", "attachment": "Layer 2" },
+	{ "name": "Layer 3", "bone": "root", "attachment": "Layer 3" }
+],
+"skins": {
+	"default": {
+		"Layer 0": {
+			"Layer 0": { "x": 1, "y": 514, "width": 1026, "height": 1026 }
+		},
+		"Layer 2": {
+			"Layer 2": { "x": 1, "y": 258, "width": 514, "height": 514 }
+		},
+		"Layer 3": {
+			"Layer 3": { "x": 1, "y": 130, "width": 258, "height": 258 }
+		}
+	}
+},
+"animations": {
+	"animation": {}
+}
+}

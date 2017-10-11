@@ -1,0 +1,46 @@
+{"skeleton":{"images":"images/"},
+"bones":[{"name":"root"}],
+"slots":[
+	{"name":"Arm_L_default copy","bone":"root","attachment":"Arm_L_default copy"},
+	{"name":"Foot_L_red","bone":"root","attachment":"Foot_L_red"},
+	{"name":"Body_red","bone":"root","attachment":"Body_red"},
+	{"name":"Foot_R_red","bone":"root","attachment":"Foot_R_red"},
+	{"name":"Arm_R_red","bone":"root","attachment":"Arm_R_red"},
+	{"name":"Head_red","bone":"root","attachment":"Head_red"}
+],
+"skins":{
+	"default":{
+	},
+	"Arm_L":{
+		"Arm_L_default copy":{
+			"Arm_L_default copy":{"name":"Arm_L/Arm_L_default copy", "x":323,"y":-295.5,"width":94,"height":159}
+		}
+	},
+	"Foot_L":{
+		"Foot_L_red":{
+			"Foot_L_red":{"name":"Foot_L/Foot_L_red", "x":296.5,"y":-400.5,"width":47,"height":153}
+		}
+	},
+	"Body":{
+		"Body_red":{
+			"Body_red":{"name":"Body/Body_red", "x":257,"y":-274,"width":126,"height":170}
+		}
+	},
+	"Foot_R":{
+		"Foot_R_red":{
+			"Foot_R_red":{"name":"Foot_R/Foot_R_red", "x":217.5,"y":-400.5,"width":47,"height":153}
+		}
+	},
+	"ArmR":{
+		"Arm_R_red":{
+			"Arm_R_red":{"name":"ArmR/Arm_R_red", "x":184,"y":-296,"width":106,"height":158}
+		}
+	}
+	"Head":{
+		"Head_red":{
+			"Head_red":{"name":"Head/Head_red", "x":257,"y":-136,"width":204,"height":204}
+		}
+	}
+},
+"animations":{"animation":{}}
+}

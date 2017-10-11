@@ -8,14 +8,15 @@ public class LevelManager : MonoBehaviour {
     //=======================================
 	public static LevelManager instance = null;
 
-	// Preset prefab
-	public GameObject startPointPrefab;
-	public GameObject levelObjectivePrefab;
-	public GameObject playerCharacterPrefab;
+    // Helper classes
+    private MazeGenerator mazeGenerator;
+    private UnitSpawner unitSpawner;
 
-	// Helper class that attached to the GM object
-	private MazeGenerator mazeGenerator;
+    #region Inspector
+    [Header("Player Character")]
+    public GameObject playerCharacterPrefab;
 
+<<<<<<< HEAD
 	private EnemyManager enemyManager;
 
 	// Global variables
@@ -27,13 +28,35 @@ public class LevelManager : MonoBehaviour {
 	public Enemy[] enemy;
     [HideInInspector]
 	public Tile startTile;  // JY added public accessibility; enemyManager need this info to avoid spawning around start tile
+=======
+    [Header("Maze")]
+    public int mazeWidth = 10;
+    public int mazeLength = 10;
+    public MazeSetting mazeSetting;
+
+    [Header("Game Mode")]
+    public GameObject startPointPrefab;
+    public GameObject levelObjectivePrefab;
+
+    [Header("Items")]
+    public bool useItemGenerateLogic;
+    public int numberOfItems;
+    #endregion
+
+    // Global variables
     [HideInInspector]
-    Tile objectiveTile;
+	public Maze maze;
+    [HideInInspector]
+    public Tile tileStart;
+>>>>>>> master
+    [HideInInspector]
+    public Tile tileObjective;
+    [HideInInspector]
+    public PlayerCharacter playerCharacter;
 
     // State variables
     private bool finsiedInit = false;
-
-
+    
     //=======================================
     //      Functions
     //=======================================   
@@ -44,6 +67,7 @@ public class LevelManager : MonoBehaviour {
 		if (instance == null)
 			instance = this;
 		else if (instance != this)
+<<<<<<< HEAD
 			Destroy(gameObject);    
 
 		// Sets this to not be destroyed when reloading scene
@@ -56,27 +80,46 @@ public class LevelManager : MonoBehaviour {
 
 		// Start init the game
 		InitGame();
+=======
+			Destroy(gameObject);
+
+        // Get component reference to the attached script
+        mazeGenerator = new MazeGenerator
+                            (
+                                mazeWidth, 
+                                mazeLength, 
+                                mazeSetting, 
+                                startPointPrefab, 
+                                levelObjectivePrefab
+                             );
+        unitSpawner = new UnitSpawner();
+
+        // Start init the game
+        InitGame();
+>>>>>>> master
     }
 
     // Game init function
 	void InitGame()
     {
         // Generate a maze
-		GenerateMaze();
-
-		// Spawn game mode object
-		InitGameMode();
+        maze = mazeGenerator.GenerateMaze();
 
 		// Spawn enemies
+<<<<<<< HEAD
 		SpawnInitEnemies();
+=======
+		// (WIP......)
+>>>>>>> master
 
 		// Spawn player character
-		SpawnStartingCharacter();
+		playerCharacter = unitSpawner.SpawnPlayerCharacter(tileStart);
 
         // Set finsiedInit
         finsiedInit = true;
     }
 
+<<<<<<< HEAD
 	//---------------------------------------
 	//      Maze
 	//---------------------------------------
@@ -106,22 +149,11 @@ public class LevelManager : MonoBehaviour {
 		enemyManager.SpawnInitEnemies ();
 	}
 
+=======
+>>>>>>> master
     //---------------------------------------
     //      Game Mode
     //---------------------------------------
-    public void InitGameMode()
-	{
-		startTile = maze.GetRandomTile();
-
-        // Make sure the objective is at least half map aways from the start point. Also, make it spawn at C shape wall layout. 
-        List<Tile> tileList = maze.GetTileListOutOfDistance(startTile, (int)Mathf.Floor(maze.tile.GetLength(0) / 2));
-        tileList = maze.GetTileListWithDesiredWallLayout(tileList, WallLayout.C);
-        objectiveTile = maze.GetRandomTileFromList(tileList);
-
-        startTile.SpawnTileItem (startPointPrefab);
-		objectiveTile.SpawnTileItem (levelObjectivePrefab);
-	}
-
 	public void CheckWinningCondition()
 	{
         if (!finsiedInit)
@@ -132,4 +164,12 @@ public class LevelManager : MonoBehaviour {
             Debug.Log("Level Finished!!");  // Debug: tmp message        
         }   
 	}
+
+    //---------------------------------------
+    //      Static Functions
+    //---------------------------------------
+    public static LevelManager GetLevelManager()
+    {
+        return GameObject.Find("LevelManager").GetComponent<LevelManager>();
+    }
 }

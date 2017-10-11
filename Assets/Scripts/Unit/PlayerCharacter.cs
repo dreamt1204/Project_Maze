@@ -8,8 +8,6 @@ public class PlayerCharacter : Unit {
 	//=======================================
 	private Camera playerCamera;
 	[HideInInspector]
-	private bool holdingWalkingButton = false;
-	[HideInInspector]
 	public bool hasObjective = false;
 
 	//---------------------------------------
@@ -26,7 +24,7 @@ public class PlayerCharacter : Unit {
 			currentTile = value;
             currentTile.CheckTileAction();
             currentTile.CheckPlayerTileAction();
-            levelManager.maze.UpdateWalkableTiles(currentTile);
+            Maze.UpdateWalkableTiles(currentTile);
         }
 	}
 
@@ -38,47 +36,46 @@ public class PlayerCharacter : Unit {
 	{
 		base.Init(gm, spawnTile);
 
-		// Setup player camera
-		playerCamera = ((GameObject)Instantiate (Resources.Load ("PlayerCamera"))).GetComponent<Camera>();
-        Vector3 cameraPos = playerCamera.transform.position;
-        Vector3 playerPos = this.transform.position;
-        playerCamera.transform.position = new Vector3(cameraPos.x + playerPos.x, cameraPos.y + playerPos.y, cameraPos.z + playerPos.z);
-        playerCamera.transform.parent = this.transform;
-	}
+        playerCamera = GetComponentInChildren<Camera>();
+    }
 
 	// Update function
-	void Update()
+	public override void Update()
 	{
-		HoldingMove ();
+        base.Update();
+
+        HoldingMove ();
 	}
 
 	// This feature lets player move to the next time while player is holding the mouse during movement.
 	// The direction is calculate based on the mouse and character origin.
 	public void HoldingMove()
 	{
-		// Check if player is holding the mouse during movement. If true, set holdingWalkingButton flag.
-		if (!holdingWalkingButton)
+        // Check if player is holding the mouse during movement. If true, set KeepWalking flag.
+        if (!KeepWalking)
 		{
-			if (isWalking && Input.GetMouseButton(0))
-				holdingWalkingButton = true;
-		}
-		// If holdingWalkingButton is set...
-		else
-		{
-			// Unset holdingWalkingButton while player release the mouse.
-			if (Input.GetMouseButtonUp (0))
+            if (isWalking && Input.GetMouseButton(0))
+                KeepWalking = true;
+        }
+        // If KeepWalking is set...
+        else
+        {
+            // Unset KeepWalking while player release the mouse.
+            if (Input.GetMouseButtonUp (0))
 			{
-				holdingWalkingButton = false;
-			}
+                KeepWalking = false;
+            }
 			// If player finished his movement and is ready for the next move, move the character to the walkable tile with holding direction.
-			else if (!isWalking)
+			else if (ArrivedNextTile)
 			{
-				Tile nextTile = levelManager.maze.GetDirNeighborTile (currentTile, GetHoldingMoveDir());
-				if ((nextTile != null) && (nextTile.State == TileState.Walkable))
-					TryMoveToTile (nextTile);
-			}
+				Tile nextTile = Maze.GetDirNeighborTile (currentTile, GetHoldingMoveDir());
+                if ((nextTile != null) && (nextTile.State == TileState.Walkable))
+                    TryMoveToTile(nextTile);
+                else
+                    isWalking = false;
+            }
 		}
-	}
+    }
 
 	// Get the direction calculated based on the mouse and character origin.
 	public int GetHoldingMoveDir()

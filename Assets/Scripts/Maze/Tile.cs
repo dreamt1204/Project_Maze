@@ -15,12 +15,19 @@ public class Tile : MonoBehaviour {
     //=======================================
 	private LevelManager levelManager;
 
+    // Coordinate info
 	public int X;
     public int Z;
+
+    // Walls
     public bool[] wall = new bool[4];
     public GameObject[] wall_obj = new GameObject[4];
     public WallLayout wallLayout;
+
+    // State
 	private TileState state = TileState.None;
+
+    // Item
 	public TileItem item;
 
     //---------------------------------------
@@ -45,6 +52,7 @@ public class Tile : MonoBehaviour {
 	{
 		levelManager = GameObject.Find ("LevelManager").GetComponent<LevelManager>();
 
+        // Init box collider for this tile
 		BoxCollider tile_collider = this.gameObject.AddComponent<BoxCollider> ();
 		tile_collider.size = new Vector3 (10, 2, 10);
 	}
