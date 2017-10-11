@@ -5,7 +5,7 @@ using UnityEngine;
 public enum ItemType
 {
 	Pickup,
-	StartPortal,
+	StartPoint,
 	Objective,
     BodyPart
 }
@@ -15,7 +15,7 @@ public class TileItem : MonoBehaviour {
 	//      Variables
 	//=======================================
 	public string itemName;
-	public ItemType type;
+	public ItemType itemType;
     public BodyPart bodyPart;
 
 	//=======================================
@@ -24,7 +24,7 @@ public class TileItem : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-        if (type != ItemType.BodyPart)
+        if (itemType != ItemType.BodyPart)
             bodyPart = null;
     }
 	

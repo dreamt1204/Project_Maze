@@ -45,7 +45,7 @@ public class MazeGenerator {
 
         // Game mode
         startPrefab = levelManager.startPointPrefab;
-        objPrefab = levelManager.levelObjectivePrefab;
+        objPrefab = levelManager.objectivePrefab;
     }
 
     //=======================================
@@ -102,13 +102,22 @@ public class MazeGenerator {
         int mazeWidth = 0;
         int mazeLength = 0;
 
+        List<GameObject> tileObjList = new List<GameObject>();
+
         foreach (Transform child in m_customMazeObj.transform)
         {
+            if (child.gameObject.GetComponent<TileItem>() != null)
+                continue;
+
+            tileObjList.Add(child.gameObject);
+        }
+
+        foreach (GameObject obj in tileObjList)
+        {
             // Gather tile data from preset tile object
-            GameObject presetTileObj = child.gameObject;
-            int X = Mathf.FloorToInt(presetTileObj.transform.position.x / 10);
+            int X = GetObjX(obj);
             mazeWidth = mazeWidth > (X + 1) ? mazeWidth : (X + 1);
-            int Z = Mathf.FloorToInt(presetTileObj.transform.position.z / 10);
+            int Z = GetObjZ(obj);
             mazeLength = mazeLength > (Z + 1) ? mazeLength : (Z + 1);
         }
 
@@ -116,19 +125,18 @@ public class MazeGenerator {
 
         // Spawn and init each preset tile from the custom maze object
         GameObject mazeObj = new GameObject() { name = "Maze" };
-        foreach (Transform child in m_customMazeObj.transform)
+        foreach (GameObject obj in tileObjList)
         {
             // Gather tile data from preset tile object
-            GameObject presetTileObj = child.gameObject;
-            int X = Mathf.FloorToInt(presetTileObj.transform.position.x / 10);
-            int Z = Mathf.FloorToInt(presetTileObj.transform.position.z / 10);
-            int rotCount = Mathf.FloorToInt(presetTileObj.transform.eulerAngles.y / 90);
+            int X = GetObjX(obj);
+            int Z = GetObjZ(obj);
+            int rotCount = Mathf.FloorToInt(obj.transform.eulerAngles.y / 90);
             rotCount = rotCount < 4 ? rotCount : (rotCount - 4);
-            WallLayout wallLayout = GetWallLayoutFromObj(presetTileObj);
-            bool[] wall = GetWallInfoFromObj(presetTileObj, rotCount);
+            WallLayout wallLayout = GetWallLayoutFromObj(obj);
+            bool[] wall = GetWallInfoFromObj(obj, rotCount);
 
             // Spawn tile object
-            GameObject tileObj = GameObject.Instantiate(presetTileObj, new Vector3(X * 10, -0, Z * 10), Quaternion.Euler(0, 90 * rotCount, 0));
+            GameObject tileObj = GameObject.Instantiate(obj, new Vector3(X * 10, -0, Z * 10), Quaternion.Euler(0, 90 * rotCount, 0));
             tileObj.name = "Tile [" + X + "]" + "[" + Z + "] " + "(" + wallLayout + ")";
             tileObj.AddComponent<Tile>();
 
@@ -156,7 +164,7 @@ public class MazeGenerator {
         return maze;
     }
 
-    #region Misc function for generating maze
+    #region Misc functions for generating maze
     // Generate script tile based on maze blueprint
     Tile GenerateTileWithBlueprint(int X, int Z, MazeBlueprint mazeBP)
     {
@@ -464,6 +472,14 @@ public class MazeGenerator {
     #region Spawn Game Objects
     public void GenerateGameModeObjects(Maze maze)
     {
+        if (m_customGameModePosition)
+            GenerateGameModeObjectsCustom(maze);
+        else
+            GenerateGameModeObjectsRandom(maze);
+    }
+
+    public void GenerateGameModeObjectsRandom(Maze maze)
+    {
         Tile tileStart, tileObj;
         tileStart = Maze.GetRandomTileFromList(maze.tileList);
 
@@ -479,6 +495,36 @@ public class MazeGenerator {
 
         levelManager.tileStart = tileStart;
         levelManager.tileObjective = tileObj;
+    }
+
+    public void GenerateGameModeObjectsCustom(Maze maze)
+    {
+        TileItem startPointItem = null;
+        TileItem objectiveItem = null;
+
+        foreach (Transform child in m_customMazeObj.transform)
+        {
+            TileItem item = child.gameObject.GetComponent<TileItem>();
+
+            if (item == null)
+                continue;
+
+            if (item.itemType == ItemType.StartPoint)
+                startPointItem = item;
+
+            if (item.itemType == ItemType.Objective)
+                objectiveItem = item;
+        }
+
+        Tile tileStart = GetObjLocatedTile(maze, startPointItem.gameObject);
+        Tile tileObjective = GetObjLocatedTile(maze, objectiveItem.gameObject);
+
+        tileStart.SpawnTileItem(startPointItem.gameObject);
+        tileObjective.SpawnTileItem(objectiveItem.gameObject);
+
+        levelManager.tileStart = tileStart;
+        levelManager.tileObjective = tileObjective;
+
     }
     #endregion
 
@@ -534,6 +580,23 @@ public class MazeGenerator {
         }
 
         return newList;
+    }
+    #endregion
+
+    #region Misc.
+    int GetObjX(GameObject obj)
+    {
+        return Mathf.FloorToInt(obj.transform.position.x / 10);
+    }
+
+    int GetObjZ(GameObject obj)
+    {
+        return Mathf.FloorToInt(obj.transform.position.z / 10);
+    }
+
+    Tile GetObjLocatedTile(Maze maze, GameObject obj)
+    {
+        return maze.tile[GetObjX(obj), GetObjZ(obj)];
     }
     #endregion
 }

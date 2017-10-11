@@ -18,7 +18,7 @@ public class LevelManager : MonoBehaviour {
     public int mazeDifficulty = 1;
     public MazeSetting mazeSetting;
 
-    [Header("Custom Maze")]
+    [Header("Custom Maze (Optional)")]
     public bool customMazeSize;
     public int mazeWidth = 10;
     public int mazeLength = 10;
@@ -33,7 +33,7 @@ public class LevelManager : MonoBehaviour {
 
     [Header("Game Mode")]
     public GameObject startPointPrefab;
-    public GameObject levelObjectivePrefab;
+    public GameObject objectivePrefab;
     #endregion
 
     // Global variables

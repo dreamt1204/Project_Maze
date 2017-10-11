@@ -100,16 +100,16 @@ public class Tile : MonoBehaviour {
         if (item == null)
             return;
 
-        if (item.type == ItemType.Objective)
+        if (item.itemType == ItemType.Objective)
         {
             levelManager.playerCharacter.hasObjective = true;
             DestroyTileItem();
         }
-        else if (item.type == ItemType.StartPortal)
+        else if (item.itemType == ItemType.StartPoint)
         {
             levelManager.CheckWinningCondition();
         }
-        else if (item.type == ItemType.BodyPart)
+        else if (item.itemType == ItemType.BodyPart)
         {
             levelManager.playerCharacter.UpdateBodyPart(item.bodyPart);
             DestroyTileItem();
