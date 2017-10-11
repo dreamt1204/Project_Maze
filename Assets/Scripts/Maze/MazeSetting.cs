@@ -24,7 +24,6 @@ public class MazeSetting : MonoBehaviour {
     public GameObject[] TileLayoutC = new GameObject[1];
 
     [Header("Item Set")]
-    public TileItem bodyPartItem;
     public List<BodyPart> bodyParts;
 
     //=======================================

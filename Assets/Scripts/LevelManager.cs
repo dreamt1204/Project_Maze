@@ -28,12 +28,11 @@ public class LevelManager : MonoBehaviour {
     public bool customGameModePosition;
     public bool customItemPosition;
 
-    [Header("Player Character")]
+    [Header("Required Prefabs")]
     public GameObject playerCharacterPrefab;
-
-    [Header("Game Mode")]
     public GameObject startPointPrefab;
     public GameObject objectivePrefab;
+    public GameObject ItemChectPrefab;
     #endregion
 
     // Global variables

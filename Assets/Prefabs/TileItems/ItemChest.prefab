@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 4021055538639728}
   - component: {fileID: 114998940527041774}
   m_Layer: 0
-  m_Name: BodyPartItem
+  m_Name: ItemChest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -187,6 +187,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b91592f66ff714eef80dad81fe51ca86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemName: Body Part
+  itemName: Item Chest
   itemType: 3
   bodyPart: {fileID: 0}

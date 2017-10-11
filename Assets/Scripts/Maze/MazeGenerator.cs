@@ -20,9 +20,16 @@ public class MazeGenerator {
     bool m_customGameModePosition;
     bool m_customItemPosition;
 
+    // Custom maze object variables
+    List<GameObject> customTileObjList;
+    GameObject customStartPointItem;
+    GameObject customObjectiveItem;
+    List<GameObject> customItemChestList;
+
     // Game mode
     GameObject startPrefab;
     GameObject objPrefab;
+    GameObject itemChectPrefab;
 
     //=======================================
     //      Struct
@@ -43,9 +50,10 @@ public class MazeGenerator {
         m_customGameModePosition = levelManager.customGameModePosition;
         m_customItemPosition = levelManager.customItemPosition;
 
-        // Game mode
+        // Prefabs
         startPrefab = levelManager.startPointPrefab;
         objPrefab = levelManager.objectivePrefab;
+        itemChectPrefab = levelManager.ItemChectPrefab;
     }
 
     //=======================================
@@ -77,6 +85,9 @@ public class MazeGenerator {
     // Generate random maze using Kruskal's algorithm
     Maze GenerateRandomMaze()
     {
+        if (!m_customMazeSize)
+            m_width = m_length = Formula.CalculateMazeSideSize(m_difficulty);
+
         Maze maze = new Maze(m_width, m_length);
         GameObject mazeObj = new GameObject() { name = "Maze" };
         MazeBlueprint mazeBP = new MazeBlueprint(m_width, m_length);
@@ -102,17 +113,9 @@ public class MazeGenerator {
         int mazeWidth = 0;
         int mazeLength = 0;
 
-        List<GameObject> tileObjList = new List<GameObject>();
+        UpdateCustomMazeObjList();
 
-        foreach (Transform child in m_customMazeObj.transform)
-        {
-            if (child.gameObject.GetComponent<TileItem>() != null)
-                continue;
-
-            tileObjList.Add(child.gameObject);
-        }
-
-        foreach (GameObject obj in tileObjList)
+        foreach (GameObject obj in customTileObjList)
         {
             // Gather tile data from preset tile object
             int X = GetObjX(obj);
@@ -125,7 +128,7 @@ public class MazeGenerator {
 
         // Spawn and init each preset tile from the custom maze object
         GameObject mazeObj = new GameObject() { name = "Maze" };
-        foreach (GameObject obj in tileObjList)
+        foreach (GameObject obj in customTileObjList)
         {
             // Gather tile data from preset tile object
             int X = GetObjX(obj);
@@ -499,48 +502,48 @@ public class MazeGenerator {
 
     public void GenerateGameModeObjectsCustom(Maze maze)
     {
-        TileItem startPointItem = null;
-        TileItem objectiveItem = null;
+        Tile tileStart = GetObjLocatedTile(maze, customStartPointItem);
+        Tile tileObjective = GetObjLocatedTile(maze, customObjectiveItem);
 
-        foreach (Transform child in m_customMazeObj.transform)
-        {
-            TileItem item = child.gameObject.GetComponent<TileItem>();
-
-            if (item == null)
-                continue;
-
-            if (item.itemType == ItemType.StartPoint)
-                startPointItem = item;
-
-            if (item.itemType == ItemType.Objective)
-                objectiveItem = item;
-        }
-
-        Tile tileStart = GetObjLocatedTile(maze, startPointItem.gameObject);
-        Tile tileObjective = GetObjLocatedTile(maze, objectiveItem.gameObject);
-
-        tileStart.SpawnTileItem(startPointItem.gameObject);
-        tileObjective.SpawnTileItem(objectiveItem.gameObject);
+        tileStart.SpawnTileItem(customStartPointItem);
+        tileObjective.SpawnTileItem(customObjectiveItem);
 
         levelManager.tileStart = tileStart;
         levelManager.tileObjective = tileObjective;
-
     }
     #endregion
 
     #region Spawn Maze Items
     public void GenerateMazeItem(Maze maze)
     {
-        // Calculate the number of items needed to spawn for this maze
-        int numItems = (int)Mathf.Floor(Mathf.Sqrt((maze.tile.GetLength(0) * maze.tile.GetLength(1) / 25)));
+        if (m_customItemPosition)
+            GenerateMazeItemCustom(maze);
+        else
+            GenerateMazeItemRandom(maze);
+    }
 
-        List<Tile> tiles = GetItemSpawnTiles(maze, numItems);
+    public void GenerateMazeItemRandom(Maze maze)
+    {
+        // Calculate the number of items needed to spawn for this maze
+        int numItems = Formula.CalculateItemChestNum(m_difficulty);
+        numItems = numItems < m_setting.bodyParts.Count ? numItems : m_setting.bodyParts.Count;
+
+        List <Tile> tiles = GetItemSpawnTiles(maze, numItems);
         List<BodyPart> partList = GetBodyPartList(numItems);
 
         for (int i = 0; i < numItems; i++)
         {
-            TileItem item = tiles[i].SpawnTileItem(m_setting.bodyPartItem.gameObject);
+            TileItem item = tiles[i].SpawnTileItem(itemChectPrefab);
             item.bodyPart = partList[i];
+        }
+    }
+
+    public void GenerateMazeItemCustom(Maze maze)
+    {
+        foreach (GameObject obj in customItemChestList)
+        {
+            Tile tile = GetObjLocatedTile(maze, obj);
+            tile.SpawnTileItem(obj);
         }
     }
 
@@ -584,6 +587,34 @@ public class MazeGenerator {
     #endregion
 
     #region Misc.
+    void UpdateCustomMazeObjList()
+    {
+        customTileObjList = new List<GameObject>();
+        customItemChestList = new List<GameObject>();
+
+        foreach (Transform child in m_customMazeObj.transform)
+        {
+            TileItem item = child.gameObject.GetComponent<TileItem>();
+
+            if (item == null)
+            {
+                customTileObjList.Add(child.gameObject);
+            }
+            else
+            {
+                if (item.itemType == ItemType.StartPoint)
+                    customStartPointItem = child.gameObject;
+
+                if (item.itemType == ItemType.Objective)
+                    customObjectiveItem = child.gameObject;
+
+                if (item.itemType == ItemType.BodyPart)
+                    if (item.bodyPart != null)
+                        customItemChestList.Add(child.gameObject);
+            }
+        }
+    }
+
     int GetObjX(GameObject obj)
     {
         return Mathf.FloorToInt(obj.transform.position.x / 10);

@@ -13,7 +13,7 @@ public class Tile : MonoBehaviour {
     //=======================================
     //      Variables
     //=======================================
-	private LevelManager levelManager;
+	LevelManager levelManager;
 
     // Coordinate info
 	public int X;
@@ -25,7 +25,7 @@ public class Tile : MonoBehaviour {
     public WallLayout wallLayout;
 
     // State
-	private TileState state = TileState.None;
+	TileState state = TileState.None;
 
     // Item
 	public TileItem item;

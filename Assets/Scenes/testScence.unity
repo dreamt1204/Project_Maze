@@ -154,8 +154,7 @@ MonoBehaviour:
   customMazeSize: 0
   mazeWidth: 10
   mazeLength: 10
-  customMazeObject: {fileID: 1754187230317282, guid: 0c8f2be7470a32747a015b514409f86f,
-    type: 2}
+  customMazeObject: {fileID: 0}
   customGameModePosition: 0
   customItemPosition: 0
   playerCharacterPrefab: {fileID: 1580977563646686, guid: b6007ed5a665c594f900229921919ff8,
@@ -163,6 +162,8 @@ MonoBehaviour:
   startPointPrefab: {fileID: 1319595478763322, guid: b84cedb6474764ae681a2ff96801b519,
     type: 2}
   objectivePrefab: {fileID: 1322906879363412, guid: f448fef0f8ba6419b89e1f5ac8315c1a,
+    type: 2}
+  ItemChectPrefab: {fileID: 1298702626922230, guid: d300446bd734be84fb5899f6f8607576,
     type: 2}
   tileStart: {fileID: 0}
   tileObjective: {fileID: 0}

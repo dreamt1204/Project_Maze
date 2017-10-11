@@ -6,7 +6,7 @@ public class UnitSpawner {
     //=======================================
     //      Variables
     //=======================================
-    private LevelManager levelManager;
+    LevelManager levelManager;
 
     public UnitSpawner()
     {
