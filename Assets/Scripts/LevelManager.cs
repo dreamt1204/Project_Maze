@@ -13,13 +13,23 @@ public class LevelManager : MonoBehaviour {
     private UnitSpawner unitSpawner;
 
     #region Inspector
-    [Header("Player Character")]
-    public GameObject playerCharacterPrefab;
-
     [Header("Maze")]
+    [Range(1, 100)]
+    public int mazeDifficulty = 1;
+    public MazeSetting mazeSetting;
+
+    [Header("Custom Maze")]
+    public bool customMazeSize;
     public int mazeWidth = 10;
     public int mazeLength = 10;
-    public MazeSetting mazeSetting;
+
+    [Space(15)]
+    public GameObject customMazeObject;
+    public bool customGameModePosition;
+    public bool customItemPosition;
+
+    [Header("Player Character")]
+    public GameObject playerCharacterPrefab;
 
     [Header("Game Mode")]
     public GameObject startPointPrefab;
@@ -52,14 +62,7 @@ public class LevelManager : MonoBehaviour {
 			Destroy(gameObject);
 
         // Get component reference to the attached script
-        mazeGenerator = new MazeGenerator
-                            (
-                                mazeWidth, 
-                                mazeLength, 
-                                mazeSetting, 
-                                startPointPrefab, 
-                                levelObjectivePrefab
-                             );
+        mazeGenerator = new MazeGenerator();
         unitSpawner = new UnitSpawner();
 
         // Start init the game
