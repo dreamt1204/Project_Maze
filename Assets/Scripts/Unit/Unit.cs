@@ -5,6 +5,11 @@ using UnityEngine;
 using Spine;
 using Spine.Unity;
 
+public enum BodyPartOwnerType
+{
+    PlayerCharacter,
+}
+
 public class Unit : MonoBehaviour {
     //=======================================
     //      Variables
@@ -39,7 +44,8 @@ public class Unit : MonoBehaviour {
         public BodyPart part;
     }
 
-    public BodyPartData[] BodyPart;
+    public BodyPartOwnerType ownerType;
+    public BodyPartData[] BodyParts;
 
     // Const
     private const float movementMultiplier = 0.15f;
@@ -100,13 +106,33 @@ public class Unit : MonoBehaviour {
     //---------------------------------------
     //      Body Part
     //---------------------------------------
-    public void UpdateBodyPart(BodyPart newPart)
+    public int GetBodyPartFitID(BodyPart newPart)
     {
-        for (int i = 0; i < BodyPart.Length; i++)
+        int id = -1;
+
+        if (newPart.ownerType != this.ownerType)
+            return id;
+
+        for (int i = 0; i < BodyParts.Length; i++)
         {
-            if (BodyPart[i].partType == newPart.partType)
-                BodyPart[i].part = newPart;
+            if (BodyParts[i].partType == newPart.partType)
+            {
+                id = i;
+                break;
+            }
         }
+
+        return id;
+    }
+
+    public void UpdateNewBodyPart(BodyPart newPart)
+    {
+        int id = GetBodyPartFitID(newPart);
+
+        if (id == -1)
+            return;
+
+        BodyParts[id].part = newPart;
 
         UpdateBody();
     }
@@ -116,7 +142,7 @@ public class Unit : MonoBehaviour {
         Skin newBody = new Skin("");
         SkeletonData skeletonData = skeletonAnim.skeletonDataAsset.GetSkeletonData(false);
 
-        foreach (BodyPartData data in BodyPart)
+        foreach (BodyPartData data in BodyParts)
         {
             // Assign body part via name
             if ((data.part != null) && (data.part.partType == data.partType))

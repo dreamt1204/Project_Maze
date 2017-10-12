@@ -6,8 +6,10 @@ public class BodyPart : MonoBehaviour {
     //=======================================
     //      Variables
     //=======================================
+    public BodyPartOwnerType ownerType;
     public string partType;
     public string partName;
+    public PlayerAbility playerAbility;
 
     //=======================================
     //      Functions

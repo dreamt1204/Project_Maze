@@ -368,7 +368,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   moveSpeed: 100
-  BodyPart:
+  BodyParts:
   - partType: Head
     part: {fileID: 0}
   - partType: Arms
