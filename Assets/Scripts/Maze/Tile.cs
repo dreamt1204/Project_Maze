@@ -111,7 +111,7 @@ public class Tile : MonoBehaviour {
         }
         else if (item.itemType == ItemType.BodyPart)
         {
-            levelManager.playerCharacter.UpdateNewBodyPart(item.bodyPart);
+            levelManager.playerCharacter.UpdateBodyPart(item.bodyPart);
             DestroyTileItem();
         }
     }

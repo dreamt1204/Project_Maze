@@ -45,7 +45,7 @@ public class Unit : MonoBehaviour {
     }
 
     public BodyPartOwnerType ownerType;
-    public BodyPartData[] BodyParts;
+    public List<BodyPartData> BodyParts;
 
     // Const
     private const float movementMultiplier = 0.15f;
@@ -74,7 +74,7 @@ public class Unit : MonoBehaviour {
     void Start()
     {
         skeletonAnim = GetComponentInChildren<SkeletonAnimation>();
-
+        InitBodyParts();
         UpdateBody();
     }
 
@@ -82,7 +82,7 @@ public class Unit : MonoBehaviour {
 	{
 		levelManager = lm;
 		CurrentTile = spawnTile;
-	}
+    }
 
     public virtual void Update()
     {
@@ -106,16 +106,28 @@ public class Unit : MonoBehaviour {
     //---------------------------------------
     //      Body Part
     //---------------------------------------
-    public int GetBodyPartFitID(BodyPart newPart)
+    public BodyPart GetBodyPartWithType(string partType)
+    {
+        BodyPart part = null;
+
+        foreach (BodyPartData data in BodyParts)
+        {
+            if (data.partType == partType)
+            {
+                part = data.part;
+            }
+        }
+
+        return part;
+    }
+
+    public int GetBodyPartIDWithType(string partType)
     {
         int id = -1;
 
-        if (newPart.ownerType != this.ownerType)
-            return id;
-
-        for (int i = 0; i < BodyParts.Length; i++)
+        for (int i = 0; i < BodyParts.Count; i++)
         {
-            if (BodyParts[i].partType == newPart.partType)
+            if (BodyParts[i].partType == partType)
             {
                 id = i;
                 break;
@@ -125,14 +137,48 @@ public class Unit : MonoBehaviour {
         return id;
     }
 
-    public void UpdateNewBodyPart(BodyPart newPart)
+    public virtual void InitBodyParts()
     {
-        int id = GetBodyPartFitID(newPart);
+        // Child unit class can force init BodyParts or specific stuff here
+    }
 
-        if (id == -1)
-            return;
+    public void InitBodyPartData(string partType)
+    {
+        foreach (BodyPartData data in BodyParts)
+        {
+            if (data.partType == partType)
+                return;
+        }
 
-        BodyParts[id].part = newPart;
+        BodyPartData newData = new BodyPartData();
+        newData.partType = partType;
+        newData.part = null;
+
+        BodyParts.Add(newData);
+    }
+
+    public void UpdateBodyPart(BodyPart newPart)
+    {
+        if (newPart.ownerType != this.ownerType) return;
+
+        int id = GetBodyPartIDWithType(newPart.partType);
+        if (id == -1) return;
+
+        BodyPartData newData = BodyParts[id];
+        newData.part = newPart;
+        BodyParts[id] = newData;
+
+        UpdateBody();
+    }
+
+    public void RemoveBodyPart(string partType)
+    {
+        int id = GetBodyPartIDWithType(partType);
+        if (id == -1) return;
+
+        BodyPartData newData = BodyParts[id];
+        newData.part = null;
+        BodyParts[id] = newData;
 
         UpdateBody();
     }
@@ -146,7 +192,9 @@ public class Unit : MonoBehaviour {
         {
             // Assign body part via name
             if ((data.part != null) && (data.part.partType == data.partType))
+            {
                 AddSkinEntries(skeletonData.FindSkin(data.part.partName), newBody);
+            }
             // Try assign the default body part
             else
             {
@@ -154,6 +202,8 @@ public class Unit : MonoBehaviour {
                 if (defaultPart != null)
                     AddSkinEntries(defaultPart, newBody);
             }
+
+            BodyPartUpdatedEvent(data.partType);
         }
 
         // Now that your custom generated skin is complete, assign it to the skeleton...
@@ -173,6 +223,10 @@ public class Unit : MonoBehaviour {
             destinationAttachments[m.Key] = m.Value;
     }
 
+    public virtual void BodyPartUpdatedEvent(string partType)
+    {
+        // Child unit class can update specific BodyPart stuff here
+    }
 
     //---------------------------------------
     //      Movement
