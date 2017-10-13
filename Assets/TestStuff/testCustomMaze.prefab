@@ -2869,4 +2869,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Item Chest
   itemType: 3
-  bodyPart: {fileID: 114328909136846850, guid: fbc31bf91877dcf4f9c5be130530b7f4, type: 2}
+  bodyPart: {fileID: 114192243277182530, guid: d8227cf042c825d41a03248a8d61eed6, type: 2}

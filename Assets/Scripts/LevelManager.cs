@@ -26,13 +26,13 @@ public class LevelManager : MonoBehaviour {
     [Space(15)]
     public GameObject customMazeObject;
     public bool customGameModePosition;
-    public bool customItemPosition;
+    public bool customBodyPartChestPosition;
 
     [Header("Required Prefabs")]
     public GameObject playerCharacterPrefab;
     public GameObject startPointPrefab;
     public GameObject objectivePrefab;
-    public GameObject ItemChectPrefab;
+    public GameObject BodyPartChestPrefab;
     #endregion
 
     // Global variables

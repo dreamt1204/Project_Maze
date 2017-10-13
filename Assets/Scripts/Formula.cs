@@ -10,7 +10,7 @@ public static class Formula
         return mazeWidth;
     }
 
-    public static int CalculateItemChestNum(int mazeDifficulty)
+    public static int CalculateBodyPartChestNum(int mazeDifficulty)
     {
         int numItems = Mathf.CeilToInt(CalculateMazeSideSize(mazeDifficulty) / 10.0f);
         return numItems;

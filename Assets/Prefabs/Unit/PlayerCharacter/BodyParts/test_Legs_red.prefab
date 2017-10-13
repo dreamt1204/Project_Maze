@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4192597206422316}
   - component: {fileID: 114192243277182530}
   m_Layer: 0
-  m_Name: test_Feet_red
+  m_Name: test_Legs_red
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51,5 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe80b70ffa128c04c8345c59713eaa5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  partType: Feet
-  partName: Feet_red
+  ownerType: 0
+  partType: Legs
+  partName: Legs_red
+  playerAbility: {fileID: 0}

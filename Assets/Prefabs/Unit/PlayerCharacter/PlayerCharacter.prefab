@@ -368,6 +368,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   moveSpeed: 100
+  ownerType: 0
   BodyParts:
   - partType: Head
     part: {fileID: 0}
@@ -375,7 +376,7 @@ MonoBehaviour:
     part: {fileID: 0}
   - partType: Body
     part: {fileID: 0}
-  - partType: Feet
+  - partType: Legs
     part: {fileID: 0}
   - partType: Misc
     part: {fileID: 0}

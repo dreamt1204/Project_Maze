@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 4021055538639728}
   - component: {fileID: 114998940527041774}
   m_Layer: 0
-  m_Name: ItemChest
+  m_Name: BodyPartChest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -599,14 +599,14 @@ MonoBehaviour:
   mazeLength: 10
   customMazeObject: {fileID: 0}
   customGameModePosition: 0
-  customItemPosition: 0
+  customBodyPartChestPosition: 0
   playerCharacterPrefab: {fileID: 1580977563646686, guid: b6007ed5a665c594f900229921919ff8,
     type: 2}
   startPointPrefab: {fileID: 1319595478763322, guid: b84cedb6474764ae681a2ff96801b519,
     type: 2}
   objectivePrefab: {fileID: 1322906879363412, guid: f448fef0f8ba6419b89e1f5ac8315c1a,
     type: 2}
-  ItemChectPrefab: {fileID: 1298702626922230, guid: d300446bd734be84fb5899f6f8607576,
+  BodyPartChestPrefab: {fileID: 1298702626922230, guid: d300446bd734be84fb5899f6f8607576,
     type: 2}
   tileStart: {fileID: 0}
   tileObjective: {fileID: 0}
@@ -1432,57 +1432,6 @@ MonoBehaviour:
   mAtlas: {fileID: 114305812388705888, guid: e7c264a69e91524488de5d039c99530f, type: 2}
   mSpriteName: Amulet-Icon
   mFillCenter: 1
---- !u!1001 &1587687358
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4348790403788062, guid: 2a17e678af9685647aad001069a7cea4, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4348790403788062, guid: 2a17e678af9685647aad001069a7cea4, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4348790403788062, guid: 2a17e678af9685647aad001069a7cea4, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4348790403788062, guid: 2a17e678af9685647aad001069a7cea4, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4348790403788062, guid: 2a17e678af9685647aad001069a7cea4, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4348790403788062, guid: 2a17e678af9685647aad001069a7cea4, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4348790403788062, guid: 2a17e678af9685647aad001069a7cea4, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4348790403788062, guid: 2a17e678af9685647aad001069a7cea4, type: 2}
-      propertyPath: m_RootOrder
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 33957639883367842, guid: 2a17e678af9685647aad001069a7cea4,
-        type: 2}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1635750514316910, guid: 2a17e678af9685647aad001069a7cea4, type: 2}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 2a17e678af9685647aad001069a7cea4, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &1676265926
 GameObject:
   m_ObjectHideFlags: 0
