@@ -140,7 +140,7 @@ public class Enemy : Unit {
 
 	// When player vanish from sensed regions, check the tile where Player was heading towards.
 	void PredictPlayerTile(){
-		tileToCheck = levelManager.maze.GetDirNeighborTile (tilePlayerLastLocated, dirPlayerLastLocated);
+		tileToCheck = Maze.GetDirNeighborTile (tilePlayerLastLocated, dirPlayerLastLocated);
 	}
 
 

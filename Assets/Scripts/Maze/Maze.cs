@@ -178,8 +178,7 @@ public class Maze  {
 
         return newList;
     }
-
-<<<<<<< HEAD
+		
 
 
 
@@ -223,7 +222,6 @@ public class Maze  {
 	}
 
 
-=======
     //---------------------------------------
     //      Tile state
     //---------------------------------------
@@ -266,5 +264,5 @@ public class Maze  {
         }
     }
     #endregion
->>>>>>> master
+
 }

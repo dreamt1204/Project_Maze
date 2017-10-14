@@ -11,24 +11,12 @@ public class LevelManager : MonoBehaviour {
     // Helper classes
     private MazeGenerator mazeGenerator;
     private UnitSpawner unitSpawner;
+	private EnemyManager enemyManager;
 
     #region Inspector
     [Header("Player Character")]
     public GameObject playerCharacterPrefab;
 
-<<<<<<< HEAD
-	private EnemyManager enemyManager;
-
-	// Global variables
-	[HideInInspector]
-	public Maze maze;
-	[HideInInspector]
-	public PlayerCharacter playerCharacter;
-	[HideInInspector]
-	public Enemy[] enemy;
-    [HideInInspector]
-	public Tile startTile;  // JY added public accessibility; enemyManager need this info to avoid spawning around start tile
-=======
     [Header("Maze")]
     public int mazeWidth = 10;
     public int mazeLength = 10;
@@ -41,6 +29,11 @@ public class LevelManager : MonoBehaviour {
     [Header("Items")]
     public bool useItemGenerateLogic;
     public int numberOfItems;
+
+	[Header("Enemy Spawning")]
+	public InitSpawnMethod spawnMethod;
+	public int spawnQuantity;
+	public int safeRadius;
     #endregion
 
     // Global variables
@@ -48,11 +41,12 @@ public class LevelManager : MonoBehaviour {
 	public Maze maze;
     [HideInInspector]
     public Tile tileStart;
->>>>>>> master
     [HideInInspector]
     public Tile tileObjective;
     [HideInInspector]
     public PlayerCharacter playerCharacter;
+	[HideInInspector]
+	public List<Enemy> enemies;
 
     // State variables
     private bool finsiedInit = false;
@@ -67,20 +61,6 @@ public class LevelManager : MonoBehaviour {
 		if (instance == null)
 			instance = this;
 		else if (instance != this)
-<<<<<<< HEAD
-			Destroy(gameObject);    
-
-		// Sets this to not be destroyed when reloading scene
-		DontDestroyOnLoad(gameObject);
-
-		// Get component reference to the attached script
-		mazeGenerator = GetComponent<MazeGenerator>();
-
-		enemyManager = GetComponent<EnemyManager> ();
-
-		// Start init the game
-		InitGame();
-=======
 			Destroy(gameObject);
 
         // Get component reference to the attached script
@@ -93,10 +73,15 @@ public class LevelManager : MonoBehaviour {
                                 levelObjectivePrefab
                              );
         unitSpawner = new UnitSpawner();
+		enemyManager = new EnemyManager
+			(
+				spawnMethod,
+				spawnQuantity,
+				safeRadius
+			);
 
         // Start init the game
         InitGame();
->>>>>>> master
     }
 
     // Game init function
@@ -106,11 +91,7 @@ public class LevelManager : MonoBehaviour {
         maze = mazeGenerator.GenerateMaze();
 
 		// Spawn enemies
-<<<<<<< HEAD
-		SpawnInitEnemies();
-=======
-		// (WIP......)
->>>>>>> master
+		enemies = enemyManager.SpawnInitEnemies ();
 
 		// Spawn player character
 		playerCharacter = unitSpawner.SpawnPlayerCharacter(tileStart);
@@ -119,22 +100,9 @@ public class LevelManager : MonoBehaviour {
         finsiedInit = true;
     }
 
-<<<<<<< HEAD
-	//---------------------------------------
-	//      Maze
-	//---------------------------------------
-	public void GenerateMaze()
-    {
-		maze = mazeGenerator.BuildMaze();
-    }
-
 	//---------------------------------------
 	//      Unit spawn functions
 	//---------------------------------------
-	public void SpawnStartingCharacter()
-	{
-		playerCharacter = SpawnPlayerCharacter(playerCharacterPrefab, startTile);
-	}
 
 	public PlayerCharacter SpawnPlayerCharacter(GameObject prefab, Tile targetTile)
 	{
@@ -146,11 +114,10 @@ public class LevelManager : MonoBehaviour {
 
 	public void SpawnInitEnemies()
 	{
-		enemyManager.SpawnInitEnemies ();
+		
 	}
 
-=======
->>>>>>> master
+
     //---------------------------------------
     //      Game Mode
     //---------------------------------------
