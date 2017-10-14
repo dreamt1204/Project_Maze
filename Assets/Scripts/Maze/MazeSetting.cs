@@ -23,10 +23,13 @@ public class MazeSetting : MonoBehaviour {
     public GameObject[] TileLayoutL = new GameObject[1];
     public GameObject[] TileLayoutC = new GameObject[1];
 
+    [Header("Item Set")]
+    public List<BodyPart> bodyParts;
+
     //=======================================
     //      Functions
     //=======================================   
-	public GameObject GetWallLayoutObj(WallLayout wallLayout)
+    public GameObject GetWallLayoutObj(WallLayout wallLayout)
 	{
 		GameObject obj;
 

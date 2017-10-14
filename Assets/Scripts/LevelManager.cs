@@ -14,18 +14,22 @@ public class LevelManager : MonoBehaviour {
 	private EnemyManager enemyManager;
 
     #region Inspector
-    [Header("Player Character")]
-    public GameObject playerCharacterPrefab;
-
     [Header("Maze")]
-    public int mazeWidth = 10;
-    public int mazeLength = 10;
+    [Range(1, 100)]
+    public int mazeDifficulty = 1;
     public MazeSetting mazeSetting;
 
-    [Header("Game Mode")]
-    public GameObject startPointPrefab;
-    public GameObject levelObjectivePrefab;
+    [Header("Custom Maze (Optional)")]
+    public bool customMazeSize;
+    public int mazeWidth = 10;
+    public int mazeLength = 10;
 
+    [Space(15)]
+    public GameObject customMazeObject;
+    public bool customGameModePosition;
+    public bool customBodyPartChestPosition;
+
+<<<<<<< HEAD
     [Header("Items")]
     public bool useItemGenerateLogic;
     public int numberOfItems;
@@ -34,6 +38,13 @@ public class LevelManager : MonoBehaviour {
 	public InitSpawnMethod spawnMethod;
 	public int spawnQuantity;
 	public int safeRadius;
+=======
+    [Header("Required Prefabs")]
+    public GameObject playerCharacterPrefab;
+    public GameObject startPointPrefab;
+    public GameObject objectivePrefab;
+    public GameObject BodyPartChestPrefab;
+>>>>>>> Henry_Ability
     #endregion
 
     // Global variables
@@ -64,14 +75,7 @@ public class LevelManager : MonoBehaviour {
 			Destroy(gameObject);
 
         // Get component reference to the attached script
-        mazeGenerator = new MazeGenerator
-                            (
-                                mazeWidth, 
-                                mazeLength, 
-                                mazeSetting, 
-                                startPointPrefab, 
-                                levelObjectivePrefab
-                             );
+        mazeGenerator = new MazeGenerator();
         unitSpawner = new UnitSpawner();
 		enemyManager = new EnemyManager
 			(

@@ -6,33 +6,54 @@ public class MazeGenerator {
     //=======================================
     //      Variables
     //=======================================
-    private LevelManager levelManager;
+    LevelManager levelManager;
 
-    // Maze Layout
-    private int width;
-    private int length;
-    private MazeSetting m_setting;
+    // Maze
+    int m_difficulty;
+    MazeSetting m_setting;
+
+    // Custom Maze Option
+    bool m_customMazeSize;
+    int m_width;
+    int m_length;
+    GameObject m_customMazeObj;
+    bool m_customGameModePosition;
+    bool m_customBodyPartChestPosition;
+
+    // Custom maze object variables
+    List<GameObject> customTileObjList;
+    GameObject customStartPointItem;
+    GameObject customObjectiveItem;
+    List<GameObject> customBodyPartChestList;
 
     // Game mode
-    private GameObject startPrefab;
-    private GameObject objPrefab;
-
-    // Items
-    private bool useItemGenerateLogic;
-    private int numberOfItems;
+    GameObject startPrefab;
+    GameObject objPrefab;
+    GameObject BodyPartChestPrefab;
 
     //=======================================
     //      Struct
     //=======================================
-    public MazeGenerator(int mazeWidth, int mazeLength, MazeSetting mazeSetting, GameObject startPointPrefab, GameObject levelObjectivePrefa)
+    public MazeGenerator()
     {
         levelManager = LevelManager.GetLevelManager();
 
-        width = mazeWidth;
-        length = mazeLength;
-        m_setting = mazeSetting;
-        startPrefab = startPointPrefab;
-        objPrefab = levelObjectivePrefa;
+        // Maze
+        m_difficulty = levelManager.mazeDifficulty;
+        m_setting = levelManager.mazeSetting;
+
+        // Custom Maze Option
+        m_customMazeSize = levelManager.customMazeSize;
+        m_width = levelManager.mazeWidth;
+        m_length = levelManager.mazeLength;
+        m_customMazeObj = levelManager.customMazeObject;
+        m_customGameModePosition = levelManager.customGameModePosition;
+        m_customBodyPartChestPosition = levelManager.customBodyPartChestPosition;
+
+        // Prefabs
+        startPrefab = levelManager.startPointPrefab;
+        objPrefab = levelManager.objectivePrefab;
+        BodyPartChestPrefab = levelManager.BodyPartChestPrefab;
     }
 
     //=======================================
@@ -40,40 +61,122 @@ public class MazeGenerator {
     //======================================= 
     public Maze GenerateMaze()
     {
-        Maze maze = BuildPlainMaze();
+        Maze maze = BuildMaze();
         GenerateGameModeObjects(maze);
-        GenerateMazeItem(maze);
+        GenerateMazeBodyPartChest(maze);
 
         return maze;
     }
 
-    #region Functions: Generate empty maze with wall layout
+    #region Build maze layout
     // Public function that generates empty maze with wall layout
-    public Maze BuildPlainMaze()
+    Maze BuildMaze()
     {
-        MazeBlueprint mazeBP = new MazeBlueprint(width, length);
-		GameObject mazeObj = new GameObject (){name = "Maze"};
-        //mazeObj.transform.position = new Vector3(0, -0.5f, 0);
-        Maze maze = new Maze(width, length);
+        Maze maze;
 
-        for (int i = 0; i < width; i++)
+        if (m_customMazeObj != null)
+            maze = GenerateMaze_Custom();
+        else
+            maze = GenerateMaze_Random();
+
+        return maze;
+    }
+
+    // Generate random maze using Kruskal's algorithm
+    Maze GenerateMaze_Random()
+    {
+        if (!m_customMazeSize)
+            m_width = m_length = Formula.CalculateMazeSideSize(m_difficulty);
+
+        Maze maze = new Maze(m_width, m_length);
+        GameObject mazeObj = new GameObject() { name = "Maze" };
+        MazeBlueprint mazeBP = new MazeBlueprint(m_width, m_length);
+
+        for (int i = 0; i < m_width; i++)
         {
-			for (int j = 0; j < length; j++)
+            for (int j = 0; j < m_length; j++)
             {
-				maze.tile[i, j] = GenerateTile (i, j, mazeBP);
-				maze.tile[i, j].transform.parent = mazeObj.transform;
+                maze.tile[i, j] = GenerateTileWithBlueprint(i, j, mazeBP);
+                maze.tile[i, j].transform.parent = mazeObj.transform;
                 maze.tileList.Add(maze.tile[i, j]);
             }
         }
 
+<<<<<<< HEAD
 		//********* JY added ********//
 		maze.updateTileList(); // has to update tileList with new pointers/references created by "GenerateTile"
 
 		return maze;
+=======
+        return maze;
+>>>>>>> Henry_Ability
     }
 
+    // Generate maze using custom game object
+    Maze GenerateMaze_Custom()
+    {
+        // Calculate the maze size then init a new maze
+        Maze maze;
+        int mazeWidth = 0;
+        int mazeLength = 0;
+
+        UpdateCustomMazeObjList();
+
+        foreach (GameObject obj in customTileObjList)
+        {
+            // Gather tile data from preset tile object
+            int X = GetObjX(obj);
+            mazeWidth = mazeWidth > (X + 1) ? mazeWidth : (X + 1);
+            int Z = GetObjZ(obj);
+            mazeLength = mazeLength > (Z + 1) ? mazeLength : (Z + 1);
+        }
+
+        maze = new Maze(mazeWidth, mazeLength);
+
+        // Spawn and init each preset tile from the custom maze object
+        GameObject mazeObj = new GameObject() { name = "Maze" };
+        foreach (GameObject obj in customTileObjList)
+        {
+            // Gather tile data from preset tile object
+            int X = GetObjX(obj);
+            int Z = GetObjZ(obj);
+            int rotCount = Mathf.FloorToInt(obj.transform.eulerAngles.y / 90);
+            rotCount = rotCount < 4 ? rotCount : (rotCount - 4);
+            WallLayout wallLayout = GetWallLayoutFromObj(obj);
+            bool[] wall = GetWallInfoFromObj(obj, rotCount);
+
+            // Spawn tile object
+            GameObject tileObj = GameObject.Instantiate(obj, new Vector3(X * 10, -0, Z * 10), Quaternion.Euler(0, 90 * rotCount, 0));
+            tileObj.name = "Tile [" + X + "]" + "[" + Z + "] " + "(" + wallLayout + ")";
+            tileObj.AddComponent<Tile>();
+
+            // Generate Tile class data
+            Tile tile = tileObj.GetComponent<Tile>();
+            tile.X = X;
+            tile.Z = Z;
+            tile.wall = wall;
+            tile.wallLayout = wallLayout;
+            AssignWallObjToTile(tile, wallLayout, rotCount);
+
+            // Group tile
+            tile.transform.parent = mazeObj.transform;
+            maze.tile[X, Z] = tile;
+        }
+
+        for (int i = 0; i < mazeWidth; i++)
+        {
+            for (int j = 0; j < mazeLength; j++)
+            {
+                maze.tileList.Add(maze.tile[i, j]);
+            }
+        }
+
+        return maze;
+    }
+
+    #region Misc functions for generating maze
     // Generate script tile based on maze blueprint
-    public Tile GenerateTile(int X, int Z, MazeBlueprint mazeBP)
+    Tile GenerateTileWithBlueprint(int X, int Z, MazeBlueprint mazeBP)
     {
 		bool[] wall = new bool[4];
 		int nbWalls = 0;
@@ -121,10 +224,111 @@ public class MazeGenerator {
         return tile;
     }
 
+    // A maze blueprint class with constructor.
+    // Once taking maze size as input, it generates wall arrays using Kruskal's algorithm.
+    // The wall array can be used to build maze tile later.
+    class MazeBlueprint
+    {
+        public int m_length = 10;
+        public int m_width = 10;
+        public bool[,] wall_v;  // X, Z
+        public bool[,] wall_h;  // X, Z
+        public int[,] cell;     // X, Z  cell is the id of each inclosed section in Kruskal's algorithm.
+
+        public MazeBlueprint(int width, int length)
+        {
+            // Setup maze blueprint with input size
+            m_width = width;
+            m_length = length;
+            wall_v = new bool[m_width + 1, m_length];
+            wall_h = new bool[m_width, m_length + 1];
+            cell = new int[m_width, m_length];
+            for (int i = 0; i < wall_v.GetLength(0); i++)
+            {
+                for (int j = 0; j < wall_v.GetLength(1); j++)
+                    wall_v[i, j] = true;
+            }
+            for (int i = 0; i < wall_h.GetLength(0); i++)
+            {
+                for (int j = 0; j < wall_h.GetLength(1); j++)
+                    wall_h[i, j] = true;
+            }
+            for (int i = 0; i < m_width; i++)
+            {
+                for (int j = 0; j < m_length; j++)
+                {
+                    cell[i, j] = m_width * j + i;
+                }
+            }
+
+            // Run Kruskal's algorithm to remove walls and get a perfect maze layout
+            GenerateBPLayout();
+        }
+
+        // Generate maze blueprint using kruskal's algorithm
+        private void GenerateBPLayout()
+        {
+            while (true)
+            {
+                int[] repl;
+
+                if (Random.Range(0, 2) >= 1)
+                {
+                    int x = Random.Range(1, wall_v.GetLength(0) - 1);
+                    int z = Random.Range(0, wall_v.GetLength(1));
+                    if (cell[x, z] == cell[x - 1, z])
+                        continue;
+                    repl = new int[] { cell[x, z], cell[x - 1, z] };
+                    wall_v[x, z] = false;
+                }
+                else
+                {
+                    int x = Random.Range(0, wall_h.GetLength(0));
+                    int z = Random.Range(1, wall_h.GetLength(1) - 1);
+                    if (cell[x, z] == cell[x, z - 1])
+                        continue;
+                    repl = new int[] { cell[x, z], cell[x, z - 1] };
+                    wall_h[x, z] = false;
+                }
+                System.Array.Sort(repl);
+                ReplaceIDs(repl);
+                if (IDsAllZero(repl) == true)
+                    break;
+            }
+        }
+
+        private void ReplaceIDs(int[] repl)
+        {
+            for (int w = 0; w < m_width; w++)
+            {
+                for (int l = 0; l < m_length; l++)
+                {
+                    if (cell[w, l] == repl[1])
+                        cell[w, l] = repl[0];
+                }
+            }
+        }
+
+        private bool IDsAllZero(int[] repl)
+        {
+            if (repl[0] != 0 && repl[1] != 0)
+                return false;
+            for (int w = 0; w < m_width; w++)
+            {
+                for (int l = 0; l < m_length; l++)
+                {
+                    if (cell[w, l] != 0)
+                        return false;
+                }
+            }
+            return true;
+        }
+    }
+
     // Instead of creating multiple type of wall layout, we rotate existing object to match the wall layout.
     // This function calculate the rotCount that can be used later to spawn the wall layout.
     // ex: Quaternion.Euler (0, 90 * rotCount, 0))
-    private int GetLayoutRotationCount(bool[] walls, WallLayout wallLayout)
+    int GetLayoutRotationCount(bool[] walls, WallLayout wallLayout)
 	{
 		int count = 0;
 
@@ -162,7 +366,7 @@ public class MazeGenerator {
 	}
 
     // Store wall object in tile class
-    private void AssignWallObjToTile(Tile tile, WallLayout wallLayout, int rotCount)
+    void AssignWallObjToTile(Tile tile, WallLayout wallLayout, int rotCount)
     {
 		if (wallLayout == WallLayout.O)
 			return;
@@ -197,9 +401,94 @@ public class MazeGenerator {
 			}
 		}
     }
+
+    int GetWallCountFromObj(GameObject tileObj)
+    {
+        int count = 0;
+
+        foreach (Transform child in tileObj.transform)
+        {
+            if (child.name.Contains("Wall_"))
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    WallLayout GetWallLayoutFromObj(GameObject tileObj)
+    {
+        WallLayout layout = WallLayout.O;
+
+        int wallCount = GetWallCountFromObj(tileObj);
+
+        if (wallCount == 3)
+        {
+            layout = WallLayout.C;
+        }
+        else if (wallCount == 2)
+        {
+            int wallAngle_1 = Mathf.FloorToInt(tileObj.transform.Find("Wall_1").transform.eulerAngles.y / 90);
+            int wallAngle_2 = Mathf.FloorToInt(tileObj.transform.Find("Wall_2").transform.eulerAngles.y / 90);
+            wallAngle_1 = wallAngle_1 > 180 ? (wallAngle_1 - 180) : wallAngle_1;
+            wallAngle_2 = wallAngle_2 > 180 ? (wallAngle_2 - 180) : wallAngle_2;
+
+            if (wallAngle_1 == wallAngle_2)
+            {
+                layout = WallLayout.II;
+            }
+            else
+            {
+                layout = WallLayout.L;
+            }
+        }
+        else if (wallCount == 1)
+        {
+            layout = WallLayout.I;
+        }
+
+        return layout;
+    }
+
+    bool[] GetWallInfoFromObj(GameObject tileObj, int rotCount)
+    {
+        bool[] wall = new bool[4];
+
+        int wallCount = GetWallCountFromObj(tileObj);
+        WallLayout layout = GetWallLayoutFromObj(tileObj);
+
+        if (layout == WallLayout.II)
+        {
+            wall[rotCount] = true;
+            rotCount = rotCount + 2 < 4 ? (rotCount + 2) : (rotCount + 2 - 4);
+            wall[rotCount] = true;
+        }
+        else
+        {
+            for (int i = 0; i < wallCount; i++)
+            {
+                wall[rotCount] = true;
+                rotCount = rotCount + 1 < 4 ? (rotCount + 1) : (rotCount + 1 - 4);
+            }
+        }
+
+        return wall;
+    }
     #endregion
 
+    #endregion
+
+    #region Spawn Game Objects
     public void GenerateGameModeObjects(Maze maze)
+    {
+        if (m_customGameModePosition)
+            GenerateGameModeObjects_Custom(maze);
+        else
+            GenerateGameModeObjects_Random(maze);
+    }
+
+    public void GenerateGameModeObjects_Random(Maze maze)
     {
         Tile tileStart, tileObj;
         tileStart = Maze.GetRandomTileFromList(maze.tileList);
@@ -218,7 +507,54 @@ public class MazeGenerator {
         levelManager.tileObjective = tileObj;
     }
 
-    public void GenerateMazeItem(Maze maze)
+    public void GenerateGameModeObjects_Custom(Maze maze)
+    {
+        Tile tileStart = GetObjLocatedTile(maze, customStartPointItem);
+        Tile tileObjective = GetObjLocatedTile(maze, customObjectiveItem);
+
+        tileStart.SpawnTileItem(customStartPointItem);
+        tileObjective.SpawnTileItem(customObjectiveItem);
+
+        levelManager.tileStart = tileStart;
+        levelManager.tileObjective = tileObjective;
+    }
+    #endregion
+
+    #region Spawn Maze Items (BodyPartChest, Pickups...etc.)
+    public void GenerateMazeBodyPartChest(Maze maze)
+    {
+        if (m_customBodyPartChestPosition)
+            GenerateMazeBodyPartChest_Custom(maze);
+        else
+            GenerateMazeBodyPartChest_Random(maze);
+    }
+
+    public void GenerateMazeBodyPartChest_Random(Maze maze)
+    {
+        // Calculate the number of items needed to spawn for this maze
+        int numChests = Formula.CalculateBodyPartChestNum(m_difficulty);
+        numChests = numChests < m_setting.bodyParts.Count ? numChests : m_setting.bodyParts.Count;
+
+        List <Tile> tiles = GetItemSpawnTiles(maze, numChests);
+        List<BodyPart> partList = GetBodyPartList(numChests);
+
+        for (int i = 0; i < numChests; i++)
+        {
+            TileItem item = tiles[i].SpawnTileItem(BodyPartChestPrefab);
+            item.bodyPart = partList[i];
+        }
+    }
+
+    public void GenerateMazeBodyPartChest_Custom(Maze maze)
+    {
+        foreach (GameObject obj in customBodyPartChestList)
+        {
+            Tile tile = GetObjLocatedTile(maze, obj);
+            tile.SpawnTileItem(obj);
+        }
+    }
+
+    public List<Tile> GetItemSpawnTiles(Maze maze, int numChests)
     {
         List<Tile> orgs = new List<Tile>();
         orgs.Add(levelManager.tileStart);
@@ -229,108 +565,76 @@ public class MazeGenerator {
         exclusiveList.Add(levelManager.tileObjective);
 
         List<Tile> tileList = Maze.UpdateTileListWithDistanceCondition(maze.tileList, orgs, (int)Mathf.Floor(maze.tile.GetLength(0) / 2));
-        tileList = Maze.UpdateTileListWithExclusiveList(maze.tileList, exclusiveList);
+        tileList = Maze.UpdateTileListWithExclusiveList(tileList, exclusiveList);
         tileList = Maze.UpdateTileListWithDesiredWallLayout(tileList, WallLayout.C);
-    }
-}
 
-// A maze blueprint class with constructor.
-// Once taking maze size as input, it generates wall arrays using Kruskal's algorithm.
-// The wall array can be used to build maze tile later.
-public class MazeBlueprint
-{
-    public int m_length = 10;
-    public int m_width = 10;
-    public bool[,] wall_v;	// X, Z
-	public bool[,] wall_h;	// X, Z
-	public int[,] cell;		// X, Z  cell is the id of each inclosed section in Kruskal's algorithm.
+        List<Tile> newList = new List<Tile>();
+        int[] randomNumbers = Utilities.GetRandomUniqueNumbers(numChests, tileList.Count);
+        for (int i = 0; i < numChests; i++)
+        {
+            newList.Add(tileList[randomNumbers[i]]);
+        }
+
+        return newList;
+    }
     
-    public MazeBlueprint(int width, int length)
+    public List<BodyPart> GetBodyPartList(int numItems)
     {
-		// Setup maze blueprint with input size
-		m_width = width;
-		m_length = length;
-		wall_v = new bool[m_width + 1, m_length];
-		wall_h = new bool[m_width, m_length + 1];
-		cell = new int[m_width, m_length];
-        for (int i = 0; i < wall_v.GetLength(0); i++)
+        List<BodyPart> newList = new List<BodyPart>();
+
+        int[] randomNumbers = Utilities.GetRandomUniqueNumbers(numItems, m_setting.bodyParts.Count);
+
+        for (int i = 0; i < numItems; i++)
         {
-            for (int j = 0; j < wall_v.GetLength(1); j++)
-                wall_v[i, j] = true;
-        }
-        for (int i = 0; i < wall_h.GetLength(0); i++)
-        {
-            for (int j = 0; j < wall_h.GetLength(1); j++)
-                wall_h[i, j] = true;
-        }
-        for (int i = 0; i < m_width; i++)
-        {
-            for (int j = 0; j < m_length; j++)
-            {
-                cell[i, j] = m_width * j + i;
-            }
+            newList.Add(m_setting.bodyParts[randomNumbers[i]]);
         }
 
-		// Run Kruskal's algorithm to remove walls and get a perfect maze layout
-        GenerateBPLayout();
+        return newList;
     }
+    #endregion
 
-    // Generate maze blueprint using kruskal's algorithm
-    private void GenerateBPLayout()
+    #region Misc.
+    void UpdateCustomMazeObjList()
     {
-        while (true)
-        {
-            int[] repl;
+        customTileObjList = new List<GameObject>();
+        customBodyPartChestList = new List<GameObject>();
 
-            if (Random.Range(0, 2) >= 1)
+        foreach (Transform child in m_customMazeObj.transform)
+        {
+            TileItem item = child.gameObject.GetComponent<TileItem>();
+
+            if (item == null)
             {
-                int x = Random.Range(1, wall_v.GetLength(0) - 1);
-				int z = Random.Range(0, wall_v.GetLength(1));
-				if (cell[x, z] == cell[x - 1, z])
-                    continue;
-				repl = new int[] { cell[x, z], cell[x - 1, z] };
-                wall_v[x, z] = false;
+                customTileObjList.Add(child.gameObject);
             }
             else
             {
-				int x = Random.Range(0, wall_h.GetLength(0));
-				int z = Random.Range(1, wall_h.GetLength(1) - 1);
-				if (cell[x, z] == cell[x, z - 1])
-                    continue;
-				repl = new int[] { cell[x, z], cell[x, z - 1] };
-                wall_h[x, z] = false;
-            }
-            System.Array.Sort(repl);
-            ReplaceIDs(repl);
-            if (IDsAllZero(repl) == true)
-                break;
-        }
-    }
+                if (item.itemType == ItemType.StartPoint)
+                    customStartPointItem = child.gameObject;
 
-    private void ReplaceIDs(int[] repl)
-    {
-        for (int w = 0; w < m_width; w++)
-        {
-            for (int l = 0; l < m_length; l++)
-            {
-                if (cell[w, l] == repl[1])
-                    cell[w, l] = repl[0];
+                if (item.itemType == ItemType.Objective)
+                    customObjectiveItem = child.gameObject;
+
+                if (item.itemType == ItemType.BodyPart)
+                    if (item.bodyPart != null)
+                        customBodyPartChestList.Add(child.gameObject);
             }
         }
     }
 
-    private bool IDsAllZero(int[] repl)
+    int GetObjX(GameObject obj)
     {
-        if (repl[0] != 0 && repl[1] != 0)
-            return false;
-        for (int w = 0; w < m_width; w++)
-        {
-            for (int l = 0; l < m_length; l++)
-            {
-                if (cell[w, l] != 0)
-                    return false;
-            }
-        }
-        return true;
+        return Mathf.FloorToInt(obj.transform.position.x / 10);
     }
+
+    int GetObjZ(GameObject obj)
+    {
+        return Mathf.FloorToInt(obj.transform.position.z / 10);
+    }
+
+    Tile GetObjLocatedTile(Maze maze, GameObject obj)
+    {
+        return maze.tile[GetObjX(obj), GetObjZ(obj)];
+    }
+    #endregion
 }

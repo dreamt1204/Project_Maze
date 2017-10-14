@@ -9,11 +9,13 @@ public class PlayerCharacter : Unit {
 	private Camera playerCamera;
 	[HideInInspector]
 	public bool hasObjective = false;
+    [HideInInspector]
+    public Dictionary<string, PlayerAbility> PlayerAbilities;
 
-	//---------------------------------------
-	//      Properties
-	//---------------------------------------
-	public override Tile CurrentTile
+    //---------------------------------------
+    //      Properties
+    //---------------------------------------
+    public override Tile CurrentTile
 	{
         get
 		{
@@ -28,14 +30,13 @@ public class PlayerCharacter : Unit {
         }
 	}
 
-	//=======================================
-	//      Functions
-	//=======================================
-	// Use this for initialization
-	public override void Init (LevelManager gm, Tile spawnTile)
+    //=======================================
+    //      Functions
+    //=======================================
+    // Use this for initialization
+    public override void Init (LevelManager gm, Tile spawnTile)
 	{
 		base.Init(gm, spawnTile);
-
         playerCamera = GetComponentInChildren<Camera>();
     }
 
@@ -47,9 +48,12 @@ public class PlayerCharacter : Unit {
         HoldingMove ();
 	}
 
-	// This feature lets player move to the next time while player is holding the mouse during movement.
-	// The direction is calculate based on the mouse and character origin.
-	public void HoldingMove()
+    //---------------------------------------
+    //      Movement
+    //---------------------------------------
+    // This feature lets player move to the next time while player is holding the mouse during movement.
+    // The direction is calculate based on the mouse and character origin.
+    public void HoldingMove()
 	{
         // Check if player is holding the mouse during movement. If true, set KeepWalking flag.
         if (!KeepWalking)
@@ -105,4 +109,32 @@ public class PlayerCharacter : Unit {
 
 		return dir;
 	}
+
+    //---------------------------------------
+    //      Body Part
+    //---------------------------------------
+    public override void InitBodyParts()
+    {
+        // Init PlayerCharacter BodyParts
+        InitBodyPartData("Head");
+        InitBodyPartData("Arms");
+        InitBodyPartData("Body");
+        InitBodyPartData("Legs");
+        InitBodyPartData("Misc");
+
+        // Init PlayerAbilities
+        PlayerAbilities = new Dictionary<string, PlayerAbility>();
+        foreach (BodyPartData data in BodyParts)
+        {
+            PlayerAbilities.Add(data.partType, null);
+        }
+    }
+
+    public override void BodyPartUpdatedEvent(string partType)
+    {
+        BodyPart part = GetBodyPartWithType(partType);
+
+        // Update PlayerAbilities while body part gets updated
+        PlayerAbilities[partType] = part != null ? GetBodyPartWithType(partType).playerAbility : null;
+    }
 }

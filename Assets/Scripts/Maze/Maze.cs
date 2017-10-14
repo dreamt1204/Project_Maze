@@ -131,8 +131,10 @@ public class Maze  {
 
         // Make sure distance is not out of bounds
         int mazeWidth = GameObject.Find("LevelManager").GetComponent<LevelManager>().mazeWidth;
-        if (distance > (int)Mathf.Floor(mazeWidth / 2))
-            distance = (int)Mathf.Floor(mazeWidth / 2);
+        int mazeLength = GameObject.Find("LevelManager").GetComponent<LevelManager>().mazeLength;
+        int shortSite = mazeWidth <= mazeLength ? mazeWidth : mazeLength;
+        if (distance > (int)Mathf.Floor(shortSite / 2))
+            distance = (int)Mathf.Floor(shortSite / 2);
 
         Tile org = orgs[orgs.Count - 1];
         foreach (Tile t in oldList)
