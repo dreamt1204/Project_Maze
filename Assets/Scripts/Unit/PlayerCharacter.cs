@@ -134,7 +134,17 @@ public class PlayerCharacter : Unit {
     {
         BodyPart part = GetBodyPartWithType(partType);
 
+        // If the part doesn't exist, clear part ability
+        if ((part == null) || (part.playerAbility == null))
+        {
+            PlayerAbilities[partType] = null;
+            levelManager.uiManager.ClearAbilityIcon(partType);
+        }
         // Update PlayerAbilities while body part gets updated
-        PlayerAbilities[partType] = part != null ? GetBodyPartWithType(partType).playerAbility : null;
+        else
+        {
+            PlayerAbilities[partType] = part.playerAbility;
+            levelManager.uiManager.UpdateAbilityIcon(partType);
+        }
     }
 }

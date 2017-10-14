@@ -193,7 +193,7 @@ public class Unit : MonoBehaviour {
             // Assign body part via name
             if ((data.part != null) && (data.part.partType == data.partType))
             {
-                AddSkinEntries(skeletonData.FindSkin(data.part.partName), newBody);
+                AddSkinEntries(skeletonData.FindSkin(data.part.partSkinName), newBody);
             }
             // Try assign the default body part
             else

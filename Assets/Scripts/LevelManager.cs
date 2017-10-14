@@ -11,6 +11,8 @@ public class LevelManager : MonoBehaviour {
     // Helper classes
     private MazeGenerator mazeGenerator;
     private UnitSpawner unitSpawner;
+    [HideInInspector]
+    public UIManager uiManager;
 
     #region Inspector
     [Header("Maze")]
@@ -63,6 +65,7 @@ public class LevelManager : MonoBehaviour {
         // Get component reference to the attached script
         mazeGenerator = new MazeGenerator();
         unitSpawner = new UnitSpawner();
+        uiManager = new UIManager();
 
         // Start init the game
         InitGame();

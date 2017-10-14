@@ -2,15 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BodyPart : MonoBehaviour {
+public class PlayerAbility : MonoBehaviour {
     //=======================================
     //      Variables
     //=======================================
-    public BodyPartOwnerType ownerType;
-    public string partName;
-    public string partType;
-    public string partSkinName;
-    public PlayerAbility playerAbility;
+    public string abilityName;
+    public string spriteName;
 
     //=======================================
     //      Functions
