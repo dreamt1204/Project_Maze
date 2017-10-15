@@ -99,7 +99,7 @@ public class Maze  {
     }
 
     //---------------------------------------
-    //      Get tile
+    //      Get tile / tiles
     //---------------------------------------
     // Get a random tile from maze
     public static Tile GetRandomTile()
@@ -114,35 +114,28 @@ public class Maze  {
     {
         return tmpList[Random.Range(0, tmpList.Count)];
     }
-
+    
     //---------------------------------------
     //      Update tile list
     //---------------------------------------
     // Get tiles 'distance' away from the org tiles
-    public static List<Tile> UpdateTileListWithDistanceCondition(List<Tile> oldList, List<Tile> orgs, int distance)
+    public static List<Tile> UpdateTileListOutOfRange(List<Tile> oldList, List<Tile> orgs, int range)
     {
         if (orgs.Count <= 0)
             return oldList;
 
         List<Tile> newList = new List<Tile>();
 
-        // Make sure distance is not out of bounds
-        int mazeWidth = GameObject.Find("LevelManager").GetComponent<LevelManager>().mazeWidth;
-        int mazeLength = GameObject.Find("LevelManager").GetComponent<LevelManager>().mazeLength;
-        int shortSite = mazeWidth <= mazeLength ? mazeWidth : mazeLength;
-        if (distance > (int)Mathf.Floor(shortSite / 2))
-            distance = (int)Mathf.Floor(shortSite / 2);
-
         Tile org = orgs[orgs.Count - 1];
         foreach (Tile t in oldList)
         {
-            if (((t.X <= (org.X - distance)) || (t.X >= (org.X + distance))) ||
-                ((t.Z <= (org.Z - distance)) || (t.Z >= (org.Z + distance))))
+            int distance = Mathf.Abs(t.X - org.X) + Mathf.Abs(t.Z - org.Z);
+            if (distance >= range)
                 newList.Add(t);
         }
         orgs.Remove(org);
 
-        newList = UpdateTileListWithDistanceCondition(newList, orgs, distance);
+        newList = UpdateTileListOutOfRange(newList, orgs, range);
 
         return newList;
     }
@@ -220,4 +213,18 @@ public class Maze  {
         }
     }
     #endregion
+
+    //---------------------------------------
+    //      Misc
+    //---------------------------------------
+    public static int GetMazeShortestSide()
+    {
+        int shortSideLength = 0;
+
+        int mazeWidth = GameObject.Find("LevelManager").GetComponent<LevelManager>().mazeWidth;
+        int mazeLength = GameObject.Find("LevelManager").GetComponent<LevelManager>().mazeLength;
+        shortSideLength = mazeWidth <= mazeLength ? mazeWidth : mazeLength;
+
+        return shortSideLength;
+    }
 }

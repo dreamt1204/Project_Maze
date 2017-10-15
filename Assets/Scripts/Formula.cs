@@ -15,4 +15,14 @@ public static class Formula
         int numItems = Mathf.CeilToInt(CalculateMazeSideSize(mazeDifficulty) / 10.0f);
         return numItems;
     }
+
+    public static int CalculateObjectiveLeastDistance()
+    {
+        return (int)Mathf.Floor(Maze.GetMazeShortestSide() / 2);
+    }
+
+    public static int CalculateBodyPartChestLeastDistance()
+    {
+        return (int)Mathf.Floor(Maze.GetMazeShortestSide() / 2);
+    }
 }

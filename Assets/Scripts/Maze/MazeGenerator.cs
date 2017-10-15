@@ -493,7 +493,7 @@ public class MazeGenerator {
         // Make sure the objective is at least half map aways from the start point. Also, make it spawn at C shape wall layout. 
         List<Tile> orgs = new List<Tile>();
         orgs.Add(tileStart);
-        List<Tile> tileList = Maze.UpdateTileListWithDistanceCondition(maze.tileList, orgs, (int)Mathf.Floor(maze.tile.GetLength(0) / 2));
+        List<Tile> tileList = Maze.UpdateTileListOutOfRange(maze.tileList, orgs, Formula.CalculateObjectiveLeastDistance());
         tileList = Maze.UpdateTileListWithDesiredWallLayout(tileList, WallLayout.C);
         tileObj = Maze.GetRandomTileFromList(tileList);
 
@@ -561,7 +561,7 @@ public class MazeGenerator {
         exclusiveList.Add(levelManager.tileStart);
         exclusiveList.Add(levelManager.tileObjective);
 
-        List<Tile> tileList = Maze.UpdateTileListWithDistanceCondition(maze.tileList, orgs, (int)Mathf.Floor(maze.tile.GetLength(0) / 2));
+        List<Tile> tileList = Maze.UpdateTileListOutOfRange(maze.tileList, orgs, Formula.CalculateBodyPartChestLeastDistance());
         tileList = Maze.UpdateTileListWithExclusiveList(tileList, exclusiveList);
         tileList = Maze.UpdateTileListWithDesiredWallLayout(tileList, WallLayout.C);
 
