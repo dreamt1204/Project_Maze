@@ -6,19 +6,32 @@ public class UIManager {
     //=======================================
     //      Variables
     //=======================================
-    public Dictionary<string, GameObject> abilityIcons;
+    public LevelManager levelManager;
+    public PlayerCharacter playerCharacter;
+
+    public Dictionary<string, abilityButton> abilityButtons;
+    
 
     //=======================================
     //      Struct
     //=======================================
     public UIManager()
     {
-        abilityIcons = new Dictionary<string, GameObject>();
-        abilityIcons.Add("Head", GameObject.Find("Sprite_ability_Head"));
-        abilityIcons.Add("Arms", GameObject.Find("Sprite_ability_Arms"));
-        abilityIcons.Add("Body", GameObject.Find("Sprite_ability_Body"));
-        abilityIcons.Add("Legs", GameObject.Find("Sprite_ability_Legs"));
-        abilityIcons.Add("Misc", GameObject.Find("Sprite_ability_Misc"));
+        levelManager = LevelManager.GetLevelManager();
+
+        abilityButtons = new Dictionary<string, abilityButton>();
+        InitNewButton("Head");
+        InitNewButton("Arms");
+        InitNewButton("Body");
+        InitNewButton("Legs");
+        InitNewButton("Misc");
+    }
+
+    public struct abilityButton
+    {
+        public GameObject buttonObj;
+        public UISprite mainSprite;
+        public UISprite iconSprite;
     }
 
     //=======================================
@@ -36,13 +49,27 @@ public class UIManager {
 		
 	}
 
+    void InitNewButton(string partType)
+    {
+        abilityButton newButton = new abilityButton();
+        newButton.buttonObj = GameObject.Find("Sprite_ability_" + partType);
+        newButton.mainSprite = newButton.buttonObj.GetComponent<UISprite>();
+        newButton.iconSprite = newButton.buttonObj.transform.Find("Sprite_ability_icon").GetComponent<UISprite>();
+
+        abilityButtons.Add(partType, newButton);
+    }
+
     public void UpdateAbilityIcon(string partType)
     {
-        abilityIcons[partType].SetActive(true);
+        abilityButtons[partType].buttonObj.SetActive(true);
+
+        string newSprite = levelManager.playerCharacter.PlayerAbilities[partType].spriteName;
+        if (newSprite!=null)
+            abilityButtons[partType].iconSprite.spriteName = levelManager.playerCharacter.PlayerAbilities[partType].spriteName;
     }
 
     public void ClearAbilityIcon(string partType)
     {
-        abilityIcons[partType].SetActive(false);
+        abilityButtons[partType].buttonObj.SetActive(false);
     }
 }
