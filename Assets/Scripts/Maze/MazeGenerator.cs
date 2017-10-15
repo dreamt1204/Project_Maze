@@ -102,10 +102,7 @@ public class MazeGenerator {
             }
         }
 
-
-		//********* JY added ********//
-		// maze.updateTileList(); // has to update tileList with new pointers/references created by "GenerateTile"
-
+		//maze.updateTileList(); // has to update tileList with new pointers/references created by "GenerateTile"
         return maze;
 
     }

@@ -33,4 +33,39 @@ public class UnitSpawner {
 
         return character;
     }
+
+	public Enemy SpawnEnemy (int enemyType, Tile targetTile)
+	{
+		GameObject prefabA = levelManager.prefabA;
+		GameObject prefabB = levelManager.prefabB;
+		GameObject prefabC = levelManager.prefabC;
+
+		Enemy enemy = new Enemy ();
+
+		switch (enemyType) {
+		case 0:
+			enemy = GameObject.Instantiate (prefabA, targetTile.transform.position, Quaternion.Euler (0, 0, 0)).GetComponent<Enemy>();
+			break;
+		case 1:
+			enemy = GameObject.Instantiate (prefabB, targetTile.transform.position, Quaternion.Euler (0, 0, 0)).GetComponent<Enemy>();
+			break;
+		case 2:
+			enemy = GameObject.Instantiate (prefabC, targetTile.transform.position, Quaternion.Euler (0, 0, 0)).GetComponent<Enemy>();
+			break;
+		}
+
+		enemy.Init (levelManager, targetTile);
+		return enemy;
+	}
+
+	public List<Enemy> SpawnInitEnemies(List<spawningInfo> spawnList)
+	{
+		List<Enemy> enemyList = new List<Enemy> ();
+		foreach (spawningInfo sInfo in spawnList) {
+			enemyList.Add (SpawnEnemy (sInfo.enemyType, sInfo.tile));
+		}
+		return enemyList;
+	}
+		
+
 }

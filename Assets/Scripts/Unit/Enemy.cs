@@ -46,7 +46,7 @@ public class Enemy : Unit {
 	}
 
 	// Update function
-	void Update()
+	public override void Update()
 	{
 		Sense ();
 		Act ();

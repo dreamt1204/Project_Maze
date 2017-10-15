@@ -44,6 +44,11 @@ public class LevelManager : MonoBehaviour {
     public GameObject objectivePrefab;
     public GameObject BodyPartChestPrefab;
 
+	// Prefabs for each type of enemy
+	public GameObject prefabA;
+	public GameObject prefabB;
+	public GameObject prefabC;
+
     #endregion
 
     // Global variables
@@ -56,7 +61,7 @@ public class LevelManager : MonoBehaviour {
     [HideInInspector]
     public PlayerCharacter playerCharacter;
 	[HideInInspector]
-	public List<Enemy> enemies;
+	public List<Enemy> enemyList;
 
     // State variables
     private bool finsiedInit = false;
@@ -93,8 +98,12 @@ public class LevelManager : MonoBehaviour {
         // Generate a maze
         maze = mazeGenerator.GenerateMaze();
 
+		if (tileStart == null){
+			Debug.Log ("tileStart is null before enemy generation is called!!!!!");
+		}
+
 		// Spawn enemies
-		enemies = enemyManager.SpawnInitEnemies ();
+		enemyList = unitSpawner.SpawnInitEnemies(enemyManager.GenerateInitSpawnList() );
 
 		// Spawn player character
 		playerCharacter = unitSpawner.SpawnPlayerCharacter(tileStart);

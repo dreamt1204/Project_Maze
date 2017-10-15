@@ -9,7 +9,19 @@ public enum InitSpawnMethod // 2 types for now, can append in future
 	InGridRandom // divide maze into grids, then random location inside each maze.  More uniform than completely random
 }
 
-public class EnemyManager : MonoBehaviour {
+// SpawningInfo is a struct that holds (1) type of spawning enemy, and (2) spawning location
+public struct spawningInfo
+{
+	public int enemyType;
+	public Tile tile;
+
+	public spawningInfo(int enemyType0, Tile tile0){
+		enemyType = enemyType0;
+		tile = tile0;
+	}
+}
+
+public class EnemyManager {
 	//=======================================
 	//      Variables
 	//=======================================
@@ -21,22 +33,6 @@ public class EnemyManager : MonoBehaviour {
 	public int safeRadius;
 	public InitSpawnMethod initSpawnMethod;
 
-	// SpawningInfo is a struct that holds (1) type of spawning enemy, and (2) spawning location
-	public struct spawningInfo
-	{
-		public int enemyType;
-		public Tile tile;
-	
-		public spawningInfo(int enemyType0, Tile tile0){
-			enemyType = enemyType0;
-			tile = tile0;
-		}
-	}
-
-	// Prefabs for each type of enemy
-	public GameObject prefabA;
-	public GameObject prefabB;
-	public GameObject prefabC;
 
 	//=======================================
 	//      Functions
@@ -45,12 +41,14 @@ public class EnemyManager : MonoBehaviour {
 
 	public EnemyManager (InitSpawnMethod spMethod, int spQuantity, int sfRadius)
 	{
+		levelManager = LevelManager.GetLevelManager();
+
 		initSpawnQuantity = spQuantity;
 		safeRadius = sfRadius;
 		initSpawnMethod = spMethod;
 	}
 
-	public List<Enemy> SpawnInitEnemies()
+	public List<spawningInfo> GenerateInitSpawnList()
 	{
 		List<Tile> spawningTiles = new List<Tile> ();
 
@@ -59,6 +57,7 @@ public class EnemyManager : MonoBehaviour {
 		case InitSpawnMethod.Random:
 
 			// Figure out non-spawnable tiles; okay for repeating items in list
+			levelManager.tileStart.DestroyTileItem ();
 			List<Tile> nonSpawnableTiles = levelManager.maze.AllTilesAround (levelManager.tileStart, safeRadius);
 
 			// Remove non-spawnable tiles: proximity to playerChar's initial location, physical objects, etc.
@@ -68,8 +67,9 @@ public class EnemyManager : MonoBehaviour {
 			}
 
 			// Calculate number of enemies to spawn
-			int numInitEnemy = Mathf.RoundToInt (initSpawnQuantity * spawnableTiles.Count);
-			Debug.Log ("Initial spawn density = " + initSpawnQuantity + "; num of spawnable tiles = " + spawnableTiles.Count + "; num of enemies spawned = " + numInitEnemy);
+//			int numInitEnemy = Mathf.RoundToInt (initSpawnDensity * spawnableTiles.Count);
+			int numInitEnemy = initSpawnQuantity;
+			Debug.Log ("Initial spawn quantity = " + initSpawnQuantity);
 
 			for (int i = 0; i < numInitEnemy; i++) {
 
@@ -117,44 +117,19 @@ public class EnemyManager : MonoBehaviour {
 			}
 		}
 
-		// Package type and location into SpawningInfo + Instantiate and package reference into enemyList
-
-		List<Enemy> enemyList = new List<Enemy> ();
-
+		// Package type and location into SpawningInfo, for UnitSpawner to spawn
+		List<spawningInfo> spawnList = new List<spawningInfo>();
 		if (spawningTiles.Count == spawningEnemyType.Length) {	
 			for (int i = 0; i < spawningTiles.Count; i++) {
-				enemyList.Add(SpawnEnemy(spawningEnemyType [i], spawningTiles [i]));
+				spawnList.Add (new spawningInfo (spawningEnemyType [i], spawningTiles [i]));
+				//enemyList.Add(SpawnEnemy(spawningEnemyType [i], spawningTiles [i]));
 			}
 		} else {
 			Debug.LogError ("Inconsistent legnth between spawningTiles and spawningEnemyType.");
 		}
 
-		return enemyList;
+		return spawnList;
 
 	}
-
-
-	public Enemy SpawnEnemy (int enemyType, Tile targetTile)
-	{
-		Enemy enemy = new Enemy ();
-
-		switch (enemyType) {
-		case 0:
-			enemy = Instantiate (prefabA, targetTile.transform.position, Quaternion.Euler (0, 0, 0)).GetComponent<Enemy>();
-			break;
-		case 1:
-			enemy = Instantiate (prefabB, targetTile.transform.position, Quaternion.Euler (0, 0, 0)).GetComponent<Enemy>();
-			break;
-		case 2:
-			enemy = Instantiate (prefabC, targetTile.transform.position, Quaternion.Euler (0, 0, 0)).GetComponent<Enemy>();
-			break;
-		}
-
-		enemy.Init (levelManager, targetTile);
-		return enemy;
-
-	}
-
-
 
 }

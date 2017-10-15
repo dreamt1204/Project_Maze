@@ -73,9 +73,11 @@ public class Unit : MonoBehaviour {
     //=======================================
     void Start()
     {
+		/*
         skeletonAnim = GetComponentInChildren<SkeletonAnimation>();
         InitBodyParts();
         UpdateBody();
+        */
     }
 
     public virtual void Init (LevelManager lm, Tile spawnTile)
@@ -86,10 +88,12 @@ public class Unit : MonoBehaviour {
 
     public virtual void Update()
     {
+		/*
         if (isWalking)
             PlayLoopAnim("Walk");
         else
             PlayLoopAnim("Idle");
+            */
     }
 
     //---------------------------------------
