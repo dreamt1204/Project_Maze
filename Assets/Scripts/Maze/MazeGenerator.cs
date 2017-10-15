@@ -102,14 +102,12 @@ public class MazeGenerator {
             }
         }
 
-<<<<<<< HEAD
-		//********* JY added ********//
-		maze.updateTileList(); // has to update tileList with new pointers/references created by "GenerateTile"
 
-		return maze;
-=======
+		//********* JY added ********//
+		// maze.updateTileList(); // has to update tileList with new pointers/references created by "GenerateTile"
+
         return maze;
->>>>>>> Henry_Ability
+
     }
 
     // Generate maze using custom game object

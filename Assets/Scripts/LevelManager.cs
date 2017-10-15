@@ -29,7 +29,6 @@ public class LevelManager : MonoBehaviour {
     public bool customGameModePosition;
     public bool customBodyPartChestPosition;
 
-<<<<<<< HEAD
     [Header("Items")]
     public bool useItemGenerateLogic;
     public int numberOfItems;
@@ -38,13 +37,13 @@ public class LevelManager : MonoBehaviour {
 	public InitSpawnMethod spawnMethod;
 	public int spawnQuantity;
 	public int safeRadius;
-=======
+
     [Header("Required Prefabs")]
     public GameObject playerCharacterPrefab;
     public GameObject startPointPrefab;
     public GameObject objectivePrefab;
     public GameObject BodyPartChestPrefab;
->>>>>>> Henry_Ability
+
     #endregion
 
     // Global variables
