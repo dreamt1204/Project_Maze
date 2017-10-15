@@ -64,12 +64,34 @@ public class UIManager {
         abilityButtons[partType].buttonObj.SetActive(true);
 
         string newSprite = levelManager.playerCharacter.PlayerAbilities[partType].spriteName;
-        if (newSprite!=null)
+        if ((newSprite != null) && (AtlasHasSprite(abilityButtons[partType].iconSprite.atlas, newSprite)))
+        {
             abilityButtons[partType].iconSprite.spriteName = levelManager.playerCharacter.PlayerAbilities[partType].spriteName;
+        }
+        else
+        {
+            abilityButtons[partType].iconSprite.spriteName = "Icon_" + partType + "_default";
+        }  
     }
 
     public void ClearAbilityIcon(string partType)
     {
         abilityButtons[partType].buttonObj.SetActive(false);
+    }
+
+    bool AtlasHasSprite(UIAtlas atlas, string newSprite)
+    {
+        bool hasSprite = false;
+
+        foreach (UISpriteData data in atlas.spriteList)
+        {
+            if (data.name == newSprite)
+            {
+                hasSprite = true;
+                break;
+            }
+        }
+
+        return hasSprite;
     }
 }

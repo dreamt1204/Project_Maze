@@ -149,7 +149,7 @@ public class MazeGenerator {
             tile.Z = Z;
             tile.wall = wall;
             tile.wallLayout = wallLayout;
-            AssignWallObjToTile(tile, wallLayout, rotCount);
+            AssignWallFloorObjToTile(tile, wallLayout, rotCount);
 
             // Group tile
             tile.transform.parent = mazeObj.transform;
@@ -212,7 +212,7 @@ public class MazeGenerator {
         tile.Z = Z;
 		tile.wall = wall;
         tile.wallLayout = wallLayout;
-        AssignWallObjToTile(tile, wallLayout, rotCount);
+        AssignWallFloorObjToTile(tile, wallLayout, rotCount);
 
         return tile;
     }
@@ -359,20 +359,24 @@ public class MazeGenerator {
 	}
 
     // Store wall object in tile class
-    void AssignWallObjToTile(Tile tile, WallLayout wallLayout, int rotCount)
+    void AssignWallFloorObjToTile(Tile tile, WallLayout wallLayout, int rotCount)
     {
 		if (wallLayout == WallLayout.O)
 			return;
 
-		// Get wall objects
+		// Get wall objects / or assign floor object
 		Dictionary<int,GameObject> wall_obj_list = new Dictionary<int,GameObject>();
 
 		foreach (Transform child in tile.gameObject.transform)
         {
             if (child.name.Contains("Wall_"))
             {
-				int index = int.Parse(child.name.Substring(child.name.IndexOf ('_') + 1)) - 1;
-				wall_obj_list.Add (index, child.gameObject);
+                int index = int.Parse(child.name.Substring(child.name.IndexOf('_') + 1)) - 1;
+                wall_obj_list.Add(index, child.gameObject);
+            }
+            else if (child.name.Contains("Floor"))
+            {
+                tile.floor_obj = child.gameObject;
             }
         }
 

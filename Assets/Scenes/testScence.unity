@@ -256,7 +256,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 49904071}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d9ee9adcf574fc42857acfaad9fb89e, type: 3}
+  m_Script: {fileID: 11500000, guid: 0b480703a95895f4c801d1366abce8b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   restriction: 0
@@ -452,7 +452,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 187783746}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d9ee9adcf574fc42857acfaad9fb89e, type: 3}
+  m_Script: {fileID: 11500000, guid: 0b480703a95895f4c801d1366abce8b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   restriction: 0
@@ -1115,7 +1115,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 942286928}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d9ee9adcf574fc42857acfaad9fb89e, type: 3}
+  m_Script: {fileID: 11500000, guid: 0b480703a95895f4c801d1366abce8b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   restriction: 0
@@ -1504,8 +1504,8 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 114305812388705888, guid: e7c264a69e91524488de5d039c99530f, type: 2}
-  mSpriteName: Amulet-Icon
+  mAtlas: {fileID: 114061017621333486, guid: d9a052a57ab84904b9ef1e6b261a8d6d, type: 2}
+  mSpriteName: Icon_Misc_default
   mFillCenter: 1
 --- !u!1 &1273989001
 GameObject:
@@ -1630,7 +1630,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1282520838}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d9ee9adcf574fc42857acfaad9fb89e, type: 3}
+  m_Script: {fileID: 11500000, guid: 0b480703a95895f4c801d1366abce8b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   restriction: 0
@@ -1936,8 +1936,8 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 114305812388705888, guid: e7c264a69e91524488de5d039c99530f, type: 2}
-  mSpriteName: Head-Icon
+  mAtlas: {fileID: 114061017621333486, guid: d9a052a57ab84904b9ef1e6b261a8d6d, type: 2}
+  mSpriteName: Icon_Head_default
   mFillCenter: 1
 --- !u!1 &1769084723
 GameObject:
@@ -1979,7 +1979,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1769084723}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d9ee9adcf574fc42857acfaad9fb89e, type: 3}
+  m_Script: {fileID: 11500000, guid: 0b480703a95895f4c801d1366abce8b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   restriction: 0
@@ -2382,8 +2382,8 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 114305812388705888, guid: e7c264a69e91524488de5d039c99530f, type: 2}
-  mSpriteName: Hands-Icon
+  mAtlas: {fileID: 114061017621333486, guid: d9a052a57ab84904b9ef1e6b261a8d6d, type: 2}
+  mSpriteName: Icon_Arms_default
   mFillCenter: 1
 --- !u!1 &1951812295
 GameObject:
@@ -2701,8 +2701,8 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 114305812388705888, guid: e7c264a69e91524488de5d039c99530f, type: 2}
-  mSpriteName: Torso-Icon
+  mAtlas: {fileID: 114061017621333486, guid: d9a052a57ab84904b9ef1e6b261a8d6d, type: 2}
+  mSpriteName: Icon_Body_default
   mFillCenter: 1
 --- !u!1 &2067416997
 GameObject:
@@ -2984,6 +2984,6 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 114305812388705888, guid: e7c264a69e91524488de5d039c99530f, type: 2}
-  mSpriteName: Legs-Icon
+  mAtlas: {fileID: 114061017621333486, guid: d9a052a57ab84904b9ef1e6b261a8d6d, type: 2}
+  mSpriteName: Icon_Legs_default
   mFillCenter: 1

@@ -24,8 +24,11 @@ public class Tile : MonoBehaviour {
     public GameObject[] wall_obj = new GameObject[4];
     public WallLayout wallLayout;
 
+    // Floor
+    public GameObject floor_obj;
+
     // State
-	TileState state = TileState.None;
+    TileState state = TileState.None;
 
     // Item
 	public TileItem item;
