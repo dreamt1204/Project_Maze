@@ -122,19 +122,22 @@ public class Tile : MonoBehaviour {
 	//---------------------------------------
 	//      Tile select detection
 	//---------------------------------------
-	void OnMouseDown()
-	{
-		if (state == TileState.None)
-			return;
+    void OnClick()
+    {
+        if (state == TileState.None)
+            return;
 
-		if (state == TileState.Walkable)
-			levelManager.playerCharacter.TryMoveToTile (this);
-	}
+        if (state == TileState.Walkable)
+        {
+            if (!levelManager.playerCharacter.isWalking)
+                levelManager.playerCharacter.TryMoveToTile(this);
+        }  
+    }
 
-	//---------------------------------------
-	//      Tile item
-	//---------------------------------------
-	public TileItem SpawnTileItem(GameObject itemPrefab)
+    //---------------------------------------
+    //      Tile item
+    //---------------------------------------
+    public TileItem SpawnTileItem(GameObject itemPrefab)
 	{
 		item = Instantiate (itemPrefab, transform.position, Quaternion.Euler (0, 0, 0)).GetComponent<TileItem>();
 

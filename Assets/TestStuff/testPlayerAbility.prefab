@@ -54,7 +54,7 @@ MonoBehaviour:
   abilityName: test
   spriteName: test
   rangeData:
-    range: 1
+    range: 2
     outOfRange: 0
-    excludeOrigin: 1
+    excludeOrigin: 0
     includeRangeTilesOnly: 0

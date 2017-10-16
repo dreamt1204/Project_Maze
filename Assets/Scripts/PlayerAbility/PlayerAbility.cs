@@ -34,4 +34,9 @@ public class PlayerAbility : MonoBehaviour {
 			tile.State = TileState.Selectable;
 		}
 	}
+
+    public virtual void ActivateAbility(Tile selectedTile)
+    {
+
+    }
 }

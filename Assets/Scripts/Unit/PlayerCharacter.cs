@@ -37,7 +37,11 @@ public class PlayerCharacter : Unit {
     public override void Init (LevelManager gm, Tile spawnTile)
 	{
 		base.Init(gm, spawnTile);
-        playerCamera = GetComponentInChildren<Camera>();
+        //playerCamera = GetComponentInChildren<Camera>();
+        playerCamera = GameObject.Find("PlayerCamera").GetComponent<Camera>();
+        Vector3 camPos = playerCamera.gameObject.transform.position;
+        playerCamera.gameObject.transform.position = new Vector3(camPos.x + transform.position.x, camPos.y + transform.position.y, camPos.z + transform.position.z);
+        playerCamera.gameObject.transform.parent = transform;
     }
 
 	// Update function

@@ -26,7 +26,7 @@ public class Unit : MonoBehaviour {
 	protected Tile currentTile;
 
     // Walking
-	protected bool isWalking = false;
+	public bool isWalking = false;
     protected bool KeepWalking = false;
     protected bool ArrivedNextTile = false;
 
