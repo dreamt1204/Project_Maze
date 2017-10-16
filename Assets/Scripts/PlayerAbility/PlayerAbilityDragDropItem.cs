@@ -18,8 +18,18 @@ public class PlayerAbilityDragDropItem : UIDragDropItem {
 
 	protected override void OnDragDropRelease(GameObject surface)
 	{
+		base.OnDragDropRelease(surface);
 		Maze.ResetAllTileState ();
 
-		base.OnDragDropRelease(surface);
+		if (surface == null)
+			return;
+
+		Tile selectedTile = surface.GetComponent<Tile> ();
+		if (selectedTile == null)
+			return;
+		if (selectedTile.State != TileState.Selectable)
+			return;
+
+		Debug.Log (selectedTile.gameObject.name);
 	}
 }

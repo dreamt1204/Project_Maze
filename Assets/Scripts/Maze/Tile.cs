@@ -32,6 +32,13 @@ public class Tile : MonoBehaviour {
     TileState state = TileState.None;
 	TileState statePrevious = TileState.None;
 
+	// Selectable highlight variables
+	float pulseTime = 0;
+	const float pulseFrequency = 1;
+	bool pulseDir;
+	Color pulseStartColor  = new Color(1f, 1f, 0.1f);
+	Color pulseEndColor  = new Color(1.5f, 1.5f, 0.2f);
+
     // Item
 	public TileItem item;
 
@@ -48,12 +55,11 @@ public class Tile : MonoBehaviour {
 		{
 			if (state != value)
 			{
-				if (value == TileState.Selectable)
-					HighlightSelectableTile (true);
-				else
-					HighlightSelectableTile (false);
-
 				statePrevious = state;
+
+				if ((value != TileState.Selectable) && (statePrevious == TileState.Selectable))
+					ResetTileColor ();
+
 				state = value;
 			}
 		}
@@ -69,6 +75,48 @@ public class Tile : MonoBehaviour {
         // Init box collider for this tile
 		BoxCollider tile_collider = this.gameObject.AddComponent<BoxCollider> ();
 		tile_collider.size = new Vector3 (10, 2, 10);
+	}
+
+	void Update()
+	{
+		TryApplyHighlightPulse();
+	}
+
+	// Highlight the tile if its state is Selectable.
+	void TryApplyHighlightPulse()
+	{
+		if (State == TileState.Selectable)
+		{
+			Material material = floor_obj.GetComponent<MeshRenderer> ().material;
+			material.color = pulseStartColor;
+
+			pulseTime += Time.deltaTime/pulseFrequency;
+			if (pulseDir)
+			{
+				material.color = Color.Lerp(pulseStartColor, pulseEndColor, pulseTime);
+			}
+			else
+			{
+				material.color = Color.Lerp(pulseEndColor, pulseStartColor, pulseTime);
+			}
+			if (pulseTime > 1)
+			{
+				pulseTime = 0;
+				pulseDir = !pulseDir;
+			}
+		}
+	}
+
+	void ResetHighlightPulseVars()
+	{
+		pulseTime = 0;
+		pulseDir = false;
+	}
+
+	void ResetTileColor()
+	{
+		floor_obj.GetComponent<MeshRenderer> ().material.color = Color.white;
+		ResetHighlightPulseVars ();
 	}
 
 	//---------------------------------------
