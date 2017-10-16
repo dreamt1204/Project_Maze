@@ -96,9 +96,9 @@ public class MazeGenerator {
         {
             for (int j = 0; j < m_length; j++)
             {
-                maze.tile[i, j] = GenerateTileWithBlueprint(i, j, mazeBP);
-                maze.tile[i, j].transform.parent = mazeObj.transform;
-                maze.tileList.Add(maze.tile[i, j]);
+				Maze.mazeTile[i, j] = GenerateTileWithBlueprint(i, j, mazeBP);
+				Maze.mazeTile[i, j].transform.parent = mazeObj.transform;
+				Maze.mazeTileList.Add(Maze.mazeTile[i, j]);
             }
         }
 
@@ -153,14 +153,14 @@ public class MazeGenerator {
 
             // Group tile
             tile.transform.parent = mazeObj.transform;
-            maze.tile[X, Z] = tile;
+			Maze.mazeTile[X, Z] = tile;
         }
 
         for (int i = 0; i < mazeWidth; i++)
         {
             for (int j = 0; j < mazeLength; j++)
             {
-                maze.tileList.Add(maze.tile[i, j]);
+				Maze.mazeTileList.Add(Maze.mazeTile[i, j]);
             }
         }
 
@@ -479,7 +479,7 @@ public class MazeGenerator {
     #region Spawn Game Objects
     public void GenerateGameModeObjects(Maze maze)
     {
-        if (m_customGameModePosition)
+		if ((m_customMazeObj != null) && (m_customGameModePosition))
             GenerateGameModeObjects_Custom(maze);
         else
             GenerateGameModeObjects_Random(maze);
@@ -488,12 +488,12 @@ public class MazeGenerator {
     public void GenerateGameModeObjects_Random(Maze maze)
     {
         Tile tileStart, tileObj;
-        tileStart = Maze.GetRandomTileFromList(maze.tileList);
+		tileStart = Maze.GetRandomTileFromList(Maze.mazeTileList);
 
         // Make sure the objective is at least half map aways from the start point. Also, make it spawn at C shape wall layout. 
         List<Tile> orgs = new List<Tile>();
         orgs.Add(tileStart);
-        List<Tile> tileList = Maze.UpdateTileListOutOfRange(maze.tileList, orgs, Formula.CalculateObjectiveLeastDistance());
+		List<Tile> tileList = Maze.UpdateTileListOutOfRange(Maze.mazeTileList, orgs, Formula.CalculateObjectiveLeastDistance());
         tileList = Maze.UpdateTileListWithDesiredWallLayout(tileList, WallLayout.C);
         tileObj = Maze.GetRandomTileFromList(tileList);
 
@@ -520,7 +520,7 @@ public class MazeGenerator {
     #region Spawn Maze Items (BodyPartChest, Pickups...etc.)
     public void GenerateMazeBodyPartChest(Maze maze)
     {
-        if (m_customBodyPartChestPosition)
+		if ((m_customMazeObj != null) && (m_customBodyPartChestPosition))
             GenerateMazeBodyPartChest_Custom(maze);
         else
             GenerateMazeBodyPartChest_Random(maze);
@@ -561,7 +561,7 @@ public class MazeGenerator {
         exclusiveList.Add(levelManager.tileStart);
         exclusiveList.Add(levelManager.tileObjective);
 
-        List<Tile> tileList = Maze.UpdateTileListOutOfRange(maze.tileList, orgs, Formula.CalculateBodyPartChestLeastDistance());
+		List<Tile> tileList = Maze.UpdateTileListOutOfRange(Maze.mazeTileList, orgs, Formula.CalculateBodyPartChestLeastDistance());
         tileList = Maze.UpdateTileListWithExclusiveList(tileList, exclusiveList);
         tileList = Maze.UpdateTileListWithDesiredWallLayout(tileList, WallLayout.C);
 
@@ -631,7 +631,7 @@ public class MazeGenerator {
 
     Tile GetObjLocatedTile(Maze maze, GameObject obj)
     {
-        return maze.tile[GetObjX(obj), GetObjZ(obj)];
+		return Maze.mazeTile[GetObjX(obj), GetObjZ(obj)];
     }
     #endregion
 }

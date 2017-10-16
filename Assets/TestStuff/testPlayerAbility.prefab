@@ -53,3 +53,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilityName: test
   spriteName: test
+  rangeData:
+    range: 1
+    outOfRange: 0
+    excludeOrigin: 1
+    includeRangeTilesOnly: 0

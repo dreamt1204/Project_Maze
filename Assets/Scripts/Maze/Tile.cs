@@ -26,9 +26,11 @@ public class Tile : MonoBehaviour {
 
     // Floor
     public GameObject floor_obj;
+	private Color originalFloorColor;
 
     // State
     TileState state = TileState.None;
+	TileState statePrevious = TileState.None;
 
     // Item
 	public TileItem item;
@@ -44,7 +46,16 @@ public class Tile : MonoBehaviour {
 		}
 		set
 		{
-			state = value;
+			if (state != value)
+			{
+				if (value == TileState.Selectable)
+					HighlightSelectableTile (true);
+				else
+					HighlightSelectableTile (false);
+
+				statePrevious = state;
+				state = value;
+			}
 		}
 	}
 
@@ -118,4 +129,28 @@ public class Tile : MonoBehaviour {
             DestroyTileItem();
         }
     }
+
+	public void ResetTileState()
+	{
+		if (statePrevious != TileState.None)
+			State = statePrevious;
+		else
+			State = TileState.None;
+
+		statePrevious = TileState.None;
+	}
+
+	public void HighlightSelectableTile(bool highlight)
+	{
+		Material material = floor_obj.GetComponent<MeshRenderer> ().material;
+
+		if (highlight)
+		{
+			material.color = Color.green;
+		}
+		else
+		{
+			material.color = Color.white;
+		}
+	}
 }

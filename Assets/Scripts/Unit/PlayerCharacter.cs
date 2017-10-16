@@ -144,6 +144,7 @@ public class PlayerCharacter : Unit {
         else
         {
             PlayerAbilities[partType] = part.playerAbility;
+			part.playerAbility.Init ();
             levelManager.uiManager.UpdateAbilityIcon(partType);
         }
     }

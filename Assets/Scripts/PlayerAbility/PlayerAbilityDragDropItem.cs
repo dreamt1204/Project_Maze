@@ -3,14 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAbilityDragDropItem : UIDragDropItem {
-
-    void Akwae()
-    {
-        cloneOnDrag = true;
-    }
+	LevelManager levelManager;
+	string partType;
 
     protected override void OnDragDropStart()
     {
-        base.OnDragDropStart();
+		levelManager = GameObject.Find ("LevelManager").GetComponent<LevelManager> ();
+		partType = gameObject.name.Substring (gameObject.name.LastIndexOf ("_") + 1);
+
+		levelManager.playerCharacter.PlayerAbilities [partType].DisplayRangeTiles ();
+
+		base.OnDragDropStart();
     }
+
+	protected override void OnDragDropRelease(GameObject surface)
+	{
+		Maze.ResetAllTileState ();
+
+		base.OnDragDropRelease(surface);
+	}
 }

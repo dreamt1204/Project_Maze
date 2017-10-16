@@ -6,14 +6,18 @@ public class Maze  {
 	//=======================================
 	//      Variables
 	//=======================================
-	public Tile[,] tile;
-    public List<Tile> tileList;
-    private List<Tile> inUsingTiles;
+	public static int width;
+	public static int length;
+	public static Tile[,] mazeTile;
+    public static List<Tile> mazeTileList;
+    private static List<Tile> inUsingTiles;
 
-	public Maze(int width, int length)
+	public Maze(int mazeWidth, int mazeLength)
 	{
-		tile = new Tile[width, length];
-        tileList = new List<Tile>();
+		width = mazeWidth;
+		length = mazeLength;
+		mazeTile = new Tile[width, length];
+		mazeTileList = new List<Tile>();
 		inUsingTiles = new List<Tile> ();
 	}
 
@@ -40,16 +44,15 @@ public class Maze  {
     public static List<Tile> GetNeighborTiles(Tile org)
     {
         List<Tile> neighbors = new List<Tile>();
-        Tile[,] tile = GameObject.Find("LevelManager").GetComponent<LevelManager>().maze.tile;
 
-        if ((org.Z + 1) < tile.GetLength(1))
-            neighbors.Add(tile[org.X, org.Z + 1]);
-        if ((org.X + 1) < tile.GetLength(0))
-            neighbors.Add(tile[org.X + 1, org.Z]);
+		if ((org.Z + 1) < mazeTile.GetLength(1))
+			neighbors.Add(mazeTile[org.X, org.Z + 1]);
+		if ((org.X + 1) < mazeTile.GetLength(0))
+			neighbors.Add(mazeTile[org.X + 1, org.Z]);
         if ((org.Z - 1) >= 0)
-            neighbors.Add(tile[org.X, org.Z - 1]);
+			neighbors.Add(mazeTile[org.X, org.Z - 1]);
         if ((org.X - 1) >= 0)
-            neighbors.Add(tile[org.X - 1, org.Z]);
+			neighbors.Add(mazeTile[org.X - 1, org.Z]);
 
         return neighbors;
     }
@@ -83,19 +86,17 @@ public class Maze  {
     // Return the neighbor tile with input direction 
     public static Tile GetDirNeighborTile(Tile org, int dir)
     {
-        Tile[,] tile = GameObject.Find("LevelManager").GetComponent<LevelManager>().maze.tile;
-
         int dir_x = dir == 1 ? 1 : dir == 3 ? -1 : 0;
         int dir_z = dir == 0 ? 1 : dir == 2 ? -1 : 0;
         int x = org.X + dir_x;
         int z = org.Z + dir_z;
 
-        if ((x < 0) || (x > (tile.GetLength(0) - 1)))
+		if ((x < 0) || (x > (mazeTile.GetLength(0) - 1)))
             return null;
-        if ((z < 0) || (z > (tile.GetLength(1) - 1)))
+		if ((z < 0) || (z > (mazeTile.GetLength(1) - 1)))
             return null;
 
-        return tile[x, z];
+		return mazeTile[x, z];
     }
 
     //---------------------------------------
@@ -104,9 +105,7 @@ public class Maze  {
     // Get a random tile from maze
     public static Tile GetRandomTile()
     {
-        Tile[,] tile = GameObject.Find("LevelManager").GetComponent<LevelManager>().maze.tile;
-
-        return tile[Random.Range(0, tile.GetLength(0)), Random.Range(0, tile.GetLength(1))];
+		return mazeTile[Random.Range(0, mazeTile.GetLength(0)), Random.Range(0, mazeTile.GetLength(1))];
     }
 
     // Get a random tile from input list
@@ -192,12 +191,10 @@ public class Maze  {
     // Set all the neighbor tiles to walkable state.
     public static void UpdateWalkableTiles(Tile org)
     {
-        List<Tile> inUsingTiles = GameObject.Find("LevelManager").GetComponent<LevelManager>().maze.inUsingTiles;
-
         // Reset all the tile state and clear inUsingTiles
         foreach (Tile tile in inUsingTiles)
         {
-            tile.State = TileState.None;
+			tile.ResetTileState ();
         }
         inUsingTiles.Clear();
 
@@ -212,6 +209,15 @@ public class Maze  {
             }
         }
     }
+
+	// Reset all tiles' states to none
+	public static void ResetAllTileState()
+	{
+		foreach (Tile tile in mazeTileList)
+		{
+			tile.ResetTileState ();
+		}
+	}
     #endregion
 
     //---------------------------------------
@@ -227,4 +233,111 @@ public class Maze  {
 
         return shortSideLength;
     }
+
+	//---------------------------------------
+	//      Get range tiles
+	//---------------------------------------
+	public static Tile GetMazeTile(int X, int Z)
+	{
+		if ((X > (width - 1)) || (X < 0))
+			return null;
+		if ((Z > (length - 1)) || (Z < 0))
+			return null;
+
+		return mazeTile [X, Z];
+	}
+
+	public static List<Tile> GetRangeTiles(Tile org, RangeData rangeData)
+	{
+		List<Tile> newList = new List<Tile> ();
+
+		int startIndex = rangeData.range * -1;
+
+		if (rangeData.outOfRange)
+		{
+			foreach (Tile t in mazeTileList)
+			{
+				if (CheckTargetOutOfRange (org, t, rangeData.range))
+					newList.Add (t);
+			}
+		}
+		else
+		{
+			for (int i = startIndex; i <= rangeData.range; i++)
+			{
+				for (int j = startIndex; j <= rangeData.range; j++)
+				{
+					Tile tile = GetMazeTile (org.X + i, org.Z + j);
+
+					if (!CheckRangeDataCondition(org, tile, rangeData))
+						continue;
+
+					newList.Add (tile);
+				}
+			}
+		}
+
+		return newList;
+	}
+
+	static bool CheckRangeDataCondition(Tile org, Tile target, RangeData rangeData)
+	{
+		if (target == null)
+			return false;
+
+		if (!CheckTargetInRange (org, target, rangeData.range))
+			return false;
+
+		if (rangeData.excludeOrigin)
+		{
+			if (org == target)
+				return false;
+		}
+
+		if (rangeData.includeRangeTilesOnly)
+		{
+			if (!CheckTargetIsRightOnRange (org, target, rangeData.range))
+				return false;
+		}
+
+		return true;
+	}
+
+	static bool CheckTargetInRange(Tile org, Tile target, int range)
+	{
+		bool pass = false;
+		int distance = Mathf.Abs(target.X - org.X) + Mathf.Abs(target.Z - org.Z);
+
+		if ((distance < GetMazeShortestSide ()) && (distance >= 0))
+			pass = (distance <= range);
+
+		return pass;
+	}
+
+	static bool CheckTargetOutOfRange(Tile org, Tile target, int range)
+	{
+		bool pass = false;
+		int distance = Mathf.Abs(target.X - org.X) + Mathf.Abs(target.Z - org.Z);
+
+		if ((distance < GetMazeShortestSide ()) && (distance >= 0))
+			pass = (distance > range);
+
+		return pass;
+	}
+
+	static bool CheckTargetIsRightOnRange(Tile org, Tile target, int range)
+	{
+		int distance = Mathf.Abs(target.X - org.X) + Mathf.Abs(target.Z - org.Z);
+
+		return (distance == range);
+	}
+}
+
+[System.Serializable]
+public class RangeData
+{
+	public int range = 0;
+	public bool outOfRange = false;
+	public bool excludeOrigin = false;
+	public bool includeRangeTilesOnly = false;
 }
