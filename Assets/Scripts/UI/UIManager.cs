@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIManager {
+public class UIManager : MonoBehaviour
+{
     //=======================================
     //      Variables
     //=======================================
     public LevelManager levelManager;
     public PlayerCharacter playerCharacter;
+
+    private Camera cam;
+    private UIWidget joyStickArea;
+    private UIJoyStick joyStick;
 
     public Dictionary<string, abilityButton> abilityButtons;
     
@@ -15,18 +20,6 @@ public class UIManager {
     //=======================================
     //      Struct
     //=======================================
-    public UIManager()
-    {
-        levelManager = LevelManager.GetLevelManager();
-
-        abilityButtons = new Dictionary<string, abilityButton>();
-        InitNewButton("Head");
-        InitNewButton("Arms");
-        InitNewButton("Body");
-        InitNewButton("Legs");
-        InitNewButton("Misc");
-    }
-
     public struct abilityButton
     {
         public GameObject buttonObj;
@@ -37,18 +30,49 @@ public class UIManager {
     //=======================================
     //      Functions
     //=======================================
-    // Use this for initialization
-    void Start ()
+    void Start()
     {
-        
+        levelManager = LevelManager.GetLevelManager();
+
+        cam = GameObject.Find("UICamera").GetComponent<Camera>();
+        joyStick = GameObject.Find("JoyStick").GetComponent<UIJoyStick>();
+        joyStickArea = GameObject.Find("Widget_JoyStickArea").GetComponent<UIWidget>();
+
+        abilityButtons = new Dictionary<string, abilityButton>();
+        InitNewButton("Head");
+        InitNewButton("Arms");
+        InitNewButton("Body");
+        InitNewButton("Legs");
+        InitNewButton("Misc");
     }
-	
-	// Update is called once per frame
+
 	void Update ()
     {
-		
-	}
+        if (Input.GetMouseButtonDown(0))
+            TryUpdateJoyStickPos();
+    }
 
+    //---------------------------------------
+    //      JoyStick
+    //---------------------------------------
+    void TryUpdateJoyStickPos()
+    {
+        // Check if player clicks/taps in the joystick area
+        Vector3 clickPos = cam.ScreenToWorldPoint(Input.mousePosition);
+        Vector3[] corners = joyStickArea.worldCorners;
+        Rect newRect = new Rect(corners[0].x, corners[0].y, (corners[3].x - corners[0].x), (corners[1].y - corners[0].y));
+        if (!newRect.Contains(clickPos))
+            return;
+
+        // Enable and update joystick position, then process mouse to click/taps on it
+        joyStick.transform.parent.transform.position = clickPos;
+        joyStick.EnableJoyStick(true);
+        cam.GetComponent<UICamera>().ProcessMouse();
+    }
+
+    //---------------------------------------
+    //      Ability Buttons
+    //---------------------------------------
     void InitNewButton(string partType)
     {
         abilityButton newButton = new abilityButton();

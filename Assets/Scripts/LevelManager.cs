@@ -65,7 +65,7 @@ public class LevelManager : MonoBehaviour {
         // Get component reference to the attached script
         mazeGenerator = new MazeGenerator();
         unitSpawner = new UnitSpawner();
-        uiManager = new UIManager();
+        uiManager = gameObject.AddComponent<UIManager>();
 
         // Start init the game
         InitGame();
