@@ -753,7 +753,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1330729304694840}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -283, y: -540, z: 0}
+  m_LocalPosition: {x: -282, y: -540, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4111262971932492}
@@ -769,7 +769,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1838515019576038}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3, y: -540, z: 0}
+  m_LocalPosition: {x: -2, y: -540, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4629850016366766}
@@ -837,7 +837,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1794371258585108}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1, y: 32, z: 0}
+  m_LocalPosition: {x: 0, y: 32, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4998344387971206}
@@ -850,7 +850,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1251580655524160}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4601673004384178}
@@ -1008,7 +1008,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1509668924598574}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 137, y: -540, z: 0}
+  m_LocalPosition: {x: 138, y: -540, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4593242089260010}
@@ -1024,7 +1024,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1499288545396138}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -143, y: -540, z: 0}
+  m_LocalPosition: {x: -142, y: -540, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4504737042130360}
@@ -1067,7 +1067,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1233626122801526}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1, y: 550, z: 0}
+  m_LocalPosition: {x: 0, y: 550, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4638404316247198}
@@ -1098,7 +1098,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1791680686691926}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 277, y: -540, z: 0}
+  m_LocalPosition: {x: 278, y: -540, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4879321168941892}
@@ -1571,7 +1571,7 @@ MonoBehaviour:
     relative: 1
     absolute: 0
   updateAnchors: 1
-  mColor: {r: 1, g: 1, b: 1, a: 0.272}
+  mColor: {r: 1, g: 1, b: 1, a: 0.19607843}
   mPivot: 4
   mWidth: 160
   mHeight: 160
@@ -2121,7 +2121,7 @@ MonoBehaviour:
     relative: 1
     absolute: 0
   updateAnchors: 1
-  mColor: {r: 0.8235294, g: 0.8235294, b: 0.8235294, a: 0.884}
+  mColor: {r: 0.8235294, g: 0.8235294, b: 0.8235294, a: 0.47058824}
   mPivot: 4
   mWidth: 110
   mHeight: 110
@@ -2386,7 +2386,7 @@ MonoBehaviour:
     relative: 1
     absolute: 0
   updateAnchors: 1
-  mColor: {r: 0.9907707, g: 1, b: 0.33088237, a: 0.834}
+  mColor: {r: 0.99215686, g: 1, b: 0.32941177, a: 0.3529412}
   mPivot: 4
   mWidth: 80
   mHeight: 50
@@ -2640,7 +2640,7 @@ MonoBehaviour:
     relative: 1
     absolute: 0
   updateAnchors: 1
-  mColor: {r: 0.9907707, g: 1, b: 0.33088237, a: 0.834}
+  mColor: {r: 0.99215686, g: 1, b: 0.32941177, a: 0.3529412}
   mPivot: 4
   mWidth: 80
   mHeight: 50
@@ -2891,7 +2891,7 @@ MonoBehaviour:
     relative: 1
     absolute: 0
   updateAnchors: 1
-  mColor: {r: 0.9907707, g: 1, b: 0.33088237, a: 0.834}
+  mColor: {r: 0.99215686, g: 1, b: 0.32941177, a: 0.3529412}
   mPivot: 4
   mWidth: 50
   mHeight: 80
@@ -2945,7 +2945,7 @@ MonoBehaviour:
     relative: 1
     absolute: 0
   updateAnchors: 1
-  mColor: {r: 0.9907707, g: 1, b: 0.33088237, a: 0.834}
+  mColor: {r: 0.99215686, g: 1, b: 0.32941177, a: 0.3529412}
   mPivot: 4
   mWidth: 50
   mHeight: 80

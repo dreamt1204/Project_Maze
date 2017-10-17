@@ -49,7 +49,20 @@ public class UIManager : MonoBehaviour
 	void Update ()
     {
         if (Input.GetMouseButtonDown(0))
+        {
             TryUpdateJoyStickPos();
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            levelManager.playerCharacter.keepWalkingAnim = false;
+        }
+
+        if (joyStick.joyStickDir != -1)
+        {
+            levelManager.playerCharacter.keepWalkingAnim = true;
+            levelManager.playerCharacter.TryMoveToDirTile(joyStick.joyStickDir);
+        }   
     }
 
     //---------------------------------------

@@ -10,7 +10,6 @@ public class Maze  {
 	public static int length;
 	public static Tile[,] mazeTile;
     public static List<Tile> mazeTileList;
-    private static List<Tile> inUsingTiles;
 
 	public Maze(int mazeWidth, int mazeLength)
 	{
@@ -18,7 +17,6 @@ public class Maze  {
 		length = mazeLength;
 		mazeTile = new Tile[width, length];
 		mazeTileList = new List<Tile>();
-		inUsingTiles = new List<Tile> ();
 	}
 
     #region Maze Static Functions
@@ -186,28 +184,6 @@ public class Maze  {
         }
 
         return walkables;
-    }
-
-    // Set all the neighbor tiles to walkable state.
-    public static void UpdateWalkableTiles(Tile org)
-    {
-        // Reset all the tile state and clear inUsingTiles
-        foreach (Tile tile in inUsingTiles)
-        {
-			tile.ResetTileState ();
-        }
-        inUsingTiles.Clear();
-
-        // Set walkable state to walkable neighbors and update inUsingTiles
-        List<Tile> walkables = GetWalkableTiles(org);
-        foreach (Tile tile in walkables)
-        {
-            if (tile.State != TileState.Walkable)
-            {
-                tile.State = TileState.Walkable;
-                inUsingTiles.Add(tile);
-            }
-        }
     }
 
 	// Reset all tiles' states to none

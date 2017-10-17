@@ -10,6 +10,12 @@ public enum BodyPartOwnerType
     PlayerCharacter,
 }
 
+public enum ActionType
+{
+    None,
+    Walking,
+}
+
 public class Unit : MonoBehaviour {
     //=======================================
     //      Variables
@@ -25,16 +31,17 @@ public class Unit : MonoBehaviour {
 	// Tile
 	protected Tile currentTile;
 
-    // Walking
-	public bool isWalking = false;
-    protected bool KeepWalking = false;
-    protected bool ArrivedNextTile = false;
+    // Action
+    protected ActionType currentAction;
 
     // Anim
     protected bool facingRight = false;
     protected string currentAnim;
     protected SkeletonAnimation skeletonAnim;
     private const float walkAnimScaleMultiplier = 3f;
+
+    public bool keepWalkingAnim = false;
+    public bool playWalkingAnim = false;
 
     // Body part
     [Serializable]
@@ -86,10 +93,23 @@ public class Unit : MonoBehaviour {
 
     public virtual void Update()
     {
-        if (isWalking)
+        if (playWalkingAnim)
             PlayLoopAnim("Walk");
         else
             PlayLoopAnim("Idle");
+    }
+
+    //---------------------------------------
+    //      Action
+    //---------------------------------------
+    public bool isAvailable()
+    {
+        return (currentAction == ActionType.None);
+    }
+
+    public ActionType GetCurrentAction()
+    {
+        return currentAction;
     }
 
     //---------------------------------------
@@ -233,16 +253,27 @@ public class Unit : MonoBehaviour {
     //---------------------------------------
     public void TryMoveToTile(Tile targetTile)
 	{
-		if (isWalking && !KeepWalking)
-			return;
+        if (!isAvailable())
+            return;
 
 		if (targetTile == CurrentTile)
 			return;
 
-		MoveToTile (targetTile);
+        if ((targetTile == null) || (Maze.WallInBetween(currentTile, targetTile)))
+        {
+            playWalkingAnim = false;
+            return;
+        }
+
+        MoveToTile (targetTile);
 	}
 
-	public void MoveToTile(Tile targetTile)
+    public void TryMoveToDirTile(int dir)
+    {
+        TryMoveToTile(Maze.GetDirNeighborTile(currentTile, dir));
+    }
+
+    public void MoveToTile(Tile targetTile)
 	{
         TryTurn(targetTile);
         StartCoroutine ("MoveToTileCoroutine", targetTile);
@@ -258,14 +289,16 @@ public class Unit : MonoBehaviour {
 
 	IEnumerator MoveToTileCoroutine (Tile targetTile)
 	{
-        ArrivedNextTile = false;
-        isWalking = true;
-        Vector3 target = targetTile.gameObject.transform.position;
+        currentAction = ActionType.Walking;
+        playWalkingAnim = true;
 
+        // Update anim play speed
+        float originalTimeScale = skeletonAnim.timeScale;
         skeletonAnim.timeScale = moveSpeed * 0.01f * walkAnimScaleMultiplier;
-
+        
+        Vector3 target = targetTile.gameObject.transform.position;
         while (Vector3.Distance(transform.position, target) > 0.25f)
-		{
+        {
 			transform.Translate((target - transform.position).normalized * Time.deltaTime * moveSpeed * movementMultiplier);
 
             yield return null;
@@ -273,9 +306,11 @@ public class Unit : MonoBehaviour {
         transform.position = target;
         CurrentTile = targetTile;
 
-        if (!KeepWalking)
-            isWalking = false;
+        // Reset unit state
+        skeletonAnim.timeScale = originalTimeScale;
+        currentAction = ActionType.None;
 
-        ArrivedNextTile = true;
+        if (!keepWalkingAnim)
+            playWalkingAnim = false;
     }
 }

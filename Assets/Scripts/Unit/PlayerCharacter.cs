@@ -26,7 +26,6 @@ public class PlayerCharacter : Unit {
 			currentTile = value;
             currentTile.CheckTileAction();
             currentTile.CheckPlayerTileAction();
-            Maze.UpdateWalkableTiles(currentTile);
         }
 	}
 
@@ -48,71 +47,11 @@ public class PlayerCharacter : Unit {
 	public override void Update()
 	{
         base.Update();
-
-        HoldingMove ();
 	}
 
     //---------------------------------------
     //      Movement
     //---------------------------------------
-    // This feature lets player move to the next time while player is holding the mouse during movement.
-    // The direction is calculate based on the mouse and character origin.
-    public void HoldingMove()
-	{
-        // Check if player is holding the mouse during movement. If true, set KeepWalking flag.
-        if (!KeepWalking)
-		{
-            if (isWalking && Input.GetMouseButton(0))
-                KeepWalking = true;
-        }
-        // If KeepWalking is set...
-        else
-        {
-            // Unset KeepWalking while player release the mouse.
-            if (Input.GetMouseButtonUp (0))
-			{
-                KeepWalking = false;
-            }
-			// If player finished his movement and is ready for the next move, move the character to the walkable tile with holding direction.
-			else if (ArrivedNextTile)
-			{
-				Tile nextTile = Maze.GetDirNeighborTile (currentTile, GetHoldingMoveDir());
-                if ((nextTile != null) && (nextTile.State == TileState.Walkable))
-                    TryMoveToTile(nextTile);
-                else
-                    isWalking = false;
-            }
-		}
-    }
-
-	// Get the direction calculated based on the mouse and character origin.
-	public int GetHoldingMoveDir()
-	{
-		int dir = 0;
-
-		Vector3 charScreenPos = playerCamera.WorldToScreenPoint (transform.position);
-		charScreenPos = new Vector3 (charScreenPos.x, charScreenPos.y, 0);
-
-		float length_x = (Input.mousePosition.x - charScreenPos.x);
-		float length_y = (Input.mousePosition.y - charScreenPos.y);
-
-		if (Mathf.Abs (length_x) >= Mathf.Abs (length_y))
-		{
-			if (length_x >= 0)
-				dir = 1;
-			else
-				dir = 3;
-		}
-		else
-		{
-			if (length_y >= 0)
-				dir = 0;
-			else
-				dir = 2;
-		}
-
-		return dir;
-	}
 
     //---------------------------------------
     //      Body Part

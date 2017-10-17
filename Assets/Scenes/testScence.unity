@@ -155,8 +155,7 @@ MonoBehaviour:
   customMazeSize: 0
   mazeWidth: 10
   mazeLength: 10
-  customMazeObject: {fileID: 1754187230317282, guid: 0c8f2be7470a32747a015b514409f86f,
-    type: 2}
+  customMazeObject: {fileID: 0}
   customGameModePosition: 1
   customBodyPartChestPosition: 1
   playerCharacterPrefab: {fileID: 1580977563646686, guid: b6007ed5a665c594f900229921919ff8,
@@ -264,11 +263,6 @@ Prefab:
     - target: {fileID: 4658922473715448, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_RootOrder
       value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114726744885701342, guid: af57739e56be62c43aa85e6e8d11533f,
-        type: 2}
-      propertyPath: mColor.a
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}

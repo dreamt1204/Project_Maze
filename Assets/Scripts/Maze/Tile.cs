@@ -5,7 +5,6 @@ using UnityEngine;
 public enum TileState
 {
 	None,			// No state and can't be selected
-	Walkable,		// Unit can walk to this tile
 	Selectable		// Can be selected while using abilities
 };
 
@@ -26,7 +25,7 @@ public class Tile : MonoBehaviour {
 
     // Floor
     public GameObject floor_obj;
-	private Color originalFloorColor;
+	private Color originalFloorColor = Color.white;
 
     // State
     TileState state = TileState.None;
@@ -34,7 +33,7 @@ public class Tile : MonoBehaviour {
 
 	// Selectable highlight variables
 	float pulseTime = 0;
-	const float pulseFrequency = 1;
+	const float pulsePeriod = 0.5f;
 	bool pulseDir;
 	Color pulseStartColor  = new Color(1f, 1f, 0.1f);
 	Color pulseEndColor  = new Color(1.5f, 1.5f, 0.2f);
@@ -90,7 +89,7 @@ public class Tile : MonoBehaviour {
 			Material material = floor_obj.GetComponent<MeshRenderer> ().material;
 			material.color = pulseStartColor;
 
-			pulseTime += Time.deltaTime/pulseFrequency;
+			pulseTime += Time.deltaTime/pulsePeriod;
 			if (pulseDir)
 			{
 				material.color = Color.Lerp(pulseStartColor, pulseEndColor, pulseTime);
@@ -115,24 +114,9 @@ public class Tile : MonoBehaviour {
 
 	void ResetTileColor()
 	{
-		floor_obj.GetComponent<MeshRenderer> ().material.color = Color.white;
+		floor_obj.GetComponent<MeshRenderer> ().material.color = originalFloorColor;
 		ResetHighlightPulseVars ();
 	}
-
-	//---------------------------------------
-	//      Tile select detection
-	//---------------------------------------
-    void OnClick()
-    {
-        if (state == TileState.None)
-            return;
-
-        if (state == TileState.Walkable)
-        {
-            if (!levelManager.playerCharacter.isWalking)
-                levelManager.playerCharacter.TryMoveToTile(this);
-        }  
-    }
 
     //---------------------------------------
     //      Tile item
@@ -189,19 +173,5 @@ public class Tile : MonoBehaviour {
 			State = TileState.None;
 
 		statePrevious = TileState.None;
-	}
-
-	public void HighlightSelectableTile(bool highlight)
-	{
-		Material material = floor_obj.GetComponent<MeshRenderer> ().material;
-
-		if (highlight)
-		{
-			material.color = Color.green;
-		}
-		else
-		{
-			material.color = Color.white;
-		}
 	}
 }
