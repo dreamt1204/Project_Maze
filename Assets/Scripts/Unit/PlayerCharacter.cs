@@ -81,14 +81,14 @@ public class PlayerCharacter : Unit {
         if ((part == null) || (part.playerAbility == null))
         {
             PlayerAbilities[partType] = null;
-            levelManager.uiManager.ClearAbilityIcon(partType);
+            LevelManager.instance.uiManager.ClearAbilityIcon(partType);
         }
         // Update PlayerAbilities while body part gets updated
         else
         {
             PlayerAbilities[partType] = part.playerAbility;
 			part.playerAbility.Init ();
-            levelManager.uiManager.UpdateAbilityIcon(partType);
+			LevelManager.instance.uiManager.UpdateAbilityIcon(partType);
         }
     }
 }

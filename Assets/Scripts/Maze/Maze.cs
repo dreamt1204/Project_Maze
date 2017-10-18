@@ -1,4 +1,11 @@
-﻿using System.Collections;
+﻿//============================== Class Definition ==============================
+// 
+// This a container class of basic maze info and maze tiles.
+// This class also has all the maze and tile related static function.
+//
+//==============================================================================
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,16 +13,16 @@ public class Maze  {
 	//=======================================
 	//      Variables
 	//=======================================
-	public static int width;
-	public static int length;
+	public static int mazeWidth;
+	public static int mazeLength;
 	public static Tile[,] mazeTile;
     public static List<Tile> mazeTileList;
 
-	public Maze(int mazeWidth, int mazeLength)
+	public Maze(int width, int length)
 	{
-		width = mazeWidth;
-		length = mazeLength;
-		mazeTile = new Tile[width, length];
+		mazeWidth = width;
+		mazeLength = length;
+		mazeTile = new Tile[mazeWidth, mazeLength];
 		mazeTileList = new List<Tile>();
 	}
 
@@ -23,14 +30,8 @@ public class Maze  {
     //=======================================
     //      Maze Static Functions
     //=======================================
-    // Check if there is a wall between these two tiles
-    public static bool WallInBetween(Tile tile_1, Tile tile_2)
-    {
-        return tile_1.wall[GetNeighborTileDir(tile_1, tile_2)];
-    }
-
     //---------------------------------------
-    //      Neighbor functions
+    //      Check functions
     //---------------------------------------
     // Check if the two tiles are neighbors
     public static bool TilesAreNeighbors(Tile tile_1, Tile tile_2)
@@ -38,23 +39,21 @@ public class Maze  {
         return ((Mathf.Abs(tile_1.X - tile_2.X) + Mathf.Abs(tile_1.Z - tile_2.Z)) == 1);
     }
 
-    // Return a list of neighbor tiles
-    public static List<Tile> GetNeighborTiles(Tile org)
-    {
-        List<Tile> neighbors = new List<Tile>();
+	// Check if there is a wall between these two tiles
+	public static bool WallBetweenTiles(Tile tile_1, Tile tile_2)
+	{
+		return tile_1.wall[GetNeighborTileDir(tile_1, tile_2)];
+	}
 
-		if ((org.Z + 1) < mazeTile.GetLength(1))
-			neighbors.Add(mazeTile[org.X, org.Z + 1]);
-		if ((org.X + 1) < mazeTile.GetLength(0))
-			neighbors.Add(mazeTile[org.X + 1, org.Z]);
-        if ((org.Z - 1) >= 0)
-			neighbors.Add(mazeTile[org.X, org.Z - 1]);
-        if ((org.X - 1) >= 0)
-			neighbors.Add(mazeTile[org.X - 1, org.Z]);
+	// Check if there is a wall on the direction of the current tile
+	public static bool WallOnDir(Tile org, int dir)
+	{
+		return org.wall[dir];
+	}
 
-        return neighbors;
-    }
-
+	//---------------------------------------
+	//      Get direction functions
+	//---------------------------------------
     // Get direction of the target tile. 
     public static int GetNeighborTileDir(Tile org, Tile target)
 	{
@@ -81,21 +80,7 @@ public class Maze  {
 		return dir;
 	}
 
-    // Return the neighbor tile with input direction 
-    public static Tile GetDirNeighborTile(Tile org, int dir)
-    {
-        int dir_x = dir == 1 ? 1 : dir == 3 ? -1 : 0;
-        int dir_z = dir == 0 ? 1 : dir == 2 ? -1 : 0;
-        int x = org.X + dir_x;
-        int z = org.Z + dir_z;
-
-		if ((x < 0) || (x > (mazeTile.GetLength(0) - 1)))
-            return null;
-		if ((z < 0) || (z > (mazeTile.GetLength(1) - 1)))
-            return null;
-
-		return mazeTile[x, z];
-    }
+    
 
     //---------------------------------------
     //      Get tile / tiles
@@ -111,6 +96,39 @@ public class Maze  {
     {
         return tmpList[Random.Range(0, tmpList.Count)];
     }
+
+	// Return a list of neighbor tiles
+	public static List<Tile> GetNeighborTiles(Tile org)
+	{
+		List<Tile> neighbors = new List<Tile>();
+
+		if ((org.Z + 1) < mazeTile.GetLength(1))
+			neighbors.Add(mazeTile[org.X, org.Z + 1]);
+		if ((org.X + 1) < mazeTile.GetLength(0))
+			neighbors.Add(mazeTile[org.X + 1, org.Z]);
+		if ((org.Z - 1) >= 0)
+			neighbors.Add(mazeTile[org.X, org.Z - 1]);
+		if ((org.X - 1) >= 0)
+			neighbors.Add(mazeTile[org.X - 1, org.Z]);
+
+		return neighbors;
+	}
+
+	// Return the neighbor tile with input direction 
+	public static Tile GetDirNeighborTile(Tile org, int dir)
+	{
+		int dir_x = dir == 1 ? 1 : dir == 3 ? -1 : 0;
+		int dir_z = dir == 0 ? 1 : dir == 2 ? -1 : 0;
+		int x = org.X + dir_x;
+		int z = org.Z + dir_z;
+
+		if ((x < 0) || (x > (mazeTile.GetLength(0) - 1)))
+			return null;
+		if ((z < 0) || (z > (mazeTile.GetLength(1) - 1)))
+			return null;
+
+		return mazeTile[x, z];
+	}
     
     //---------------------------------------
     //      Update tile list
@@ -179,7 +197,7 @@ public class Maze  {
 
         foreach (Tile tile in neighbors)
         {
-            if (!WallInBetween(org, tile))
+			if (!WallBetweenTiles(org, tile))
                 walkables.Add(tile);
         }
 
@@ -215,9 +233,9 @@ public class Maze  {
 	//---------------------------------------
 	public static Tile GetMazeTile(int X, int Z)
 	{
-		if ((X > (width - 1)) || (X < 0))
+		if ((X > (mazeWidth - 1)) || (X < 0))
 			return null;
-		if ((Z > (length - 1)) || (Z < 0))
+		if ((Z > (mazeLength - 1)) || (Z < 0))
 			return null;
 
 		return mazeTile [X, Z];

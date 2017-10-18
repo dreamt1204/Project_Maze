@@ -259,7 +259,7 @@ public class Unit : MonoBehaviour {
 		if (targetTile == CurrentTile)
 			return;
 
-        if ((targetTile == null) || (Maze.WallInBetween(currentTile, targetTile)))
+		if ((targetTile == null) || (Maze.WallBetweenTiles(currentTile, targetTile)))
         {
             playWalkingAnim = false;
             return;

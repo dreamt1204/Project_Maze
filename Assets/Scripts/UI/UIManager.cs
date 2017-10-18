@@ -7,8 +7,7 @@ public class UIManager : MonoBehaviour
     //=======================================
     //      Variables
     //=======================================
-    public LevelManager levelManager;
-    public PlayerCharacter playerCharacter;
+    public LevelManager level;
 
     private Camera cam;
     private UIWidget joyStickArea;
@@ -30,9 +29,9 @@ public class UIManager : MonoBehaviour
     //=======================================
     //      Functions
     //=======================================
-    void Start()
+    void Awake()
     {
-        levelManager = LevelManager.GetLevelManager();
+        level = LevelManager.instance;
 
         cam = GameObject.Find("UICamera").GetComponent<Camera>();
         joyStick = GameObject.Find("JoyStick").GetComponent<UIJoyStick>();
@@ -55,13 +54,13 @@ public class UIManager : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {
-            levelManager.playerCharacter.keepWalkingAnim = false;
+			level.playerCharacter.keepWalkingAnim = false;
         }
 
         if (joyStick.joyStickDir != -1)
         {
-            levelManager.playerCharacter.keepWalkingAnim = true;
-            levelManager.playerCharacter.TryMoveToDirTile(joyStick.joyStickDir);
+			level.playerCharacter.keepWalkingAnim = true;
+			level.playerCharacter.TryMoveToDirTile(joyStick.joyStickDir);
         }   
     }
 
@@ -100,10 +99,10 @@ public class UIManager : MonoBehaviour
     {
         abilityButtons[partType].buttonObj.SetActive(true);
 
-        string newSprite = levelManager.playerCharacter.PlayerAbilities[partType].spriteName;
+		string newSprite = level.playerCharacter.PlayerAbilities[partType].spriteName;
         if ((newSprite != null) && (AtlasHasSprite(abilityButtons[partType].iconSprite.atlas, newSprite)))
         {
-            abilityButtons[partType].iconSprite.spriteName = levelManager.playerCharacter.PlayerAbilities[partType].spriteName;
+			abilityButtons[partType].iconSprite.spriteName = level.playerCharacter.PlayerAbilities[partType].spriteName;
         }
         else
         {

@@ -25,4 +25,10 @@ public static class Utilities
 
         return randomNumbers;
     }
+
+	public static void TryCatchError(bool statement, string message)
+	{
+		if( statement )
+			Debug.LogError("Error: " + message);
+	}
 }

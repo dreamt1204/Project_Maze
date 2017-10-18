@@ -1,36 +1,27 @@
-﻿using System.Collections;
+﻿//============================== Class Definition ==============================
+// 
+// This is a static class that contains all the unit spawn functions.
+//
+//==============================================================================
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnitSpawner {
+public static class UnitSpawner {
     //=======================================
-    //      Variables
+    //      Static Functions
     //=======================================
-    LevelManager levelManager;
-
-    public UnitSpawner()
-    {
-        levelManager = LevelManager.GetLevelManager();
-    }
-
-    //=======================================
-    //      Functions
-    //=======================================
-    public Unit SpawnUnit(GameObject prefab, Tile targetTile)
+    public static Unit SpawnUnit(GameObject prefab, Tile targetTile)
     {
         Unit unit = GameObject.Instantiate(prefab, targetTile.transform.position, Quaternion.Euler(0, 0, 0)).GetComponent<Unit>();
-        unit.Init(levelManager, targetTile);
+		unit.Init(LevelManager.instance, targetTile);
 
         return unit;
     }
 
-    public PlayerCharacter SpawnPlayerCharacter(Tile targetTile)
+    public static PlayerCharacter SpawnPlayerCharacter(Tile targetTile)
     {
-        GameObject playerCharacterPrefab = levelManager.playerCharacterPrefab;
-
-        PlayerCharacter character = GameObject.Instantiate(playerCharacterPrefab, targetTile.transform.position, Quaternion.Euler(0, 0, 0)).GetComponent<PlayerCharacter>();
-        character.Init(levelManager, targetTile);
-
-        return character;
+		return (PlayerCharacter)SpawnUnit(LevelManager.instance.playerCharacterPrefab, targetTile);
     }
 }
