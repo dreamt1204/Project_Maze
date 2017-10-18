@@ -1,4 +1,11 @@
-﻿using System.Collections;
+﻿//============================== Class Definition ==============================
+// 
+// This is the base class for Player ability.
+// Have to create prefab with this attached for future use.
+//
+//==============================================================================
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -7,8 +14,7 @@ public class PlayerAbility : MonoBehaviour {
     //=======================================
     //      Variables
     //=======================================
-	private LevelManager levelManager;
-	private PlayerCharacter playerCharacter;
+	LevelManager level;
 
     public string abilityName;
     public string spriteName;
@@ -21,13 +27,12 @@ public class PlayerAbility : MonoBehaviour {
     //=======================================
 	public virtual void Init()
 	{
-		levelManager = GameObject.Find ("LevelManager").GetComponent<LevelManager> ();
-		playerCharacter = levelManager.playerCharacter;
+        level = LevelManager.instance;
 	}
 
 	public void DisplayRangeTiles()
 	{
-		List<Tile> tiles = Maze.GetRangeTiles (playerCharacter.CurrentTile, rangeData);
+		List<Tile> tiles = MazeUTL.GetRangeTiles (level.playerCharacter.CurrentTile, rangeData);
 
 		foreach (Tile tile in tiles)
 		{

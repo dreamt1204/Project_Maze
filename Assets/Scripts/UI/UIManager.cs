@@ -1,4 +1,10 @@
-﻿using System.Collections;
+﻿//============================== Class Definition ==============================
+// 
+// This is a helper class that control all the UI logic.
+//
+//==============================================================================
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,7 +13,7 @@ public class UIManager : MonoBehaviour
     //=======================================
     //      Variables
     //=======================================
-    public LevelManager level;
+    LevelManager level;
 
     private Camera cam;
     private UIWidget joyStickArea;
@@ -54,12 +60,11 @@ public class UIManager : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {
-			level.playerCharacter.keepWalkingAnim = false;
+            level.playerCharacter.StopKeepWalkingAnim();
         }
 
         if (joyStick.joyStickDir != -1)
         {
-			level.playerCharacter.keepWalkingAnim = true;
 			level.playerCharacter.TryMoveToDirTile(joyStick.joyStickDir);
         }   
     }

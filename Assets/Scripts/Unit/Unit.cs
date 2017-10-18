@@ -1,14 +1,16 @@
-﻿using System;
+﻿//============================== Class Definition ==============================
+// 
+// This is the base class for Units (PlayerCharacter and Enemy).
+// To spawn a unit, use UnitSpawner static functions.
+//
+//==============================================================================
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Spine;
 using Spine.Unity;
-
-public enum BodyPartOwnerType
-{
-    PlayerCharacter,
-}
 
 public enum ActionType
 {
@@ -20,13 +22,11 @@ public class Unit : MonoBehaviour {
     //=======================================
     //      Variables
     //=======================================
-    protected LevelManager levelManager;
+    LevelManager level;
 
-    //Stat
-    [SerializeField]
-    protected float health = 100;
-    [SerializeField]
-    protected float moveSpeed = 100;
+    // Stat
+    [SerializeField] protected float health = 100;
+    [SerializeField] protected float moveSpeed = 100;
 
 	// Tile
 	protected Tile currentTile;
@@ -34,28 +34,31 @@ public class Unit : MonoBehaviour {
     // Action
     protected ActionType currentAction;
 
+    // Body Part
+    public BodyPartOwnerType ownerType;
+    public List<BodyPartData> BodyParts;
+
     // Anim
     protected bool facingRight = false;
     protected string currentAnim;
     protected SkeletonAnimation skeletonAnim;
     private const float walkAnimScaleMultiplier = 3f;
 
-    public bool keepWalkingAnim = false;
-    public bool playWalkingAnim = false;
+    protected bool keepWalkingAnim = false;
+    protected bool playWalkingAnim = false;
 
-    // Body part
+    // Const
+    private const float movementMultiplier = 0.15f;
+
+    //---------------------------------------
+    //      Struct
+    //---------------------------------------
     [Serializable]
     public struct BodyPartData
     {
         public string partType;
         public BodyPart part;
     }
-
-    public BodyPartOwnerType ownerType;
-    public List<BodyPartData> BodyParts;
-
-    // Const
-    private const float movementMultiplier = 0.15f;
 
     //---------------------------------------
     //      Properties
@@ -74,6 +77,17 @@ public class Unit : MonoBehaviour {
             currentTile.CheckTileAction();
         }
     }
+    public virtual ActionType CurrentAction
+    {
+        get
+        {
+            return currentAction;
+        }
+        set
+        {
+            currentAction = value;
+        }
+    }
 
     //=======================================
     //      Functions
@@ -85,10 +99,10 @@ public class Unit : MonoBehaviour {
         UpdateBody();
     }
 
-    public virtual void Init (LevelManager lm, Tile spawnTile)
+    public virtual void Init (Tile spawnTile)
 	{
-		levelManager = lm;
-		CurrentTile = spawnTile;
+        level = LevelManager.instance;
+        CurrentTile = spawnTile;
     }
 
     public virtual void Update()
@@ -104,12 +118,7 @@ public class Unit : MonoBehaviour {
     //---------------------------------------
     public bool isAvailable()
     {
-        return (currentAction == ActionType.None);
-    }
-
-    public ActionType GetCurrentAction()
-    {
-        return currentAction;
+        return (CurrentAction == ActionType.None);
     }
 
     //---------------------------------------
@@ -121,6 +130,11 @@ public class Unit : MonoBehaviour {
 
         currentAnim = animName;
         skeletonAnim.state.SetAnimation(0, animName, true);
+    }
+
+    public void StopKeepWalkingAnim()
+    {
+        keepWalkingAnim = false;
     }
 
     //---------------------------------------
@@ -259,7 +273,7 @@ public class Unit : MonoBehaviour {
 		if (targetTile == CurrentTile)
 			return;
 
-		if ((targetTile == null) || (Maze.WallBetweenTiles(currentTile, targetTile)))
+		if ((targetTile == null) || (MazeUTL.WallBetweenNeighborTiles(currentTile, targetTile)))
         {
             playWalkingAnim = false;
             return;
@@ -270,7 +284,7 @@ public class Unit : MonoBehaviour {
 
     public void TryMoveToDirTile(int dir)
     {
-        TryMoveToTile(Maze.GetDirNeighborTile(currentTile, dir));
+        TryMoveToTile(MazeUTL.GetDirNeighborTile(currentTile, dir));
     }
 
     public void MoveToTile(Tile targetTile)
@@ -281,7 +295,7 @@ public class Unit : MonoBehaviour {
 
     public void TryTurn(Tile targetTile)
     {
-        int dir = Maze.GetNeighborTileDir(currentTile, targetTile);
+        int dir = MazeUTL.GetNeighborTileDir(currentTile, targetTile);
         facingRight = dir == 1 ? false : dir == 3 ? true : facingRight;
 
         skeletonAnim.skeleton.FlipX = facingRight;
@@ -289,7 +303,8 @@ public class Unit : MonoBehaviour {
 
 	IEnumerator MoveToTileCoroutine (Tile targetTile)
 	{
-        currentAction = ActionType.Walking;
+        CurrentAction = ActionType.Walking;
+        keepWalkingAnim = true;
         playWalkingAnim = true;
 
         // Update anim play speed
@@ -308,7 +323,7 @@ public class Unit : MonoBehaviour {
 
         // Reset unit state
         skeletonAnim.timeScale = originalTimeScale;
-        currentAction = ActionType.None;
+        CurrentAction = ActionType.None;
 
         if (!keepWalkingAnim)
             playWalkingAnim = false;

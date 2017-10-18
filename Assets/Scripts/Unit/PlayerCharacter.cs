@@ -1,16 +1,20 @@
-﻿using System.Collections;
+﻿//============================== Class Definition ==============================
+// 
+// This class contains all the player character specific properties and functions.
+//
+//==============================================================================
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerCharacter : Unit {
-	//=======================================
-	//      Variables
-	//=======================================
-	private Camera playerCamera;
-	[HideInInspector]
-	public bool hasObjective = false;
-    [HideInInspector]
-    public Dictionary<string, PlayerAbility> PlayerAbilities;
+    //=======================================
+    //      Variables
+    //=======================================
+    [HideInInspector] public Camera playerCamera;
+	[HideInInspector] public bool hasObjective = false;
+    [HideInInspector] public Dictionary<string, PlayerAbility> PlayerAbilities;
 
     //---------------------------------------
     //      Properties
@@ -33,25 +37,15 @@ public class PlayerCharacter : Unit {
     //      Functions
     //=======================================
     // Use this for initialization
-    public override void Init (LevelManager gm, Tile spawnTile)
+    public override void Init (Tile spawnTile)
 	{
-		base.Init(gm, spawnTile);
-        //playerCamera = GetComponentInChildren<Camera>();
+		base.Init(spawnTile);
+
         playerCamera = GameObject.Find("PlayerCamera").GetComponent<Camera>();
         Vector3 camPos = playerCamera.gameObject.transform.position;
         playerCamera.gameObject.transform.position = new Vector3(camPos.x + transform.position.x, camPos.y + transform.position.y, camPos.z + transform.position.z);
         playerCamera.gameObject.transform.parent = transform;
     }
-
-	// Update function
-	public override void Update()
-	{
-        base.Update();
-	}
-
-    //---------------------------------------
-    //      Movement
-    //---------------------------------------
 
     //---------------------------------------
     //      Body Part

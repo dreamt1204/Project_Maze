@@ -61,8 +61,6 @@ MonoBehaviour:
   - {fileID: 1132896773378542, guid: 3f9a4401f0d980945914a7569320df4b, type: 2}
   TileLayoutC:
   - {fileID: 1279900473387186, guid: ffd2d3ce27b1c3b4080d80e55026a741, type: 2}
-  bodyPartItem: {fileID: 114998940527041774, guid: d300446bd734be84fb5899f6f8607576,
-    type: 2}
   bodyParts:
   - {fileID: 114316107835354738, guid: ce22412cae20025458e488e243a6b760, type: 2}
   - {fileID: 114276151289404670, guid: 6ee4bcdd2e5a5ba4fbd0e31306d27704, type: 2}

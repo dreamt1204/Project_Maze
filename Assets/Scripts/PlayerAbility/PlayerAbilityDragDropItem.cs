@@ -1,17 +1,22 @@
-﻿using System.Collections;
+﻿//============================== Class Definition ==============================
+// 
+// Custom DragDropItem class for Player Ability Icons.
+//
+//==============================================================================
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAbilityDragDropItem : UIDragDropItem {
-	LevelManager levelManager;
+	LevelManager level = LevelManager.instance;
 	string partType;
 
     protected override void OnDragDropStart()
     {
-		levelManager = GameObject.Find ("LevelManager").GetComponent<LevelManager> ();
-		partType = gameObject.name.Substring (gameObject.name.LastIndexOf ("_") + 1);
+        partType = gameObject.name.Substring (gameObject.name.LastIndexOf ("_") + 1);
 
-		levelManager.playerCharacter.PlayerAbilities [partType].DisplayRangeTiles ();
+        level.playerCharacter.PlayerAbilities [partType].DisplayRangeTiles ();
 
 		base.OnDragDropStart();
     }
@@ -19,14 +24,11 @@ public class PlayerAbilityDragDropItem : UIDragDropItem {
 	protected override void OnDragDropRelease(GameObject surface)
 	{
         base.OnDragDropRelease(surface);
+        MazeUTL.ResetAllTileState();
 
         if ((surface == null) || (surface.GetComponent<Tile>() == null) || (surface.GetComponent<Tile>().State != TileState.Selectable))
-        {
-            Maze.ResetAllTileState();
             return;
-        }
 
-        Maze.ResetAllTileState();
-        levelManager.playerCharacter.PlayerAbilities[partType].ActivateAbility(surface.GetComponent<Tile>());
+        level.playerCharacter.PlayerAbilities[partType].ActivateAbility(surface.GetComponent<Tile>());
     }
 }

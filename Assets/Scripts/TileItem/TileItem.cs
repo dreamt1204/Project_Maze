@@ -1,4 +1,11 @@
-﻿using System.Collections;
+﻿//============================== Class Definition ==============================
+// 
+// This a container class store all the info of tile item.
+// Have to create prefab with this attached for future use.
+//
+//==============================================================================
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,12 +31,8 @@ public class TileItem : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
+        // Remove mis-input Body Part
         if (itemType != ItemType.BodyPart)
             bodyPart = null;
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

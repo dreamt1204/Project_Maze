@@ -1,9 +1,22 @@
-﻿using System.Collections;
+﻿//============================== Class Definition ==============================
+// 
+// This class contains all the misc static functions.
+//
+//==============================================================================
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public static class Utilities
 {
+    // Print out error message in console to catch exception
+    public static void TryCatchError(bool statement, string message)
+    {
+        if (statement)
+            Debug.LogError("Error: " + message);
+    }
+
     // Return random X unique integers from total number
     public static int[] GetRandomUniqueNumbers(int num, int totalNum)
     {
@@ -25,10 +38,4 @@ public static class Utilities
 
         return randomNumbers;
     }
-
-	public static void TryCatchError(bool statement, string message)
-	{
-		if( statement )
-			Debug.LogError("Error: " + message);
-	}
 }

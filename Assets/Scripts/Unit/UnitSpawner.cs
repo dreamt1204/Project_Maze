@@ -15,7 +15,7 @@ public static class UnitSpawner {
     public static Unit SpawnUnit(GameObject prefab, Tile targetTile)
     {
         Unit unit = GameObject.Instantiate(prefab, targetTile.transform.position, Quaternion.Euler(0, 0, 0)).GetComponent<Unit>();
-		unit.Init(LevelManager.instance, targetTile);
+		unit.Init(targetTile);
 
         return unit;
     }

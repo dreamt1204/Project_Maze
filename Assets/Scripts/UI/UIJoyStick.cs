@@ -1,7 +1,9 @@
-﻿//----------------------------------------------
-//            NGUI: Next-Gen UI kit
-// Copyright © 2011-2013 Tasharen Entertainment
-//----------------------------------------------
+﻿//============================== Class Definition ==============================
+// 
+// This dynamic virutal joystick written using NGUI functions.
+// Credit to 白米飯.
+//
+//==============================================================================
 
 using UnityEngine;
 using System.Collections;

@@ -57,4 +57,5 @@ MonoBehaviour:
     range: 2
     outOfRange: 0
     excludeOrigin: 0
-    includeRangeTilesOnly: 0
+    excludeTilesBetweenRange: 0
+    targetTiles: []
