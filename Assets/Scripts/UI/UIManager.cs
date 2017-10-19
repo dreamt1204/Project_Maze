@@ -17,9 +17,9 @@ public class UIManager : MonoBehaviour
 
     private Camera cam;
     private UIWidget joyStickArea;
-    private UIJoyStick joyStick;
-
-    public Dictionary<string, abilityButton> abilityButtons;
+	[HideInInspector] public  UIJoyStick joyStick;
+	[HideInInspector] public bool joyStickEnabled;
+	[HideInInspector] public Dictionary<string, abilityButton> abilityButtons;
     
 
     //=======================================
@@ -55,18 +55,13 @@ public class UIManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            TryUpdateJoyStickPos();
+			joyStickEnabled = true;
+			TryUpdateJoyStickPos();
         }
-
-        if (Input.GetMouseButtonUp(0))
+        else if (Input.GetMouseButtonUp(0))
         {
-            level.playerCharacter.StopKeepWalkingAnim();
+			joyStickEnabled = false;
         }
-
-        if (joyStick.joyStickDir != -1)
-        {
-			level.playerCharacter.TryMoveToDirTile(joyStick.joyStickDir);
-        }   
     }
 
     //---------------------------------------

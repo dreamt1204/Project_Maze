@@ -12,6 +12,8 @@ public class PlayerCharacter : Unit {
     //=======================================
     //      Variables
     //=======================================
+	[HideInInspector] private UIManager uiManager;
+
     [HideInInspector] public Camera playerCamera;
 	[HideInInspector] public bool hasObjective = false;
     [HideInInspector] public Dictionary<string, PlayerAbility> PlayerAbilities;
@@ -41,11 +43,31 @@ public class PlayerCharacter : Unit {
 	{
 		base.Init(spawnTile);
 
+		uiManager = level.uiManager;
+
         playerCamera = GameObject.Find("PlayerCamera").GetComponent<Camera>();
         Vector3 camPos = playerCamera.gameObject.transform.position;
         playerCamera.gameObject.transform.position = new Vector3(camPos.x + transform.position.x, camPos.y + transform.position.y, camPos.z + transform.position.z);
         playerCamera.gameObject.transform.parent = transform;
     }
+
+	public override void Update()
+	{
+		base.Update ();
+
+		// Update movement based on UIJoyStick
+		if (uiManager.joyStickEnabled)
+		{
+			if (uiManager.joyStick.joyStickDir != -1)
+			{
+				TryMoveToDirTile(uiManager.joyStick.joyStickDir);
+			}  
+		}
+		else
+		{
+			StopKeepWalkingAnim ();
+		} 
+	}
 
     //---------------------------------------
     //      Body Part

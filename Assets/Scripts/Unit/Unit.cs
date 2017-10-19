@@ -22,7 +22,7 @@ public class Unit : MonoBehaviour {
     //=======================================
     //      Variables
     //=======================================
-    LevelManager level;
+	protected LevelManager level;
 
     // Stat
     [SerializeField] protected float health = 100;
@@ -134,7 +134,8 @@ public class Unit : MonoBehaviour {
 
     public void StopKeepWalkingAnim()
     {
-        keepWalkingAnim = false;
+		if (keepWalkingAnim)
+			keepWalkingAnim = false;
     }
 
     //---------------------------------------
