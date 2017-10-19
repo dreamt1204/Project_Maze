@@ -8,6 +8,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum AbilityButtonState
+{
+	Enabled,
+	Disable,
+	CoolDown
+}
+
 public class UIManager : MonoBehaviour
 {
     //=======================================
@@ -27,7 +34,9 @@ public class UIManager : MonoBehaviour
     //=======================================
     public struct abilityButton
     {
-        public GameObject buttonObj;
+		public AbilityButtonState iconState;
+
+		public GameObject buttonObj;
         public UISprite mainSprite;
         public UISprite iconSprite;
     }
@@ -95,9 +104,18 @@ public class UIManager : MonoBehaviour
         abilityButtons.Add(partType, newButton);
     }
 
+	void UpdateabilityButtonsIconSate(abilityButton button, AbilityButtonState newState)
+	{
+		abilityButton newButton = new abilityButton();
+		newButton = button;
+		newButton.iconState = newState;
+		button = newButton;
+	}
+
     public void UpdateAbilityIcon(string partType)
     {
         abilityButtons[partType].buttonObj.SetActive(true);
+		UpdateabilityButtonsIconSate (abilityButtons [partType], AbilityButtonState.Enabled);
 
 		string newSprite = level.playerCharacter.PlayerAbilities[partType].spriteName;
         if ((newSprite != null) && (AtlasHasSprite(abilityButtons[partType].iconSprite.atlas, newSprite)))
@@ -112,7 +130,8 @@ public class UIManager : MonoBehaviour
 
     public void ClearAbilityIcon(string partType)
     {
-        abilityButtons[partType].buttonObj.SetActive(false);
+		UpdateabilityButtonsIconSate (abilityButtons [partType], AbilityButtonState.Disable);
+		abilityButtons[partType].buttonObj.SetActive(false);
     }
 
     bool AtlasHasSprite(UIAtlas atlas, string newSprite)

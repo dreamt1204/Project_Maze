@@ -25,14 +25,24 @@ public class PlayerCharacter : Unit {
 	{
         get
 		{
-			return currentTile;
+			return base.CurrentTile;
 		}
 		set
 		{
-			currentTile = value;
-            currentTile.CheckTileAction();
+			base.CurrentTile = value;
             currentTile.CheckPlayerTileAction();
         }
+	}
+	public override ActionType CurrentAction
+	{
+		get
+		{
+			return base.CurrentAction;
+		}
+		set
+		{
+			base.CurrentAction = value;
+		}
 	}
 
     //=======================================

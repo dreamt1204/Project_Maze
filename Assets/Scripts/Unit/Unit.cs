@@ -81,7 +81,7 @@ public class Unit : MonoBehaviour {
     {
         get
         {
-            return currentAction;
+			return currentAction;
         }
         set
         {
