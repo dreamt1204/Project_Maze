@@ -12,6 +12,7 @@ public class LevelManager : MonoBehaviour {
     private MazeGenerator mazeGenerator;
     private UnitSpawner unitSpawner;
 	private EnemyManager enemyManager;
+	public EventManager eventManager;
 
     #region Inspector
     [Header("Maze")]
@@ -87,6 +88,7 @@ public class LevelManager : MonoBehaviour {
 				spawnQuantity,
 				safeRadius
 			);
+		eventManager = new EventManager();
 
         // Start init the game
         InitGame();

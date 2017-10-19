@@ -12,6 +12,9 @@ public class PlayerCharacter : Unit {
     [HideInInspector]
     public Dictionary<string, PlayerAbility> PlayerAbilities;
 
+	int stepNoiseLevel = 2;
+	protected Tile tileWalkingTowards = null;
+
     //---------------------------------------
     //      Properties
     //---------------------------------------
@@ -29,6 +32,8 @@ public class PlayerCharacter : Unit {
             Maze.UpdateWalkableTiles(currentTile);
         }
 	}
+
+	public virtual Tile TileWalkingTowards {get; set;}
 
     //=======================================
     //      Functions
@@ -137,4 +142,19 @@ public class PlayerCharacter : Unit {
         // Update PlayerAbilities while body part gets updated
         PlayerAbilities[partType] = part != null ? GetBodyPartWithType(partType).playerAbility : null;
     }
+
+	// ================
+	//     JY Added 
+	// ================
+
+	public override void MoveToTile(Tile targetTile)
+	{
+		base.MoveToTile (targetTile);
+		levelManager.eventManager.makeNoise (currentTile, stepNoiseLevel);
+		TileWalkingTowards = targetTile;
+		//Debug.Log ("(1) TileWalkingTowards X = " + TileWalkingTowards.X + "; Z = " + TileWalkingTowards.Z);
+
+		// Important!!! current not removing TileWalkingTowards after movement completes
+	}
+
 }

@@ -654,14 +654,15 @@ MonoBehaviour:
   customMazeSize: 0
   mazeWidth: 10
   mazeLength: 10
-  customMazeObject: {fileID: 0}
+  customMazeObject: {fileID: 1795440594905312, guid: 83503354f249344f39745f90b6ba11f0,
+    type: 2}
   customGameModePosition: 0
   customBodyPartChestPosition: 0
   useItemGenerateLogic: 0
   numberOfItems: 0
   spawnMethod: 0
-  spawnQuantity: 4
-  safeRadius: 3
+  spawnQuantity: 1
+  safeRadius: 1
   playerCharacterPrefab: {fileID: 1580977563646686, guid: b6007ed5a665c594f900229921919ff8,
     type: 2}
   startPointPrefab: {fileID: 1319595478763322, guid: b84cedb6474764ae681a2ff96801b519,
@@ -692,7 +693,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &423427967
 Transform:
   m_ObjectHideFlags: 0
@@ -945,7 +946,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &830687629
 Transform:
   m_ObjectHideFlags: 0
@@ -1211,7 +1212,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &963320833
 Transform:
   m_ObjectHideFlags: 0
@@ -1809,7 +1810,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1381941099
 Transform:
   m_ObjectHideFlags: 0
@@ -2128,7 +2129,7 @@ MonoBehaviour:
   keepAspectRatio: 0
   aspectRatio: 2.857143
   keepCrispWhenShrunk: 1
-  mTrueTypeFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  mTrueTypeFont: {fileID: 0}
   mFont: {fileID: 0}
   mText: 00:00
   mFontSize: 65
@@ -2255,7 +2256,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1819133042
 Transform:
   m_ObjectHideFlags: 0
@@ -2408,7 +2409,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1951812296
 Transform:
   m_ObjectHideFlags: 0
@@ -2822,7 +2823,7 @@ Transform:
   m_GameObject: {fileID: 2067416997}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.0091743115, y: 0.0091743115, z: 0.0091743115}
+  m_LocalScale: {x: 0.00990099, y: 0.00990099, z: 0.00990099}
   m_Children:
   - {fileID: 8013279}
   - {fileID: 785969184}

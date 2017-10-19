@@ -19,5 +19,13 @@ public static class ExtensionMethods {
 	}
 
 
+	public static void PrintTileList (string string0, List<Tile> tileList){
+		Debug.Log("PrintTileList called by *" + string0 + "*, tiles in list are:");
+		for (int n = 0; n < tileList.Count; n++){
+			int tileNum = n + 1;
+			Debug.Log("Tile #" + (tileNum) + " is at X = " + tileList[n].X + ", Z = " + tileList[n].Z);
+		}
+	}
+
 
 }

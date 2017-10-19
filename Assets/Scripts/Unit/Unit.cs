@@ -71,13 +71,11 @@ public class Unit : MonoBehaviour {
     //=======================================
     //      Functions
     //=======================================
-    void Start()
+    public virtual void Start()
     {
-		/*
         skeletonAnim = GetComponentInChildren<SkeletonAnimation>();
         InitBodyParts();
         UpdateBody();
-        */
     }
 
     public virtual void Init (LevelManager lm, Tile spawnTile)
@@ -246,7 +244,7 @@ public class Unit : MonoBehaviour {
 		MoveToTile (targetTile);
 	}
 
-	public void MoveToTile(Tile targetTile)
+	public virtual void MoveToTile(Tile targetTile)
 	{
         TryTurn(targetTile);
         StartCoroutine ("MoveToTileCoroutine", targetTile);
@@ -260,7 +258,7 @@ public class Unit : MonoBehaviour {
         skeletonAnim.skeleton.FlipX = facingRight;
     }
 
-	IEnumerator MoveToTileCoroutine (Tile targetTile)
+	protected virtual IEnumerator MoveToTileCoroutine (Tile targetTile)
 	{
         ArrivedNextTile = false;
         isWalking = true;
