@@ -38,6 +38,9 @@ public class Tile : MonoBehaviour {
     // Item
     public TileItem item;
 
+    // Flags
+    public GameObject SlimeSplit;
+
     // Selectable highlight variables
     float pulseTime = 0;
 	const float pulsePeriod = 0.5f;

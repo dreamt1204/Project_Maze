@@ -19,7 +19,6 @@ public class LevelManager : MonoBehaviour {
 
     // Helper classes instances
     private MazeGenerator mazeGenerator;
-	[HideInInspector] public UIManager uiManager;
 
 	// Global variables
 	[HideInInspector] public bool finishedInitLevel = false;
@@ -62,7 +61,6 @@ public class LevelManager : MonoBehaviour {
 
         // Get component reference to the attached script
 		mazeGenerator = gameObject.AddComponent<MazeGenerator>();
-        uiManager = gameObject.AddComponent<UIManager>();
 
 		Utilities.TryCatchError ((mazeSetting == null), "Maze Setting cannot be null");
     }

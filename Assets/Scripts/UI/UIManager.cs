@@ -20,7 +20,7 @@ public class UIManager : MonoBehaviour
     //=======================================
     //      Variables
     //=======================================
-    LevelManager level;
+    public static UIManager instance = null;
 
     private Camera cam;
     private UIWidget joyStickArea;
@@ -46,7 +46,11 @@ public class UIManager : MonoBehaviour
     //=======================================
     void Awake()
     {
-        level = LevelManager.instance;
+        // This enforces our singleton pattern, meaning there can only ever be one instance of a LevelManager.
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(gameObject);
 
         cam = GameObject.Find("UICamera").GetComponent<Camera>();
         joyStick = GameObject.Find("JoyStick").GetComponent<UIJoyStick>();
@@ -117,10 +121,10 @@ public class UIManager : MonoBehaviour
         abilityButtons[partType].buttonObj.SetActive(true);
 		UpdateabilityButtonsIconSate (abilityButtons [partType], AbilityButtonState.Enabled);
 
-		string newSprite = level.playerCharacter.PlayerAbilities[partType].spriteName;
+		string newSprite = LevelManager.instance.playerCharacter.PlayerAbilities[partType].spriteName;
         if ((newSprite != null) && (AtlasHasSprite(abilityButtons[partType].iconSprite.atlas, newSprite)))
         {
-			abilityButtons[partType].iconSprite.spriteName = level.playerCharacter.PlayerAbilities[partType].spriteName;
+			abilityButtons[partType].iconSprite.spriteName = LevelManager.instance.playerCharacter.PlayerAbilities[partType].spriteName;
         }
         else
         {
@@ -148,5 +152,13 @@ public class UIManager : MonoBehaviour
         }
 
         return hasSprite;
+    }
+
+    //---------------------------------------
+    //      SlimeSplit Button
+    //---------------------------------------
+    public void ToggleSlimeSplitButton()
+    {
+        LevelManager.instance.playerCharacter.ToggleSplittingSlime();
     }
 }

@@ -18,10 +18,14 @@ public class PlayerCharacter : Unit {
 	[HideInInspector] public bool hasObjective = false;
     [HideInInspector] public Dictionary<string, PlayerAbility> PlayerAbilities;
 
+    public GameObject SlimeSplitPrefab;
+    [HideInInspector] public bool splittingSlime = false;
+    [HideInInspector] public float splittingSlimeDamage = 10;
+
     //---------------------------------------
     //      Properties
     //---------------------------------------
-	public override float Health
+    public override float Health
 	{
 		get
 		{
@@ -34,7 +38,23 @@ public class PlayerCharacter : Unit {
 		}
 	}
 
-	public override ActionType CurrentAction
+    public override Tile CurrentTile
+    {
+        get
+        {
+            return base.CurrentTile;
+        }
+        set
+        {
+            base.CurrentTile = value;
+            if (splittingSlime)
+            {
+                TryGenerateSlimeSplit();
+            }
+        }
+    }
+
+    public override ActionType CurrentAction
 	{
 		get
 		{
@@ -52,7 +72,7 @@ public class PlayerCharacter : Unit {
     // Use this for initialization
     public override void Init (Tile spawnTile)
 	{
-		uiManager = LevelManager.instance.uiManager;
+		uiManager = UIManager.instance;
 
         playerCamera = GameObject.Find("PlayerCamera").GetComponent<Camera>();
         Vector3 camPos = playerCamera.gameObject.transform.position;
@@ -80,7 +100,7 @@ public class PlayerCharacter : Unit {
 		else
 		{
 			StopKeepWalkingAnim ();
-		} 
+		}
 	}
 
     //---------------------------------------
@@ -111,14 +131,14 @@ public class PlayerCharacter : Unit {
         if ((part == null) || (part.playerAbility == null))
         {
             PlayerAbilities[partType] = null;
-            LevelManager.instance.uiManager.ClearAbilityIcon(partType);
+            UIManager.instance.ClearAbilityIcon(partType);
         }
         // Update PlayerAbilities while body part gets updated
         else
         {
             PlayerAbilities[partType] = part.playerAbility;
 			part.playerAbility.Init ();
-			LevelManager.instance.uiManager.UpdateAbilityIcon(partType);
+            UIManager.instance.UpdateAbilityIcon(partType);
         }
     }
 
@@ -145,4 +165,34 @@ public class PlayerCharacter : Unit {
 			tile.DestroyTileItem();
 		}
 	}
+
+    //---------------------------------------
+    //      Slime Split Ability
+    //---------------------------------------
+    public void ToggleSplittingSlime()
+    {
+        splittingSlime = !splittingSlime;
+
+        if (splittingSlime)
+            TryGenerateSlimeSplit();
+    }
+
+    public void TryGenerateSlimeSplit()
+    {
+        if (CurrentTile.SlimeSplit != null)
+            return;
+
+        if ((Health - splittingSlimeDamage) <= 0)
+            return;
+
+        GenerateSlimeSplit();
+    }
+
+    public void GenerateSlimeSplit()
+    {
+        RecieveDamage(splittingSlimeDamage);
+
+        GameObject newSplit = Instantiate(SlimeSplitPrefab, CurrentTile.transform.position, Quaternion.Euler(0, 0, 0));
+        CurrentTile.SlimeSplit = newSplit;
+    }
 }
