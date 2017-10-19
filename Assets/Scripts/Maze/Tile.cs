@@ -122,31 +122,10 @@ public class Tile : MonoBehaviour {
     //      Tile action
     //---------------------------------------
     // Apply tile action when stepped on
-    public void CheckTileAction()
+	// Note: This is only for modifing tile. For unit, check UnitTileAction.
+    public void TileAction()
 	{
         
-    }
-
-    // Player specific tile action
-    public void CheckPlayerTileAction()
-    {
-        if (item == null)
-            return;
-
-        if (item.itemType == ItemType.Objective)
-        {
-            level.playerCharacter.hasObjective = true;
-            DestroyTileItem();
-        }
-        else if (item.itemType == ItemType.StartPoint)
-        {
-            level.CheckWinningCondition();
-        }
-        else if (item.itemType == ItemType.BodyPart)
-        {
-            level.playerCharacter.UpdateBodyPart(item.bodyPart);
-            DestroyTileItem();
-        }
     }
 
     //---------------------------------------

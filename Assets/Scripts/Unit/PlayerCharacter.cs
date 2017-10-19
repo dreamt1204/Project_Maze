@@ -21,18 +21,19 @@ public class PlayerCharacter : Unit {
     //---------------------------------------
     //      Properties
     //---------------------------------------
-    public override Tile CurrentTile
+	public override float Health
 	{
-        get
+		get
 		{
-			return base.CurrentTile;
+			return base.Health;
 		}
 		set
 		{
-			base.CurrentTile = value;
-            currentTile.CheckPlayerTileAction();
-        }
+			base.Health = value;
+			level.CheckGameModeCondition ();
+		}
 	}
+
 	public override ActionType CurrentAction
 	{
 		get
@@ -51,18 +52,21 @@ public class PlayerCharacter : Unit {
     // Use this for initialization
     public override void Init (Tile spawnTile)
 	{
-		base.Init(spawnTile);
-
-		uiManager = level.uiManager;
+		uiManager = LevelManager.instance.uiManager;
 
         playerCamera = GameObject.Find("PlayerCamera").GetComponent<Camera>();
         Vector3 camPos = playerCamera.gameObject.transform.position;
         playerCamera.gameObject.transform.position = new Vector3(camPos.x + transform.position.x, camPos.y + transform.position.y, camPos.z + transform.position.z);
         playerCamera.gameObject.transform.parent = transform;
+
+		base.Init(spawnTile);
     }
 
 	public override void Update()
 	{
+		if (!finishedInit)
+			return;
+
 		base.Update ();
 
 		// Update movement based on UIJoyStick
@@ -117,4 +121,28 @@ public class PlayerCharacter : Unit {
 			LevelManager.instance.uiManager.UpdateAbilityIcon(partType);
         }
     }
+
+	//---------------------------------------
+	//      Tile Action
+	//---------------------------------------
+	public override void UnitTileAction(Tile tile)
+	{
+		if (tile.item == null)
+			return;
+
+		if (tile.item.itemType == ItemType.Objective)
+		{
+			level.playerCharacter.hasObjective = true;
+			tile.DestroyTileItem();
+		}
+		else if (tile.item.itemType == ItemType.StartPoint)
+		{
+			level.CheckGameModeCondition();
+		}
+		else if (tile.item.itemType == ItemType.BodyPart)
+		{
+			level.playerCharacter.UpdateBodyPart(tile.item.bodyPart);
+			tile.DestroyTileItem();
+		}
+	}
 }

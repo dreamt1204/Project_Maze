@@ -22,7 +22,7 @@ public class LevelManager : MonoBehaviour {
 	[HideInInspector] public UIManager uiManager;
 
 	// Global variables
-	[HideInInspector] public bool finsiedInit = false;
+	[HideInInspector] public bool finishedInitLevel = false;
 	[HideInInspector] public Maze maze;
 	[HideInInspector] public Tile tileStart;
 	[HideInInspector] public Tile tileObjective;
@@ -78,21 +78,35 @@ public class LevelManager : MonoBehaviour {
 		// Spawn player character
 		playerCharacter = UnitSpawner.SpawnPlayerCharacter(tileStart);
 
-		// Set finsiedInit
-		finsiedInit = true;
+		// Set init flag to true
+		finishedInitLevel = true;
 	}
 
     //---------------------------------------
     //      Game Mode
     //---------------------------------------
-	public void CheckWinningCondition()
+	public void CheckGameModeCondition()
 	{
-        if (!finsiedInit)
-            return;
+		if (!finishedInitLevel)
+			return;
 
-        if (playerCharacter.hasObjective)
+		if (playerCharacter.Health <= 0)
+		{
+			FailLevel ();
+		}
+		else if (playerCharacter.hasObjective)
         {
-            Debug.Log("Level Finished!!");  // Debug: tmp message        
-        }   
+			PassLevel ();
+        }
+	}
+
+	void PassLevel()
+	{
+		Debug.Log("Level Finished!!");  // Debug: tmp message 
+	}
+
+	void FailLevel()
+	{
+		Debug.Log("Level Failed...");  // Debug: tmp message 
 	}
 }

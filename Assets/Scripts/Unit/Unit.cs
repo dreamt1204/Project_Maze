@@ -24,9 +24,12 @@ public class Unit : MonoBehaviour {
     //=======================================
 	protected LevelManager level;
 
+	// Flags
+	protected bool finishedInit;
+
     // Stat
-    [SerializeField] protected float health = 100;
-    [SerializeField] protected float moveSpeed = 100;
+	[SerializeField] protected float health = 100;
+	[SerializeField] protected float moveSpeed = 100;
 
 	// Tile
 	protected Tile currentTile;
@@ -63,8 +66,28 @@ public class Unit : MonoBehaviour {
     //---------------------------------------
     //      Properties
     //---------------------------------------
-    public virtual float Health {get; set;}
-	public virtual float MoveSpeed {get; set;}
+    public virtual float Health
+	{
+		get
+		{
+			return health;
+		}
+		set
+		{
+			health = value;
+		}
+	}
+	public virtual float MoveSpeed
+	{
+		get
+		{
+			return moveSpeed;
+		}
+		set
+		{
+			moveSpeed = value;
+		}
+	}
     public virtual Tile CurrentTile
     {
         get
@@ -74,7 +97,8 @@ public class Unit : MonoBehaviour {
         set
         {
             currentTile = value;
-            currentTile.CheckTileAction();
+			currentTile.TileAction ();
+			UnitTileAction (currentTile);
         }
     }
     public virtual ActionType CurrentAction
@@ -103,39 +127,27 @@ public class Unit : MonoBehaviour {
 	{
         level = LevelManager.instance;
         CurrentTile = spawnTile;
+
+		finishedInit = true;
     }
 
     public virtual void Update()
     {
-        if (playWalkingAnim)
+		if (!finishedInit)
+			return;
+
+		if (playWalkingAnim)
             PlayLoopAnim("Walk");
         else
             PlayLoopAnim("Idle");
     }
 
     //---------------------------------------
-    //      Action
+    //      Action State
     //---------------------------------------
     public bool isAvailable()
     {
         return (CurrentAction == ActionType.None);
-    }
-
-    //---------------------------------------
-    //      Anim
-    //---------------------------------------
-    public void PlayLoopAnim(string animName)
-    {
-        if (currentAnim == animName) return;
-
-        currentAnim = animName;
-        skeletonAnim.state.SetAnimation(0, animName, true);
-    }
-
-    public void StopKeepWalkingAnim()
-    {
-		if (keepWalkingAnim)
-			keepWalkingAnim = false;
     }
 
     //---------------------------------------
@@ -263,6 +275,31 @@ public class Unit : MonoBehaviour {
         // Child unit class can update specific BodyPart stuff here
     }
 
+	//---------------------------------------
+	//      Anim
+	//---------------------------------------
+	public void PlayLoopAnim(string animName)
+	{
+		if (currentAnim == animName) return;
+
+		currentAnim = animName;
+		skeletonAnim.state.SetAnimation(0, animName, true);
+	}
+
+	public void StopKeepWalkingAnim()
+	{
+		if (keepWalkingAnim)
+			keepWalkingAnim = false;
+	}
+
+	//---------------------------------------
+	//      Tile Action
+	//---------------------------------------
+	public virtual void UnitTileAction(Tile tile)
+	{
+		// Apply effect when unit steps on this tile
+	}
+
     //---------------------------------------
     //      Movement
     //---------------------------------------
@@ -329,4 +366,22 @@ public class Unit : MonoBehaviour {
         if (!keepWalkingAnim)
             playWalkingAnim = false;
     }
+
+	//---------------------------------------
+	//      Action
+	//---------------------------------------
+	public virtual void RecieveDamage(float amount)
+	{
+		Health = Mathf.Clamp ((Health - amount), 0, Health);
+	}
+
+	public virtual void RestoreHealth(float amount)
+	{
+		Health = Mathf.Clamp ((Health + amount), 0, Health);
+	}
+
+	public virtual void ApplyDamageToTarget(Unit target, float amount)
+	{
+		target.RecieveDamage (amount);
+	}
 }
