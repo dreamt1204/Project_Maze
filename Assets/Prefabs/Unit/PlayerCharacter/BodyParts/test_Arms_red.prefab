@@ -51,5 +51,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe80b70ffa128c04c8345c59713eaa5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ownerType: 0
+  partName: Red Arms
   partType: Arms
-  partName: Arms_red
+  partSkinName: Arms_red
+  playerAbility: {fileID: 0}

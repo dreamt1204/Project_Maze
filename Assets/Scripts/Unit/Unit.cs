@@ -1,34 +1,42 @@
-﻿using System;
+﻿//============================== Class Definition ==============================
+// 
+// This is the base class for Units (PlayerCharacter and Enemy).
+// To spawn a unit, use UnitSpawner static functions.
+//
+//==============================================================================
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Spine;
 using Spine.Unity;
 
-public enum BodyPartOwnerType
+public enum ActionType
 {
-    PlayerCharacter,
+    None,
+    Walking,
 }
 
 public class Unit : MonoBehaviour {
     //=======================================
     //      Variables
     //=======================================
-    protected LevelManager levelManager;
+    protected LevelManager level;
 
-    //Stat
-    [SerializeField]
-    protected float health = 100;
-    [SerializeField]
-    protected float moveSpeed = 100;
+    // Stat
+    [SerializeField] protected float health = 100;
+    [SerializeField] protected float moveSpeed = 100;
 
 	// Tile
 	protected Tile currentTile;
 
-    // Walking
-	protected bool isWalking = false;
-    protected bool KeepWalking = false;
-    protected bool ArrivedNextTile = false;
+    // Action
+    protected ActionType currentAction;
+
+    // Body Part
+    public BodyPartOwnerType ownerType;
+    public List<BodyPartData> BodyParts;
 
     // Anim
     protected bool facingRight = false;
@@ -36,19 +44,21 @@ public class Unit : MonoBehaviour {
     protected SkeletonAnimation skeletonAnim;
     private const float walkAnimScaleMultiplier = 3f;
 
-    // Body part
+    protected bool keepWalkingAnim = false;
+    protected bool playWalkingAnim = false;
+
+    // Const
+    private const float movementMultiplier = 0.15f;
+
+    //---------------------------------------
+    //      Struct
+    //---------------------------------------
     [Serializable]
     public struct BodyPartData
     {
         public string partType;
         public BodyPart part;
     }
-
-    public BodyPartOwnerType ownerType;
-    public List<BodyPartData> BodyParts;
-
-    // Const
-    private const float movementMultiplier = 0.15f;
 
     //---------------------------------------
     //      Properties
@@ -67,6 +77,17 @@ public class Unit : MonoBehaviour {
             currentTile.CheckTileAction();
         }
     }
+    public virtual ActionType CurrentAction
+    {
+        get
+        {
+            return currentAction;
+        }
+        set
+        {
+            currentAction = value;
+        }
+    }
 
     //=======================================
     //      Functions
@@ -78,20 +99,30 @@ public class Unit : MonoBehaviour {
         UpdateBody();
     }
 
-    public virtual void Init (LevelManager lm, Tile spawnTile)
+    public virtual void Init (Tile spawnTile)
 	{
-		levelManager = lm;
-		CurrentTile = spawnTile;
+        level = LevelManager.instance;
+        CurrentTile = spawnTile;
     }
 
     public virtual void Update()
     {
-		/*
-        if (isWalking)
+/*
+        if (playWalkingAnim)
+
             PlayLoopAnim("Walk");
         else
             PlayLoopAnim("Idle");
-            */
+*/
+            
+    }
+
+    //---------------------------------------
+    //      Action
+    //---------------------------------------
+    public bool isAvailable()
+    {
+        return (CurrentAction == ActionType.None);
     }
 
     //---------------------------------------
@@ -103,6 +134,11 @@ public class Unit : MonoBehaviour {
 
         currentAnim = animName;
         skeletonAnim.state.SetAnimation(0, animName, true);
+    }
+
+    public void StopKeepWalkingAnim()
+    {
+        keepWalkingAnim = false;
     }
 
     //---------------------------------------
@@ -195,7 +231,7 @@ public class Unit : MonoBehaviour {
             // Assign body part via name
             if ((data.part != null) && (data.part.partType == data.partType))
             {
-                AddSkinEntries(skeletonData.FindSkin(data.part.partName), newBody);
+                AddSkinEntries(skeletonData.FindSkin(data.part.partSkinName), newBody);
             }
             // Try assign the default body part
             else
@@ -235,16 +271,31 @@ public class Unit : MonoBehaviour {
     //---------------------------------------
     public void TryMoveToTile(Tile targetTile)
 	{
-		if (isWalking && !KeepWalking)
-			return;
+        if (!isAvailable())
+            return;
 
 		if (targetTile == CurrentTile)
 			return;
 
-		MoveToTile (targetTile);
+		if ((targetTile == null) || (MazeUTL.WallBetweenNeighborTiles(currentTile, targetTile)))
+        {
+            playWalkingAnim = false;
+            return;
+        }
+
+        MoveToTile (targetTile);
 	}
 
-	public virtual void MoveToTile(Tile targetTile)
+
+
+
+    public void TryMoveToDirTile(int dir)
+    {
+        TryMoveToTile(MazeUTL.GetDirNeighborTile(currentTile, dir));
+    }
+
+	// public void MoveToTile(Tile targetTile)
+	public virtual void MoveToTile(Tile targetTile) // JY overrides PlayerCharacter's MoveToTile (to make step noise)
 	{
         TryTurn(targetTile);
         StartCoroutine ("MoveToTileCoroutine", targetTile);
@@ -252,7 +303,7 @@ public class Unit : MonoBehaviour {
 
     public void TryTurn(Tile targetTile)
     {
-        int dir = Maze.GetNeighborTileDir(currentTile, targetTile);
+        int dir = MazeUTL.GetNeighborTileDir(currentTile, targetTile);
         facingRight = dir == 1 ? false : dir == 3 ? true : facingRight;
 
         skeletonAnim.skeleton.FlipX = facingRight;
@@ -260,14 +311,17 @@ public class Unit : MonoBehaviour {
 
 	protected virtual IEnumerator MoveToTileCoroutine (Tile targetTile)
 	{
-        ArrivedNextTile = false;
-        isWalking = true;
-        Vector3 target = targetTile.gameObject.transform.position;
+        CurrentAction = ActionType.Walking;
+        keepWalkingAnim = true;
+        playWalkingAnim = true;
 
+        // Update anim play speed
+        float originalTimeScale = skeletonAnim.timeScale;
         skeletonAnim.timeScale = moveSpeed * 0.01f * walkAnimScaleMultiplier;
-
+        
+        Vector3 target = targetTile.gameObject.transform.position;
         while (Vector3.Distance(transform.position, target) > 0.25f)
-		{
+        {
 			transform.Translate((target - transform.position).normalized * Time.deltaTime * moveSpeed * movementMultiplier);
 
             yield return null;
@@ -275,9 +329,11 @@ public class Unit : MonoBehaviour {
         transform.position = target;
         CurrentTile = targetTile;
 
-        if (!KeepWalking)
-            isWalking = false;
+        // Reset unit state
+        skeletonAnim.timeScale = originalTimeScale;
+        CurrentAction = ActionType.None;
 
-        ArrivedNextTile = true;
+        if (!keepWalkingAnim)
+            playWalkingAnim = false;
     }
 }

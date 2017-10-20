@@ -1,16 +1,20 @@
-﻿using System.Collections;
+﻿//============================== Class Definition ==============================
+// 
+// This class contains all the player character specific properties and functions.
+//
+//==============================================================================
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerCharacter : Unit {
-	//=======================================
-	//      Variables
-	//=======================================
-	private Camera playerCamera;
-	[HideInInspector]
-	public bool hasObjective = false;
-    [HideInInspector]
-    public Dictionary<string, PlayerAbility> PlayerAbilities;
+    //=======================================
+    //      Variables
+    //=======================================
+    [HideInInspector] public Camera playerCamera;
+	[HideInInspector] public bool hasObjective = false;
+    [HideInInspector] public Dictionary<string, PlayerAbility> PlayerAbilities;
 
 	int stepNoiseLevel = 2;
 	protected Tile tileWalkingTowards = null;
@@ -29,7 +33,6 @@ public class PlayerCharacter : Unit {
 			currentTile = value;
             currentTile.CheckTileAction();
             currentTile.CheckPlayerTileAction();
-            Maze.UpdateWalkableTiles(currentTile);
         }
 	}
 
@@ -39,81 +42,15 @@ public class PlayerCharacter : Unit {
     //      Functions
     //=======================================
     // Use this for initialization
-    public override void Init (LevelManager gm, Tile spawnTile)
+    public override void Init (Tile spawnTile)
 	{
-		base.Init(gm, spawnTile);
-        playerCamera = GetComponentInChildren<Camera>();
+		base.Init(spawnTile);
+
+        playerCamera = GameObject.Find("PlayerCamera").GetComponent<Camera>();
+        Vector3 camPos = playerCamera.gameObject.transform.position;
+        playerCamera.gameObject.transform.position = new Vector3(camPos.x + transform.position.x, camPos.y + transform.position.y, camPos.z + transform.position.z);
+        playerCamera.gameObject.transform.parent = transform;
     }
-
-	// Update function
-	public override void Update()
-	{
-        base.Update();
-
-        HoldingMove ();
-	}
-
-    //---------------------------------------
-    //      Movement
-    //---------------------------------------
-    // This feature lets player move to the next time while player is holding the mouse during movement.
-    // The direction is calculate based on the mouse and character origin.
-    public void HoldingMove()
-	{
-        // Check if player is holding the mouse during movement. If true, set KeepWalking flag.
-        if (!KeepWalking)
-		{
-            if (isWalking && Input.GetMouseButton(0))
-                KeepWalking = true;
-        }
-        // If KeepWalking is set...
-        else
-        {
-            // Unset KeepWalking while player release the mouse.
-            if (Input.GetMouseButtonUp (0))
-			{
-                KeepWalking = false;
-            }
-			// If player finished his movement and is ready for the next move, move the character to the walkable tile with holding direction.
-			else if (ArrivedNextTile)
-			{
-				Tile nextTile = Maze.GetDirNeighborTile (currentTile, GetHoldingMoveDir());
-                if ((nextTile != null) && (nextTile.State == TileState.Walkable))
-                    TryMoveToTile(nextTile);
-                else
-                    isWalking = false;
-            }
-		}
-    }
-
-	// Get the direction calculated based on the mouse and character origin.
-	public int GetHoldingMoveDir()
-	{
-		int dir = 0;
-
-		Vector3 charScreenPos = playerCamera.WorldToScreenPoint (transform.position);
-		charScreenPos = new Vector3 (charScreenPos.x, charScreenPos.y, 0);
-
-		float length_x = (Input.mousePosition.x - charScreenPos.x);
-		float length_y = (Input.mousePosition.y - charScreenPos.y);
-
-		if (Mathf.Abs (length_x) >= Mathf.Abs (length_y))
-		{
-			if (length_x >= 0)
-				dir = 1;
-			else
-				dir = 3;
-		}
-		else
-		{
-			if (length_y >= 0)
-				dir = 0;
-			else
-				dir = 2;
-		}
-
-		return dir;
-	}
 
     //---------------------------------------
     //      Body Part
@@ -139,8 +76,19 @@ public class PlayerCharacter : Unit {
     {
         BodyPart part = GetBodyPartWithType(partType);
 
+        // If the part doesn't exist, clear part ability
+        if ((part == null) || (part.playerAbility == null))
+        {
+            PlayerAbilities[partType] = null;
+            LevelManager.instance.uiManager.ClearAbilityIcon(partType);
+        }
         // Update PlayerAbilities while body part gets updated
-        PlayerAbilities[partType] = part != null ? GetBodyPartWithType(partType).playerAbility : null;
+        else
+        {
+            PlayerAbilities[partType] = part.playerAbility;
+			part.playerAbility.Init ();
+			LevelManager.instance.uiManager.UpdateAbilityIcon(partType);
+        }
     }
 
 	// ================
@@ -150,7 +98,7 @@ public class PlayerCharacter : Unit {
 	public override void MoveToTile(Tile targetTile)
 	{
 		base.MoveToTile (targetTile);
-		levelManager.eventManager.makeNoise (currentTile, stepNoiseLevel);
+		LevelManager.instance.eventManager.makeNoise (currentTile, stepNoiseLevel);
 		TileWalkingTowards = targetTile;
 		//Debug.Log ("(1) TileWalkingTowards X = " + TileWalkingTowards.X + "; Z = " + TileWalkingTowards.Z);
 

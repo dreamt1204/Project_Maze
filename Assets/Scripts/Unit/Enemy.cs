@@ -79,7 +79,7 @@ public class Enemy : Unit {
 	// Empty for now to disable bodyparts
 	public override void Start()
 	{
-		attnList.SetLevelManager (levelManager);
+		attnList.SetLevelManager (level);
 		LoadPriorityList ();
 		InvokeRepeating ("RunEveryPeriod", 0, 1);
 	}
@@ -142,12 +142,12 @@ public class Enemy : Unit {
 			for (int dir = 0; dir < 4; dir++) {
 				Tile tile0 = this.CurrentTile;
 				for (int n = 1; n <= visionLevel; n++) { 
-					Tile tile1 = Maze.GetDirNeighborTile (tile0, dir);
+					Tile tile1 = MazeUTL.GetDirNeighborTile (tile0, dir);
 					// Check if tile out of bound
 					if (tile1 == null) {
 						break;
 					}
-					if (!Maze.WallInBetween (tile0, tile1)) {
+					if (!MazeUTL.WallBetweenNeighborTiles (tile0, tile1)) {
 						visibleTileList.Add (tile1);
 						tile0 = tile1;
 					} else {
@@ -159,7 +159,7 @@ public class Enemy : Unit {
 
 		// ExtensionMethods.PrintTileList ("Visible tiles by enemy", visibleTileList);
 
-		Tile playerTile = levelManager.playerCharacter.CurrentTile;
+		Tile playerTile = LevelManager.instance.playerCharacter.CurrentTile;
 		if (visibleTileList.Contains (playerTile)) {
 			attnList.AddEvent (SensedEvent.EventType.PlayerDetected, playerTile);
 			Debug.Log ("Enemy class Add Event of PlayerDetected by vision.");
@@ -226,7 +226,7 @@ public class Enemy : Unit {
 	{
 		// Even if stepNoiseLevel == 0, makes noise at player's own tile
 		// To "not make noise", set player's stepNoiseLevel = -999;
-		if (Maze.DistBtwTiles (this.currentTile, source) <= (intensity + hearingLevel) ) { 
+		if (MazeUTL.GetDistanceBetweenTiles (this.currentTile, source) <= (intensity + hearingLevel) ) { 
 			attnList.AddEvent (SensedEvent.EventType.AlertingNoise, source);
 			Debug.Log ("Noise heard at X = " + source.X + ", Z = " + source.Z);
 		}

@@ -1,6 +1,15 @@
-﻿using System.Collections;
+﻿//============================== Class Definition ==============================
+// 
+// This class runs all the core game logic.
+// A level must has a empty gameobject with this attached.
+// All the level information can be edited in its inspector.
+//
+//==============================================================================
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class LevelManager : MonoBehaviour {
     //=======================================
@@ -8,23 +17,32 @@ public class LevelManager : MonoBehaviour {
     //=======================================
 	public static LevelManager instance = null;
 
-    // Helper classes
+    // Helper classes instances
     private MazeGenerator mazeGenerator;
-    private UnitSpawner unitSpawner;
-	private EnemyManager enemyManager;
-	public EventManager eventManager;
+	[HideInInspector] public UIManager uiManager;
 
-    #region Inspector
+    //private UnitSpawner unitSpawner;
+	private EnemyManager enemyManager;
+	public EventManager eventManager; // FIX public to private
+
+	// Global variables
+	[HideInInspector] public bool finsiedInit = false;
+	[HideInInspector] public Maze maze;
+	[HideInInspector] public Tile tileStart;
+	[HideInInspector] public Tile tileObjective;
+	[HideInInspector] public PlayerCharacter playerCharacter;
+	[HideInInspector] public List<Enemy> enemyList;
+
+	// Global variables in Inspector
     [Header("Maze")]
-    [Range(1, 100)]
-    public int mazeDifficulty = 1;
+	[Range(1, 100)]
+	public int mazeDifficulty = 1;
     public MazeSetting mazeSetting;
 
     [Header("Custom Maze (Optional)")]
     public bool customMazeSize;
     public int mazeWidth = 10;
     public int mazeLength = 10;
-
     [Space(15)]
     public GameObject customMazeObject;
     public bool customGameModePosition;
@@ -34,44 +52,26 @@ public class LevelManager : MonoBehaviour {
     public bool useItemGenerateLogic;
     public int numberOfItems;
 
-	[Header("Enemy Spawning")]
-	public InitSpawnMethod spawnMethod;
-	public int spawnQuantity;
-	public int safeRadius;
-
     [Header("Required Prefabs")]
     public GameObject playerCharacterPrefab;
     public GameObject startPointPrefab;
     public GameObject objectivePrefab;
     public GameObject BodyPartChestPrefab;
 
-	// Prefabs for each type of enemy
+	[Header("Enemy Spawning")]
+	public InitSpawnMethod spawnMethod = InitSpawnMethod.Random;
+	public int spawnQuantity = 1;
+	public int safeRadius = 2;
+
+	[Header("Enemy Prefabs")]
 	public GameObject prefabA;
 	public GameObject prefabB;
 	public GameObject prefabC;
 
-    #endregion
-
-    // Global variables
-    [HideInInspector]
-	public Maze maze;
-    [HideInInspector]
-    public Tile tileStart;
-    [HideInInspector]
-    public Tile tileObjective;
-    [HideInInspector]
-    public PlayerCharacter playerCharacter;
-	[HideInInspector]
-	public List<Enemy> enemyList;
-
-    // State variables
-    private bool finsiedInit = false;
-    
     //=======================================
     //      Functions
     //=======================================   
-    // Use this for initialization
-    void Awake()
+	void Awake()
     {
 		// This enforces our singleton pattern, meaning there can only ever be one instance of a LevelManager.
 		if (instance == null)
@@ -80,8 +80,13 @@ public class LevelManager : MonoBehaviour {
 			Destroy(gameObject);
 
         // Get component reference to the attached script
-        mazeGenerator = new MazeGenerator();
-        unitSpawner = new UnitSpawner();
+		mazeGenerator = gameObject.AddComponent<MazeGenerator>();
+        uiManager = gameObject.AddComponent<UIManager>();
+
+		enemyManager = gameObject.AddComponent<EnemyManager> ();
+		eventManager = gameObject.AddComponent<EventManager> ();
+
+		/*
 		enemyManager = new EnemyManager
 			(
 				spawnMethod,
@@ -89,31 +94,31 @@ public class LevelManager : MonoBehaviour {
 				safeRadius
 			);
 		eventManager = new EventManager();
+		*/
 
-        // Start init the game
-        InitGame();
+		Utilities.TryCatchError ((mazeSetting == null), "Maze Setting cannot be null");
     }
 
-    // Game init function
-	void InitGame()
-    {
-        // Generate a maze
-        maze = mazeGenerator.GenerateMaze();
+	void Start()
+	{
+		// Generate a maze
+		maze = mazeGenerator.GenerateMaze();
 
 		if (tileStart == null){
 			Debug.Log ("tileStart is null before enemy generation is called!!!!!");
 		}
 
 		// Spawn enemies
-		enemyList = unitSpawner.SpawnInitEnemies(enemyManager.GenerateInitSpawnList() );
+		enemyList = UnitSpawner.SpawnInitEnemies(enemyManager.GenerateInitSpawnList() );
 
 		// Spawn player character
-		playerCharacter = unitSpawner.SpawnPlayerCharacter(tileStart);
+		playerCharacter = UnitSpawner.SpawnPlayerCharacter(tileStart);
 
-        // Set finsiedInit
-        finsiedInit = true;
-    }
+		// Set finsiedInit
+		finsiedInit = true;
+	}
 
+	/* 
 	//---------------------------------------
 	//      Unit spawn functions
 	//---------------------------------------
@@ -130,6 +135,7 @@ public class LevelManager : MonoBehaviour {
 	{
 		
 	}
+	*/
 
 
     //---------------------------------------
@@ -145,12 +151,4 @@ public class LevelManager : MonoBehaviour {
             Debug.Log("Level Finished!!");  // Debug: tmp message        
         }   
 	}
-
-    //---------------------------------------
-    //      Static Functions
-    //---------------------------------------
-    public static LevelManager GetLevelManager()
-    {
-        return GameObject.Find("LevelManager").GetComponent<LevelManager>();
-    }
 }

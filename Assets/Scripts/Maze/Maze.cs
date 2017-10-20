@@ -1,4 +1,10 @@
-﻿using System.Collections;
+﻿//============================== Class Definition ==============================
+// 
+// This a container class of basic maze info and maze tiles.
+//
+//==============================================================================
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,12 +12,24 @@ public class Maze  {
 	//=======================================
 	//      Variables
 	//=======================================
-	public Tile[,] tile;
-    public List<Tile> tileList;
-    private List<Tile> inUsingTiles;
+	public int mazeWidth;
+	public int mazeLength;
+	public Tile[,] mazeTile;
+    public List<Tile> mazeTileList;
 
 	public Maze(int width, int length)
 	{
+		mazeWidth = width;
+		mazeLength = length;
+		mazeTile = new Tile[mazeWidth, mazeLength];
+		mazeTileList = new List<Tile>();
+	}
+}
+
+
+// Saved content from conflict:
+/* 
+ * <<<<<<< HEAD
 		tile = new Tile[width, length];
         tileList = new List<Tile>();
 		inUsingTiles = new List<Tile> ();
@@ -267,4 +285,6 @@ public class Maze  {
     }
     #endregion
 
-}
+=======
+
+*/

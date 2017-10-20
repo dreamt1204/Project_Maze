@@ -1,4 +1,12 @@
-﻿using System.Collections;
+﻿//============================== Class Definition ==============================
+// 
+// This is a data class that stores all the maze specific setting for level to generate maze.
+// Specific setting includes tile layout models, Item Set, Body Parts Set..etc.
+// Have to create prefab with this attached for future use.
+//
+//==============================================================================
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,31 +36,35 @@ public class MazeSetting : MonoBehaviour {
 
     //=======================================
     //      Functions
-    //=======================================   
+    //=======================================
     public GameObject GetWallLayoutObj(WallLayout wallLayout)
 	{
-		GameObject obj;
+        GameObject[] objList;
 
-		switch ((int)wallLayout)
+        switch ((int)wallLayout)
 		{
 		default:
-		case 0:
-            obj = TileLayoutO [Random.Range (0, TileLayoutO.Length)];
+            objList = new GameObject[0];
+            break;
+        case 0:
+            objList = TileLayoutO;
 			break;
 		case 1:
-            obj = TileLayoutI [Random.Range (0, TileLayoutI.Length)];
+            objList = TileLayoutI;
 			break;
 		case 2:
-			obj = TileLayoutL [Random.Range (0, TileLayoutL.Length)];
+            objList = TileLayoutL;
 			break;
 		case 3:
-			obj = TileLayoutC [Random.Range (0, TileLayoutC.Length)];
+            objList = TileLayoutC;
 			break;
 		case 4:
-			obj = TileLayoutII [Random.Range (0, TileLayoutII.Length)];
+             objList = TileLayoutII;
 			break;
 		}
 
-		return obj;
+        Utilities.TryCatchError((objList.Length <= 0), "'TileLayout" + wallLayout + "' has wrong setup in current Maze Setting.");
+
+        return objList[Random.Range(0, objList.Length)];
 	}
 }

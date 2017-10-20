@@ -52,6 +52,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ownerType: 0
+  partName: Red Legs
   partType: Legs
-  partName: Legs_red
+  partSkinName: Legs_red
   playerAbility: {fileID: 0}

@@ -21,24 +21,31 @@ public struct spawningInfo
 	}
 }
 
-public class EnemyManager {
+public class EnemyManager : MonoBehaviour {
 	//=======================================
 	//      Variables
 	//=======================================
 
-	public LevelManager levelManager;
+	LevelManager level;
 
+	/*
 	// public initEnemySpawnSetting m_setting;
 	public int initSpawnQuantity; // roughly equals to number of enemies per tile
 	public int safeRadius;
 	public InitSpawnMethod initSpawnMethod;
+	*/
 
 
 	//=======================================
 	//      Functions
 	//======================================= 
 
+	void Awake()
+	{
+		level = LevelManager.instance;
+	}
 
+	/*
 	public EnemyManager (InitSpawnMethod spMethod, int spQuantity, int sfRadius)
 	{
 		levelManager = LevelManager.GetLevelManager();
@@ -47,29 +54,31 @@ public class EnemyManager {
 		safeRadius = sfRadius;
 		initSpawnMethod = spMethod;
 	}
+	*/
 
 	public List<spawningInfo> GenerateInitSpawnList()
 	{
 		List<Tile> spawningTiles = new List<Tile> ();
 
 		// Generate spawning locations, taking into account maze restrictions (e.g. playerChar's initial location)
-		switch (initSpawnMethod) {
+		switch (level.spawnMethod) {
 		case InitSpawnMethod.Random:
 
 			// Figure out non-spawnable tiles; okay for repeating items in list
-			levelManager.tileStart.DestroyTileItem ();
-			List<Tile> nonSpawnableTiles = levelManager.maze.AllTilesAround (levelManager.tileStart, safeRadius);
+			// level.tileStart.DestroyTileItem ();
+			RangeData rangeData = new RangeData ();
+			rangeData.range = level.safeRadius;
 
-			// Remove non-spawnable tiles: proximity to playerChar's initial location, physical objects, etc.
-			List<Tile> spawnableTiles = new List<Tile> (levelManager.maze.tileList); // all tiles
-			foreach (Tile t in nonSpawnableTiles) {
-				spawnableTiles.Remove (t);
+			List<Tile> spawnableTiles = new List<Tile> ();
+			foreach (Tile t in level.maze.mazeTileList) {
+				if (!RangeData.CheckRangeDataCondition (level.tileStart, t, rangeData))
+					spawnableTiles.Add (t);
 			}
 
 			// Calculate number of enemies to spawn
 //			int numInitEnemy = Mathf.RoundToInt (initSpawnDensity * spawnableTiles.Count);
-			int numInitEnemy = initSpawnQuantity;
-			Debug.Log ("Initial spawn quantity = " + initSpawnQuantity);
+			int numInitEnemy = level.spawnQuantity;
+			Debug.Log ("Initial spawn quantity = " + numInitEnemy);
 
 			for (int i = 0; i < numInitEnemy; i++) {
 

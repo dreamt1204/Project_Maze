@@ -1,14 +1,27 @@
-﻿using System.Collections;
+﻿//============================== Class Definition ==============================
+// 
+// This container class store data for certain body part.
+// Have to create prefab with this attached for future use.
+//
+//==============================================================================
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+public enum BodyPartOwnerType
+{
+    PlayerCharacter,
+}
 
 public class BodyPart : MonoBehaviour {
     //=======================================
     //      Variables
     //=======================================
     public BodyPartOwnerType ownerType;
-    public string partType;
     public string partName;
+    public string partType;
+    public string partSkinName;
     public PlayerAbility playerAbility;
 
     //=======================================
