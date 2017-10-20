@@ -20,7 +20,9 @@ public class PlayerCharacter : Unit {
 
     public GameObject SlimeSplitPrefab;
     [HideInInspector] public bool splittingSlime = false;
-    [HideInInspector] public float splittingSlimeDamage = 10;
+	[HideInInspector] public bool eattingSlime = false;
+    [HideInInspector] public float splittingSlimeDamage = 1;
+	[HideInInspector] public float eattingSlimeRecover = 1;
 
     //---------------------------------------
     //      Properties
@@ -34,7 +36,8 @@ public class PlayerCharacter : Unit {
 		set
 		{
 			base.Health = value;
-			level.CheckGameModeCondition ();
+			uiManager.UpdateHealthBar (Health/healthMax);
+			level.CheckLevelFailedCondition ();
 		}
 	}
 
@@ -47,10 +50,7 @@ public class PlayerCharacter : Unit {
         set
         {
             base.CurrentTile = value;
-            if (splittingSlime)
-            {
-                TryGenerateSlimeSplit();
-            }
+            TryUpdateSlimeSplit();
         }
     }
 
@@ -157,7 +157,7 @@ public class PlayerCharacter : Unit {
 		}
 		else if (tile.item.itemType == ItemType.StartPoint)
 		{
-			level.CheckGameModeCondition();
+			level.CheckLevelPassedCondition();
 		}
 		else if (tile.item.itemType == ItemType.BodyPart)
 		{
@@ -174,18 +174,38 @@ public class PlayerCharacter : Unit {
         splittingSlime = !splittingSlime;
 
         if (splittingSlime)
-            TryGenerateSlimeSplit();
+			TryUpdateSlimeSplit();
     }
 
-    public void TryGenerateSlimeSplit()
+	public void ToggleEattingSlime()
+	{
+		eattingSlime = !eattingSlime;
+
+		if (eattingSlime)
+			TryUpdateSlimeSplit();
+	}
+
+    public void TryUpdateSlimeSplit()
     {
-        if (CurrentTile.SlimeSplit != null)
-            return;
+		if (splittingSlime)
+		{
+			if (CurrentTile.SlimeSplit != null)
+				return;
 
-        if ((Health - splittingSlimeDamage) <= 0)
-            return;
+			if ((Health - splittingSlimeDamage) <= 0)
+				return;
 
-        GenerateSlimeSplit();
+			GenerateSlimeSplit();
+		}
+
+		if (eattingSlime)
+		{
+			if (CurrentTile.SlimeSplit == null)
+				return;
+
+			EatSlimeSplit();
+		}
+
     }
 
     public void GenerateSlimeSplit()
@@ -195,4 +215,11 @@ public class PlayerCharacter : Unit {
         GameObject newSplit = Instantiate(SlimeSplitPrefab, CurrentTile.transform.position, Quaternion.Euler(0, 0, 0));
         CurrentTile.SlimeSplit = newSplit;
     }
+
+	public void EatSlimeSplit()
+	{
+		RestoreHealth(eattingSlimeRecover);
+
+		Destroy(CurrentTile.SlimeSplit);
+	}
 }

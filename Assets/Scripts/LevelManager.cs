@@ -83,19 +83,26 @@ public class LevelManager : MonoBehaviour {
     //---------------------------------------
     //      Game Mode
     //---------------------------------------
-	public void CheckGameModeCondition()
+	public void CheckLevelFailedCondition()
 	{
 		if (!finishedInitLevel)
 			return;
 
-		if (playerCharacter.Health <= 0)
-		{
-			FailLevel ();
-		}
-		else if (playerCharacter.hasObjective)
-        {
-			PassLevel ();
-        }
+		if (playerCharacter.Health > 0)
+			return;
+
+		FailLevel ();
+	}
+
+	public void CheckLevelPassedCondition()
+	{
+		if (!finishedInitLevel)
+			return;
+
+		if (!playerCharacter.hasObjective)
+			return;
+
+		PassLevel ();
 	}
 
 	void PassLevel()

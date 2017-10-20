@@ -28,6 +28,7 @@ public class Unit : MonoBehaviour {
 	protected bool finishedInit;
 
     // Stat
+	[SerializeField] protected float healthMax = 100;
 	[SerializeField] protected float health = 100;
 	[SerializeField] protected float moveSpeed = 100;
 
@@ -74,7 +75,7 @@ public class Unit : MonoBehaviour {
 		}
 		set
 		{
-			health = value;
+			health = Mathf.Clamp (value, 0, healthMax);
 		}
 	}
 	public virtual float MoveSpeed
@@ -372,12 +373,12 @@ public class Unit : MonoBehaviour {
 	//---------------------------------------
 	public virtual void RecieveDamage(float amount)
 	{
-		Health = Mathf.Clamp ((Health - amount), 0, Health);
+		Health = (Health - amount);
 	}
 
 	public virtual void RestoreHealth(float amount)
 	{
-		Health = Mathf.Clamp ((Health + amount), 0, Health);
+		Health = (Health + amount);
 	}
 
 	public virtual void ApplyDamageToTarget(Unit target, float amount)

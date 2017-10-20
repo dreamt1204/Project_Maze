@@ -27,6 +27,10 @@ public class UIManager : MonoBehaviour
 	[HideInInspector] public  UIJoyStick joyStick;
 	[HideInInspector] public bool joyStickEnabled;
 	[HideInInspector] public Dictionary<string, abilityButton> abilityButtons;
+
+	private UIProgressBar healthBar;
+	private UIButton splitSlimeButton;
+	private UIButton eatSlimeButton;
     
 
     //=======================================
@@ -55,6 +59,10 @@ public class UIManager : MonoBehaviour
         cam = GameObject.Find("UICamera").GetComponent<Camera>();
         joyStick = GameObject.Find("JoyStick").GetComponent<UIJoyStick>();
         joyStickArea = GameObject.Find("Widget_JoyStickArea").GetComponent<UIWidget>();
+
+		splitSlimeButton = GameObject.Find("SplitSlimeButton").GetComponent<UIButton>();
+		eatSlimeButton = GameObject.Find("EatSlimeButton").GetComponent<UIButton>();
+		healthBar = GameObject.Find("HealthBar").GetComponent<UIProgressBar>();
 
         abilityButtons = new Dictionary<string, abilityButton>();
         InitNewButton("Head");
@@ -159,6 +167,33 @@ public class UIManager : MonoBehaviour
     //---------------------------------------
     public void ToggleSlimeSplitButton()
     {
-        LevelManager.instance.playerCharacter.ToggleSplittingSlime();
+		PlayerCharacter player = LevelManager.instance.playerCharacter;
+
+		player.ToggleSplittingSlime();
+
+		if (player.splittingSlime)
+			splitSlimeButton.GetComponentInChildren<UILabel>().text = "Split ON";
+		else
+			splitSlimeButton.GetComponentInChildren<UILabel>().text = "Split Off";
     }
+
+	public void ToggleEatSplitButton()
+	{
+		PlayerCharacter player = LevelManager.instance.playerCharacter;
+
+		player.ToggleEattingSlime();
+
+		if (player.eattingSlime)
+			eatSlimeButton.GetComponentInChildren<UILabel>().text = "Eat ON";
+		else
+			eatSlimeButton.GetComponentInChildren<UILabel>().text = "Eat Off";
+	}
+
+	//---------------------------------------
+	//      Health
+	//---------------------------------------
+	public void UpdateHealthBar(float value)
+	{
+		healthBar.value = value;
+	}
 }
