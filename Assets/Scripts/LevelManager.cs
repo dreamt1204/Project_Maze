@@ -86,16 +86,6 @@ public class LevelManager : MonoBehaviour {
 		enemyManager = gameObject.AddComponent<EnemyManager> ();
 		eventManager = gameObject.AddComponent<EventManager> ();
 
-		/*
-		enemyManager = new EnemyManager
-			(
-				spawnMethod,
-				spawnQuantity,
-				safeRadius
-			);
-		eventManager = new EventManager();
-		*/
-
 		Utilities.TryCatchError ((mazeSetting == null), "Maze Setting cannot be null");
     }
 
@@ -103,6 +93,12 @@ public class LevelManager : MonoBehaviour {
 	{
 		// Generate a maze
 		maze = mazeGenerator.GenerateMaze();
+
+		// Assign address to tiles in maze, for path finding
+		MazeUTL.AssignAddressToTiles (maze);
+		//MazeUTL.PrintAddress (maze.mazeTile [9, 9]);
+		MazeUTL.PrintTileList( MazeUTL.FindPathByAddress(maze.mazeTile[0,0], maze.mazeTile[3,3]), "Path from (0,0) to (3,3)");
+
 
 		if (tileStart == null){
 			Debug.Log ("tileStart is null before enemy generation is called!!!!!");
@@ -117,26 +113,6 @@ public class LevelManager : MonoBehaviour {
 		// Set finsiedInit
 		finsiedInit = true;
 	}
-
-	/* 
-	//---------------------------------------
-	//      Unit spawn functions
-	//---------------------------------------
-
-	public PlayerCharacter SpawnPlayerCharacter(GameObject prefab, Tile targetTile)
-	{
-		PlayerCharacter character = Instantiate (prefab, targetTile.transform.position, Quaternion.Euler(0, 0, 0)).GetComponent<PlayerCharacter>();
-		character.Init(this, targetTile);
-
-		return character;
-	}
-
-	public void SpawnInitEnemies()
-	{
-		
-	}
-	*/
-
 
     //---------------------------------------
     //      Game Mode

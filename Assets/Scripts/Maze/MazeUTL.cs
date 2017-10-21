@@ -299,4 +299,98 @@ public static class MazeUTL {
     }
 
 
+	// ===== JY added for path-finding =====
+
+	// Writes address to each tile in maze
+	// Currently assumes maze has no circular route (e.g. minSpanningTree); otherwise goes into infinite loop
+	public static void AssignAddressToTiles(Maze maze)
+	{
+		// Origin is the tile where all addresses are based on; any tile works, but center node is most efficient
+		Tile origin = maze.mazeTile [(maze.mazeWidth / 2) - 1, (maze.mazeLength / 2) - 1];
+
+		origin.addr = new List<Tile> ();
+		origin.addr.Add (origin);
+		WriteAddressToNeighbors (origin, null); // Recursive; calls itself until all tiles in maze is assigned an address
+
+		Debug.Log ("Origin is at X = " + origin.X + "; Z = " + origin.Z);
+	}
+
+	// Recursive Helper 
+	public static void WriteAddressToNeighbors(Tile current, Tile parent)
+	{
+		if (current.addr == null) {
+			if (current.addr.Count == 0) {
+				Debug.LogError ("Assigner tile has no address");
+			}
+		}
+		for (int dir = 0; dir < 4; dir ++)
+		{
+			Tile child = GetDirNeighborTile (current, dir);
+			if (child != null) {
+				if (!WallBetweenNeighborTiles(current, child)) {
+					if (child != parent) {
+						child.addr = new List<Tile> (current.addr);
+						child.addr.Add (child);
+						WriteAddressToNeighbors (child, current); // Recursive call
+					}
+				}
+			}
+		}
+	}
+
+	// Finds path based on address method 
+	// (vulnerable to maze modification after initialization)
+	// For convience of using, output does NOT include starting tile;  Output DOES include target tile
+	// e.g. A--B--C--D--E
+	// FindPathByAddress(A, E) returns B--C--D--E
+	// Returns empty list if A == E
+
+	public static List<Tile> FindPathByAddress (Tile startTile, Tile endTile)
+	{
+		// Find the last common element in address
+		int index = 0;
+		while (true) 
+		{
+			if (startTile.addr [index] != endTile.addr [index]) {
+				index = index - 1; // the last common index is one before the first differing index 
+				break;
+			}
+			index++;
+		}
+
+		// ....................
+
+		return null;
+	}
+
+	public static void PrintAddress (Tile t)
+	{
+		if (t.addr == null)
+			Debug.LogError ("Tile has no address");
+		if (t.addr.Count == 0)
+			Debug.LogError ("Tile address has no elements");
+
+		Debug.Log ("=== Printing address of Tile X = " + t.X + "; Z = " + t.Z + "===");
+		for (int i = 0; i < t.addr.Count; i++) {
+			Debug.Log ("Element#" + (i + 1) + " : X = " + t.addr [i].X + "; Z = " + t.addr [i].Z);
+		}
+	}
+
+	public static void PrintTileList (List<Tile> tileList, string listName)
+	{
+		Debug.Log ("=== Printing Tile List '" + listName + "' ===");
+		if (tileList == null) {
+			Debug.Log ("TileList is null.");
+		}
+		else {
+			if (tileList.Count == 0) {
+				Debug.Log ("TileList is empty.");
+			} else {
+				for (int i = 0; i < tileList.Count; i++) {
+					Debug.Log ("Tile#" + (i + 1) + " : X = " + tileList [i].X + "; Z = " + tileList [i].Z);
+				}
+			}
+		}
+	}
+
 }
