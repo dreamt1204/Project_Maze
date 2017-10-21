@@ -29,9 +29,11 @@ public class UIManager : MonoBehaviour
 	[HideInInspector] public Dictionary<string, abilityButton> abilityButtons;
 
 	private UIProgressBar healthBar;
-	private UIButton splitSlimeButton;
-	private UIButton eatSlimeButton;
-    
+
+    [HideInInspector] public UIWidget slimeWidget;
+    [HideInInspector] public UISprite slimeDragButtonSprite;
+    [HideInInspector] public UIWidget slimeStateSelectWidget;
+
 
     //=======================================
     //      Struct
@@ -60,16 +62,21 @@ public class UIManager : MonoBehaviour
         joyStick = GameObject.Find("JoyStick").GetComponent<UIJoyStick>();
         joyStickArea = GameObject.Find("Widget_JoyStickArea").GetComponent<UIWidget>();
 
-		splitSlimeButton = GameObject.Find("SplitSlimeButton").GetComponent<UIButton>();
-		eatSlimeButton = GameObject.Find("EatSlimeButton").GetComponent<UIButton>();
-		healthBar = GameObject.Find("HealthBar").GetComponent<UIProgressBar>();
+        slimeWidget = GameObject.Find("Widget_Slime").GetComponent<UIWidget>();
+        slimeDragButtonSprite = GameObject.Find("Sprite_Slime").GetComponent<UISprite>();
+        slimeStateSelectWidget = GameObject.Find("Widget_SlimeStateSelect").GetComponent<UIWidget>();
+        slimeStateSelectWidget.alpha = 0;
 
+        healthBar = GameObject.Find("HealthBar").GetComponent<UIProgressBar>();
+        
+        /*
         abilityButtons = new Dictionary<string, abilityButton>();
         InitNewButton("Head");
         InitNewButton("Arms");
         InitNewButton("Body");
         InitNewButton("Legs");
         InitNewButton("Misc");
+        */
     }
 
 	void Update ()
@@ -162,33 +169,6 @@ public class UIManager : MonoBehaviour
         return hasSprite;
     }
 
-    //---------------------------------------
-    //      SlimeSplit Button
-    //---------------------------------------
-    public void ToggleSlimeSplitButton()
-    {
-		PlayerCharacter player = LevelManager.instance.playerCharacter;
-
-		player.ToggleSplittingSlime();
-
-		if (player.splittingSlime)
-			splitSlimeButton.GetComponentInChildren<UILabel>().text = "Split ON";
-		else
-			splitSlimeButton.GetComponentInChildren<UILabel>().text = "Split Off";
-    }
-
-	public void ToggleEatSplitButton()
-	{
-		PlayerCharacter player = LevelManager.instance.playerCharacter;
-
-		player.ToggleEattingSlime();
-
-		if (player.eattingSlime)
-			eatSlimeButton.GetComponentInChildren<UILabel>().text = "Eat ON";
-		else
-			eatSlimeButton.GetComponentInChildren<UILabel>().text = "Eat Off";
-	}
-
 	//---------------------------------------
 	//      Health
 	//---------------------------------------
@@ -196,4 +176,17 @@ public class UIManager : MonoBehaviour
 	{
 		healthBar.value = value;
 	}
+
+    //---------------------------------------
+    //      Slime Drag Button
+    //---------------------------------------
+    public void UpdateSlimeDragButtonSprite(SlimeStateType state)
+    {
+        if (state == SlimeStateType.None)
+            slimeDragButtonSprite.spriteName = "Slime";
+        else if (state == SlimeStateType.Splitting)
+            slimeDragButtonSprite.spriteName = "Slime_Split";
+        else if(state == SlimeStateType.Eatting)
+            slimeDragButtonSprite.spriteName = "Slime_Eat";
+    }
 }

@@ -283,25 +283,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34b22d85c4ee1460fb1fe09b7d664c35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healthMax: 100
   health: 100
   moveSpeed: 100
   ownerType: 0
   BodyParts:
-  - partType: Head
+  - partType: Slime
     part: {fileID: 0}
-  - partType: Arms
+  - partType: Head
     part: {fileID: 0}
   - partType: Body
     part: {fileID: 0}
   - partType: Legs
-    part: {fileID: 0}
-  - partType: Misc
     part: {fileID: 0}
   playerCamera: {fileID: 0}
   hasObjective: 0
   SlimeSplitPrefab: {fileID: 1333352588105302, guid: 4d5f6b42e8ee17346bf61a5ccaee5a83,
     type: 2}
   splittingSlime: 0
+  eattingSlime: 0
+  splittingSlimeDamage: 1
+  eattingSlimeRecover: 1
 --- !u!114 &114951310847072486
 MonoBehaviour:
   m_ObjectHideFlags: 1
