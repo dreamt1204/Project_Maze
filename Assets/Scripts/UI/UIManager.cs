@@ -69,14 +69,10 @@ public class UIManager : MonoBehaviour
 
         healthBar = GameObject.Find("HealthBar").GetComponent<UIProgressBar>();
         
-        /*
         abilityButtons = new Dictionary<string, abilityButton>();
         InitNewButton("Head");
-        InitNewButton("Arms");
         InitNewButton("Body");
         InitNewButton("Legs");
-        InitNewButton("Misc");
-        */
     }
 
 	void Update ()
@@ -134,7 +130,7 @@ public class UIManager : MonoBehaviour
     public void UpdateAbilityIcon(string partType)
     {
         abilityButtons[partType].buttonObj.SetActive(true);
-		UpdateabilityButtonsIconSate (abilityButtons [partType], AbilityButtonState.Enabled);
+        UpdateabilityButtonsIconSate (abilityButtons [partType], AbilityButtonState.Enabled);
 
 		string newSprite = LevelManager.instance.playerCharacter.PlayerAbilities[partType].spriteName;
         if ((newSprite != null) && (AtlasHasSprite(abilityButtons[partType].iconSprite.atlas, newSprite)))

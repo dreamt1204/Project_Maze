@@ -53,22 +53,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: 607f1f3d25264bd44802940f46eb9626, type: 2}
   mSprites:
-  - name: Icon_Arms_default
-    x: 581
-    y: 555
-    width: 517
-    height: 469
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
-    paddingLeft: 1
-    paddingRight: 0
-    paddingTop: 0
-    paddingBottom: 0
   - name: Icon_Body_default
     x: 0
-    y: 40
+    y: 563
     width: 580
     height: 461
     borderLeft: 0
@@ -80,8 +67,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Icon_Head_default
-    x: 959
-    y: 66
+    x: 0
+    y: 74
     width: 373
     height: 488
     borderLeft: 0
@@ -94,22 +81,9 @@ MonoBehaviour:
     paddingBottom: 0
   - name: Icon_Legs_default
     x: 581
-    y: 64
+    y: 534
     width: 377
     height: 490
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
-    paddingLeft: 0
-    paddingRight: 0
-    paddingTop: 0
-    paddingBottom: 0
-  - name: Icon_Misc_default
-    x: 0
-    y: 502
-    width: 580
-    height: 522
     borderLeft: 0
     borderRight: 0
     borderTop: 0

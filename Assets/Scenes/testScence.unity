@@ -200,10 +200,11 @@ MonoBehaviour:
   mazeDifficulty: 1
   mazeSetting: {fileID: 114690698242918930, guid: 917fe6d0109bb5942bfdb0a04e7f6396,
     type: 2}
-  customMazeSize: 1
-  mazeWidth: 30
-  mazeLength: 30
-  customMazeObject: {fileID: 0}
+  customMazeSize: 0
+  mazeWidth: 10
+  mazeLength: 10
+  customMazeObject: {fileID: 1754187230317282, guid: 0c8f2be7470a32747a015b514409f86f,
+    type: 2}
   customGameModePosition: 1
   customBodyPartChestPosition: 1
   playerCharacterPrefab: {fileID: 1580977563646686, guid: b6007ed5a665c594f900229921919ff8,
@@ -253,10 +254,29 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 114284241253691508, guid: af57739e56be62c43aa85e6e8d11533f,
-        type: 2}
-      propertyPath: mColor.a
-      value: 0
+    - target: {fileID: 1035559491121080, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1378022683968952, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1589612710591048, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4965354693859342, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -70
+      objectReference: {fileID: 0}
+    - target: {fileID: 4297120767566086, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4137429860130042, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -228
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}

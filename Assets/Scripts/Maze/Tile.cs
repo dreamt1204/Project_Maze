@@ -19,8 +19,6 @@ public class Tile : MonoBehaviour {
     //=======================================
     //      Variables
     //=======================================
-	LevelManager level;
-
     // Coordinate info
 	public int X;
     public int Z;
@@ -77,8 +75,6 @@ public class Tile : MonoBehaviour {
     //=======================================
     void Awake()
 	{
-        level = LevelManager.instance;
-
         // Init box collider for this tile
         BoxCollider tile_collider = this.gameObject.AddComponent<BoxCollider> ();
 		tile_collider.size = new Vector3 (10, 2, 10);

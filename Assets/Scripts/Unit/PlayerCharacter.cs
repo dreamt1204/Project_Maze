@@ -127,26 +127,26 @@ public class PlayerCharacter : Unit {
     //---------------------------------------
     public override void InitBodyParts()
     {
-        /* (WIP FIX)
         // Init PlayerCharacter BodyParts
+        InitBodyPartData("Slime");
         InitBodyPartData("Head");
-        InitBodyPartData("Arms");
         InitBodyPartData("Body");
         InitBodyPartData("Legs");
-        InitBodyPartData("Misc");
 
         // Init PlayerAbilities
         PlayerAbilities = new Dictionary<string, PlayerAbility>();
         foreach (BodyPartData data in BodyParts)
         {
-            PlayerAbilities.Add(data.partType, null);
+            if (data.partType != "Slime")
+                PlayerAbilities.Add(data.partType, null);
         }
-        */
     }
 
     public override void BodyPartUpdatedEvent(string partType)
     {
-        /* (WIP FIX)
+        if (partType == "Slime")
+            return;
+
         BodyPart part = GetBodyPartWithType(partType);
 
         // If the part doesn't exist, clear part ability
@@ -162,7 +162,6 @@ public class PlayerCharacter : Unit {
 			part.playerAbility.Init ();
             UIManager.instance.UpdateAbilityIcon(partType);
         }
-        */
     }
 
     //---------------------------------------

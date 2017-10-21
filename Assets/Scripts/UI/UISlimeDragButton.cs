@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class UISlimeDragButton : UIDragDropItem
 {
-    UIManager uiManager = UIManager.instance;
-
     protected override void OnPress(bool isDown)
     {
         base.OnPress(isDown);

@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4061172029973750}
   - component: {fileID: 114276151289404670}
   m_Layer: 0
-  m_Name: test_Arms_red
+  m_Name: test_Slime_red
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -52,7 +52,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ownerType: 0
-  partName: Red Arms
-  partType: Arms
-  partSkinName: Arms_red
+  partName: Red Slime
+  partType: Slime
+  partSkinName: Slime_red
   playerAbility: {fileID: 0}
