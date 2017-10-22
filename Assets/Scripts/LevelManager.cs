@@ -97,8 +97,7 @@ public class LevelManager : MonoBehaviour {
 		// Assign address to tiles in maze, for path finding
 		MazeUTL.AssignAddressToTiles (maze);
 		//MazeUTL.PrintAddress (maze.mazeTile [9, 9]);
-		MazeUTL.PrintTileList( MazeUTL.FindPathByAddress(maze.mazeTile[0,0], maze.mazeTile[3,3]), "Path from (0,0) to (3,3)");
-
+		//MazeUTL.PrintTileList( MazeUTL.FindPathByAddress(maze.mazeTile[4,4], maze.mazeTile[0,0]), "Path");
 
 		if (tileStart == null){
 			Debug.Log ("tileStart is null before enemy generation is called!!!!!");

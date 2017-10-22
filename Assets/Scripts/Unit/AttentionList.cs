@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 // Major purpose for this class is to not let external classes (esp. Enemy and its children) to 
@@ -40,7 +41,7 @@ public class AttentionList {
 	}
 
 	public void AddEvent(SensedEvent.EventType type, Tile tile){
-		Debug.Log ("AddEvent called.");
+		//Debug.Log ("AddEvent called.");
 
 		switch (type) {
 
@@ -141,12 +142,77 @@ public class AttentionList {
 		}
 	}
 
+	public SensedEvent TopPriorityEvent (Dictionary <SensedEvent.EventType, int> priorityLUT)
+	{
+		int[] priorityValues = new int[attnList.Count];
+		for (int n = 0; n < attnList.Count; n++) {
+			priorityValues [n] = priorityLUT [attnList[n].Type];
+		}
+
+		// If only 1 event has the highest value, then return that event
+		// If multiple events has highest value,
+		// (1) check if all event are of the same type; if not, throw error saying that types should differ by priorityValue
+		// (2) if same type; pick priority based on each type  
+		// [Never happens to PlayerDetected / PlayerLastDetected since there should be only one instance for each]
+		// Simple AI: For NoiseEvent, now set to the latest noise heard 
+
+		int maxPriorityVal = priorityValues.Max ();
+		int[] indexOfMaxPriority = priorityValues.FindAllIndexof (maxPriorityVal);
+		if (indexOfMaxPriority.Length == 1) {
+			return attnList [indexOfMaxPriority [0]];
+		} else {
+			SensedEvent.EventType[] typesOfMaxPriorityEvents = new SensedEvent.EventType[indexOfMaxPriority.Length];
+			for (int i = 0; i < indexOfMaxPriority.Length; i++) {
+				typesOfMaxPriorityEvents [i] = attnList [indexOfMaxPriority [i]].Type;
+			}
+			if (typesOfMaxPriorityEvents.Distinct ().Count() != 1)
+				Debug.LogError ("Multiple sensedEvent types have the same priority value in the given dictionary.");
+			else {
+				SensedEvent.EventType maxPriorityType = typesOfMaxPriorityEvents [0];
+				switch (maxPriorityType) {
+				case SensedEvent.EventType.PlayerDetected:
+					Debug.LogError ("Multiple PlayerDetected event is in the AttentionList.  This should never happen.");
+					return attnList [indexOfMaxPriority [0]];
+				case SensedEvent.EventType.PlayerLastDetected:
+					Debug.LogError ("Multiple PlayerLastDetected event is in the AttentionList.  This should never happen.");
+					return attnList [indexOfMaxPriority [0]];
+				case SensedEvent.EventType.AlertingNoise:
+					// return the latest noise heard
+					return attnList [indexOfMaxPriority.Last()];
+				}
+			}
+		}
+
+		return null;
+	}
+
+	// Restores the memLife of a sensed event to initial value (if eventType invariant allows)
+	public void ResetEventMemLife(SensedEvent sensedEvent) {
+		if (attnList.Contains(sensedEvent)){
+			switch (sensedEvent.Type) {
+			case SensedEvent.EventType.PlayerDetected:
+				// Does nothing -- PlayerDetected should have memLife = 1 and always gets removed at UpdateMemomry step
+				break;
+			case SensedEvent.EventType.PlayerLastDetected:
+				// Set to very large number again just for sake of consistency
+				sensedEvent.MemoryLife = veryLargeNumber;
+				break;
+			case SensedEvent.EventType.AlertingNoise:
+				sensedEvent.MemoryLife = noiseEventMemoryLife;
+				break;
+			}
+		} else {
+			Debug.LogError("ResetEventMemLife called on an event that is not currently in attnList.");
+		}
+	}
+
+
 	public void PrintAttnList(){
 
 		if (attnList.Count != 0) {
 			Debug.Log ("====== PrintAttnList called ======");
 			for (int n = 0; n < attnList.Count; n++) {
-				Debug.Log ("Entry# " + (n+1) + "; Type = " + attnList [n].Type + "; memLife = " + attnList [n].MemoryLife);
+				Debug.Log ("Entry# " + (n+1) + "; Type = " + attnList [n].Type + " || X = " + attnList[n].EventTile.X + ", Z = " + attnList[n].EventTile.Z + " || memLife = " + attnList [n].MemoryLife);
 			}
 		}
 	}

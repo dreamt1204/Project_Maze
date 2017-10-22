@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public static class ExtensionMethods {
 
@@ -25,6 +26,11 @@ public static class ExtensionMethods {
 			int tileNum = n + 1;
 			Debug.Log("Tile #" + (tileNum) + " is at X = " + tileList[n].X + ", Z = " + tileList[n].Z);
 		}
+	}
+
+	public static int[] FindAllIndexof<T>(this IEnumerable<T> values, T val)
+	{
+		return values.Select((b,i) => object.Equals(b, val) ? i : -1).Where(i => i != -1).ToArray();
 	}
 
 

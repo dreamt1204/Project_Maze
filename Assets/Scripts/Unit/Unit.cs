@@ -42,13 +42,13 @@ public class Unit : MonoBehaviour {
     protected bool facingRight = false;
     protected string currentAnim;
     protected SkeletonAnimation skeletonAnim;
-    private const float walkAnimScaleMultiplier = 3f;
+	protected const float walkAnimScaleMultiplier = 3f; // JY changed to protected 
 
     protected bool keepWalkingAnim = false;
     protected bool playWalkingAnim = false;
 
     // Const
-    private const float movementMultiplier = 0.15f;
+	protected const float movementMultiplier = 0.15f; // JY changed to protected 
 
     //---------------------------------------
     //      Struct
@@ -306,7 +306,8 @@ public class Unit : MonoBehaviour {
         int dir = MazeUTL.GetNeighborTileDir(currentTile, targetTile);
         facingRight = dir == 1 ? false : dir == 3 ? true : facingRight;
 
-        skeletonAnim.skeleton.FlipX = facingRight;
+		//  =========  temporarily commented out until enemy skeleton works ========= 
+		// skeletonAnim.skeleton.FlipX = facingRight;
     }
 
 	protected virtual IEnumerator MoveToTileCoroutine (Tile targetTile)
@@ -335,5 +336,8 @@ public class Unit : MonoBehaviour {
 
         if (!keepWalkingAnim)
             playWalkingAnim = false;
+
     }
+
 }
+

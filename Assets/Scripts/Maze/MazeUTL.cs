@@ -312,7 +312,7 @@ public static class MazeUTL {
 		origin.addr.Add (origin);
 		WriteAddressToNeighbors (origin, null); // Recursive; calls itself until all tiles in maze is assigned an address
 
-		Debug.Log ("Origin is at X = " + origin.X + "; Z = " + origin.Z);
+		// Debug.Log ("Origin is at X = " + origin.X + "; Z = " + origin.Z);
 	}
 
 	// Recursive Helper 
@@ -347,10 +347,24 @@ public static class MazeUTL {
 
 	public static List<Tile> FindPathByAddress (Tile startTile, Tile endTile)
 	{
+		// Return empty list if start == end
+		if (startTile == endTile) {
+			return new List<Tile> ();
+		}
+
 		// Find the last common element in address
 		int index = 0;
 		while (true) 
 		{
+			// This case happens when startTile or endTile is right on the address of the other tile.
+			// e.g. startTile.addr is A--B--C
+			//      endTile.addr   is A--B--C--D--E
+			// There will be no "tile of first differing index"
+			if (startTile.addr.Count < index + 1 | endTile.addr.Count < index + 1) {
+				index = index - 1;
+				break;
+			}
+
 			if (startTile.addr [index] != endTile.addr [index]) {
 				index = index - 1; // the last common index is one before the first differing index 
 				break;
@@ -358,9 +372,24 @@ public static class MazeUTL {
 			index++;
 		}
 
-		// ....................
+		// Debug.Log ("Index of common node is " + index + "; copied list counts are " + (startTile.addr.Count - index) + " and " + (endTile.addr.Count - index));
 
-		return null;
+		// Get Tile List from common element to end
+		List<Tile> subPath1 = startTile.addr.GetRange (index, startTile.addr.Count - index); 
+		List<Tile> subPath2 = endTile.addr.GetRange (index, endTile.addr.Count - index);
+
+		subPath1.RemoveAt (subPath1.Count-1); // Return list should not contain the startTile (list starts with next tile)
+		subPath1.Reverse();
+		// Remove the shared element; if startTile is origin, then subPath1 will be empty, so in that case take away from subPath2
+		if (subPath1.Count > 0) {
+			subPath1.RemoveAt (subPath1.Count-1);  
+		} else {
+			subPath2.RemoveAt (0);
+		}
+		List<Tile> path = subPath1;
+		path.AddRange (subPath2);
+
+		return path;
 	}
 
 	public static void PrintAddress (Tile t)

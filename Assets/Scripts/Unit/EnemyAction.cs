@@ -18,6 +18,13 @@ public class EnemyAction {
 	//      Variables
 	//=======================================
 	public actionType type;
-	public bool isCancelable;
+	public Tile targetTile = null;  // This is temporarily implementation; enemyAction might involve no tile, 1 tile, many tiles
+	public bool isComplete = false; // This is debug / safety feature
+	public bool isCancelable = false;
+
+	public EnemyAction (actionType type0, Tile targetTile0) {
+		type = type0;
+		targetTile = targetTile0;
+	}
 
 }
