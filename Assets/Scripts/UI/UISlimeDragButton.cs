@@ -1,4 +1,10 @@
-﻿using System.Collections;
+﻿//============================== Class Definition ==============================
+// 
+// Custom DragDropItem class for Slime State.
+//
+//==============================================================================
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 

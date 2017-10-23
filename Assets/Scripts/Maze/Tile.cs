@@ -37,7 +37,7 @@ public class Tile : MonoBehaviour {
     public TileItem item;
 
     // Flags
-    public GameObject SlimeSplit;
+	public SlimeSplit slimeSplit;
 
     // Selectable highlight variables
     float pulseTime = 0;

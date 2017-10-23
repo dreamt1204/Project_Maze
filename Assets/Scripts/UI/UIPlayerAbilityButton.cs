@@ -8,7 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIPlayerAbilityIcon : UIDragDropItem {
+public class UIPlayerAbilityButton : UIDragDropItem {
 	LevelManager level = LevelManager.instance;
 	string partType;
 

@@ -62,12 +62,12 @@ public class UIManager : MonoBehaviour
         joyStick = GameObject.Find("JoyStick").GetComponent<UIJoyStick>();
         joyStickArea = GameObject.Find("Widget_JoyStickArea").GetComponent<UIWidget>();
 
+		healthBar = GameObject.Find("HealthBar").GetComponent<UIProgressBar>();
+
         slimeWidget = GameObject.Find("Widget_Slime").GetComponent<UIWidget>();
         slimeDragButtonSprite = GameObject.Find("Sprite_Slime").GetComponent<UISprite>();
         slimeStateSelectWidget = GameObject.Find("Widget_SlimeStateSelect").GetComponent<UIWidget>();
         slimeStateSelectWidget.alpha = 0;
-
-        healthBar = GameObject.Find("HealthBar").GetComponent<UIProgressBar>();
         
         abilityButtons = new Dictionary<string, abilityButton>();
         InitNewButton("Head");
@@ -114,7 +114,7 @@ public class UIManager : MonoBehaviour
         abilityButton newButton = new abilityButton();
         newButton.buttonObj = GameObject.Find("Sprite_ability_" + partType);
         newButton.mainSprite = newButton.buttonObj.GetComponent<UISprite>();
-        newButton.iconSprite = newButton.buttonObj.transform.Find("Sprite_ability_icon").GetComponent<UISprite>();
+        newButton.iconSprite = newButton.buttonObj.transform.Find("Sprite_ability_button").GetComponent<UISprite>();
 
         abilityButtons.Add(partType, newButton);
     }
@@ -166,7 +166,7 @@ public class UIManager : MonoBehaviour
     }
 
 	//---------------------------------------
-	//      Health
+	//      Slime Health
 	//---------------------------------------
 	public void UpdateHealthBar(float value)
 	{

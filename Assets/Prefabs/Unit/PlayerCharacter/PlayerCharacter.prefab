@@ -328,5 +328,5 @@ MonoBehaviour:
     part: {fileID: 0}
   playerCamera: {fileID: 0}
   hasObjective: 0
-  SlimeSplitPrefab: {fileID: 1333352588105302, guid: 4d5f6b42e8ee17346bf61a5ccaee5a83,
+  slimeSplit: {fileID: 114472983391352266, guid: 4d5f6b42e8ee17346bf61a5ccaee5a83,
     type: 2}

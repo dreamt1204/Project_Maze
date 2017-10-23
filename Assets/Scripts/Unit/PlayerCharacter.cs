@@ -25,10 +25,8 @@ public class PlayerCharacter : Unit {
 	[HideInInspector] public bool hasObjective = false;
     [HideInInspector] public Dictionary<string, PlayerAbility> PlayerAbilities;
 
-    public GameObject SlimeSplitPrefab;
+    public SlimeSplit slimeSplit;
     [HideInInspector] private SlimeStateType slimeState;
-    [HideInInspector] private float splittingSlimeDamage = 1;
-	[HideInInspector] private float eattingSlimeRecover = 1;
 
     //---------------------------------------
     //      Properties
@@ -198,36 +196,35 @@ public class PlayerCharacter : Unit {
 
         if (SlimeState == SlimeStateType.Splitting)
         {
-            if (CurrentTile.SlimeSplit != null)
+			if (CurrentTile.slimeSplit != null)
                 return;
 
-            if ((Health - splittingSlimeDamage) <= 0)
+			if ((Health - slimeSplit.splittingSlimeDamage) <= 0)
                 return;
 
             GenerateSlimeSplit();
         }
 		else if (SlimeState == SlimeStateType.Eatting)
 		{
-			if (CurrentTile.SlimeSplit == null)
+			if (CurrentTile.slimeSplit == null)
 				return;
 
 			EatSlimeSplit();
 		}
-
     }
 
     public void GenerateSlimeSplit()
     {
-        RecieveDamage(splittingSlimeDamage);
+        RecieveDamage(slimeSplit.splittingSlimeDamage);
 
-        GameObject newSplit = Instantiate(SlimeSplitPrefab, CurrentTile.transform.position, Quaternion.Euler(0, 0, 0));
-        CurrentTile.SlimeSplit = newSplit;
+		GameObject splitObj = Instantiate(slimeSplit.gameObject, CurrentTile.transform.position, Quaternion.Euler(0, 0, 0));
+		CurrentTile.slimeSplit = splitObj.GetComponent<SlimeSplit>();
     }
 
 	public void EatSlimeSplit()
 	{
-		RestoreHealth(eattingSlimeRecover);
+		RestoreHealth(CurrentTile.slimeSplit.eattingSlimeRecover);
 
-		Destroy(CurrentTile.SlimeSplit);
+		Destroy(CurrentTile.slimeSplit.gameObject);
 	}
 }
