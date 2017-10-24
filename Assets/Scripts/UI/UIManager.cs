@@ -22,6 +22,8 @@ public class UIManager : MonoBehaviour
     //=======================================
     public static UIManager instance = null;
 
+    private UILabel timerLabel;
+
     private Camera cam;
     private UIWidget joyStickArea;
 	[HideInInspector] public  UIJoyStick joyStick;
@@ -58,6 +60,8 @@ public class UIManager : MonoBehaviour
         else if (instance != this)
             Destroy(gameObject);
 
+        timerLabel = GameObject.Find("Label_Timer").GetComponent<UILabel>();
+
         cam = GameObject.Find("UICamera").GetComponent<Camera>();
         joyStick = GameObject.Find("JoyStick").GetComponent<UIJoyStick>();
         joyStickArea = GameObject.Find("Widget_JoyStickArea").GetComponent<UIWidget>();
@@ -86,6 +90,21 @@ public class UIManager : MonoBehaviour
         {
 			joyStickEnabled = false;
         }
+
+        timerLabel.text = GetTimerText(LevelManager.instance.timer);
+    }
+
+    //---------------------------------------
+    //      Timer
+    //---------------------------------------
+    public static string GetTimerText(float time)
+    {
+        int min, sec;
+
+        min = Mathf.FloorToInt(time / 60f);
+        sec = Mathf.FloorToInt(time - (min * 60f));
+
+        return min + ":" + sec;
     }
 
     //---------------------------------------

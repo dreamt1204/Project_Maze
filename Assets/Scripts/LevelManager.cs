@@ -25,11 +25,12 @@ public class LevelManager : MonoBehaviour {
 	[HideInInspector] public Maze maze;
 	[HideInInspector] public Tile tileStart;
 	[HideInInspector] public Tile tileObjective;
-	[HideInInspector] public PlayerCharacter playerCharacter;
+    [HideInInspector] public float timer;
+    [HideInInspector] public PlayerCharacter playerCharacter;
 
 	// Global variables in Inspector
     [Header("Maze")]
-	[Range(1, 100)]
+	[Range(1, 10)]
 	public int mazeDifficulty = 1;
     public MazeSetting mazeSetting;
 
@@ -41,6 +42,9 @@ public class LevelManager : MonoBehaviour {
     public GameObject customMazeObject;
     public bool customGameModePosition;
     public bool customBodyPartChestPosition;
+
+    [Header("Game Mode")]
+    public float timerStart = 3600;
 
     [Header("Required Prefabs")]
     public GameObject playerCharacterPrefab;
@@ -76,9 +80,22 @@ public class LevelManager : MonoBehaviour {
 		// Spawn player character
 		playerCharacter = UnitSpawner.SpawnPlayerCharacter(tileStart);
 
-		// Set init flag to true
-		finishedInitLevel = true;
+        // Setup timer
+        timer = timerStart;
+
+        // Set init flag to true
+        finishedInitLevel = true;
 	}
+
+    void Update()
+    {
+        if (!finishedInitLevel)
+            return;
+
+        // Update timer
+        if (timer > 0)
+            timer = Mathf.Clamp(timer - Time.deltaTime, 0, timerStart);
+    }
 
     //---------------------------------------
     //      Game Mode
@@ -108,7 +125,8 @@ public class LevelManager : MonoBehaviour {
 	void PassLevel()
 	{
 		Debug.Log("Level Finished!!");  // Debug: tmp message 
-	}
+        Debug.Log("Time used: " + UIManager.GetTimerText(timerStart - timer));
+    }
 
 	void FailLevel()
 	{

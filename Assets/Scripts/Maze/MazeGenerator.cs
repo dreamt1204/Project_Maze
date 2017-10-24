@@ -202,6 +202,7 @@ public class MazeGenerator : MonoBehaviour
         public bool[,] wall_v;  // X, Z
         public bool[,] wall_h;  // X, Z
         public int[,] cell;     // X, Z  cell is the id of each inclosed section in Kruskal's algorithm.
+        public List<Vector2> tileInSquares;
 
         public MazeBlueprint(int width, int length)
         {
@@ -211,6 +212,8 @@ public class MazeGenerator : MonoBehaviour
             wall_v = new bool[m_width + 1, m_length];
             wall_h = new bool[m_width, m_length + 1];
             cell = new int[m_width, m_length];
+            tileInSquares = new List<Vector2>();
+
             for (int i = 0; i < wall_v.GetLength(0); i++)
             {
                 for (int j = 0; j < wall_v.GetLength(1); j++)
@@ -263,6 +266,8 @@ public class MazeGenerator : MonoBehaviour
                 if (IDsAllZero(repl) == true)
                     break;
             }
+
+            AddSquares();
         }
 
         void ReplaceIDs(int[] repl)
@@ -290,6 +295,53 @@ public class MazeGenerator : MonoBehaviour
                 }
             }
             return true;
+        }
+
+        void AddSquares()
+        {
+            int squares2x2 = Formula.Calculate2x2SquareNum(m_width);
+            int squares3x3 = Formula.Calculate3x3SquareNum(m_width);
+
+            for (int i = 0; i < squares2x2; i++)
+            {
+                AddSquare(2);
+            }
+
+            for (int i = 0; i < squares3x3; i++)
+            {
+                AddSquare(3);
+            }
+        }
+
+        void AddSquare(int size)
+        {
+            int x, z;
+
+            do
+            {
+                x = Random.Range(0, (m_width - size));
+                z = Random.Range(0, (m_length - size));
+
+            } while ((tileInSquares.Contains(new Vector2(x, z))) || (tileInSquares.Contains(new Vector2(x + size - 1, z + size - 1))));
+
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    if ((i + 1) < size )
+                        wall_v[x + i + 1, z + j] = false;
+                    if ((j + 1) < size)
+                        wall_h[x + i , z + j + 1] = false;
+                }
+            }
+
+            for (int i = (x - 1); i <= (x + size) ; i++)
+            {
+                for (int j = (z - 1); j <= (z + size); j++)
+                {
+                    tileInSquares.Add(new Vector2(i, j));
+                }
+            }
         }
     }
 
