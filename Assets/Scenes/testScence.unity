@@ -214,6 +214,8 @@ MonoBehaviour:
     type: 2}
   objectivePrefab: {fileID: 1322906879363412, guid: f448fef0f8ba6419b89e1f5ac8315c1a,
     type: 2}
+  HealthPackPrefab: {fileID: 1109405773331554, guid: c64f8dff735853b4699412ad92c551eb,
+    type: 2}
   BodyPartChestPrefab: {fileID: 1298702626922230, guid: d300446bd734be84fb5899f6f8607576,
     type: 2}
 --- !u!1001 &856507179
@@ -307,31 +309,31 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4137429860130042, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -228
+      value: -11559
       objectReference: {fileID: 0}
     - target: {fileID: 4137429860130042, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -524
+      value: -29232
       objectReference: {fileID: 0}
     - target: {fileID: 4297120767566086, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -1
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 4297120767566086, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 46
+      value: -18025
       objectReference: {fileID: 0}
     - target: {fileID: 4965354693859342, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -70
+      value: -11392
       objectReference: {fileID: 0}
     - target: {fileID: 4650900690296976, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -1
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 4650900690296976, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 550
+      value: -6883
       objectReference: {fileID: 0}
     - target: {fileID: 1044051049122270, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_Name

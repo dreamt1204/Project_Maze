@@ -187,6 +187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b91592f66ff714eef80dad81fe51ca86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemName: Item Chest
+  itemName: Body Part Chest
   itemType: 3
+  healAmount: 0
   bodyPart: {fileID: 0}

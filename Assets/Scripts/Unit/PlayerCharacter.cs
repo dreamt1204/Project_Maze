@@ -179,9 +179,14 @@ public class PlayerCharacter : Unit {
 		{
 			level.CheckLevelPassedCondition();
 		}
-		else if (tile.item.itemType == ItemType.BodyPart)
+        else if (tile.item.itemType == ItemType.HealthPack)
+        {
+            RestoreHealth(tile.item.healAmount);
+            tile.DestroyTileItem();
+        }
+        else if (tile.item.itemType == ItemType.BodyPart)
 		{
-			level.playerCharacter.UpdateBodyPart(tile.item.bodyPart);
+			UpdateBodyPart(tile.item.bodyPart);
 			tile.DestroyTileItem();
 		}
 	}
