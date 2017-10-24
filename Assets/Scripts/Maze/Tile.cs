@@ -104,6 +104,7 @@ public class Tile : MonoBehaviour {
     public TileItem SpawnTileItem(GameObject itemPrefab)
 	{
 		item = Instantiate (itemPrefab, transform.position, Quaternion.Euler (0, 0, 0)).GetComponent<TileItem>();
+		item.transform.parent = this.transform;
 
         return item;
 	}
@@ -166,4 +167,20 @@ public class Tile : MonoBehaviour {
         floor_obj.GetComponent<MeshRenderer>().material.color = originalFloorColor;
         ResetHighlightPulseVars();
     }
+
+	//---------------------------------------
+	//      Slime Split
+	//---------------------------------------
+	public SlimeSplit SpawnTileSlimeSplit(GameObject splitPrefab)
+	{
+		slimeSplit = Instantiate (splitPrefab, transform.position, Quaternion.Euler (0, 0, 0)).GetComponent<SlimeSplit>();
+		slimeSplit.transform.parent = this.transform;
+
+		return slimeSplit;
+	}
+
+	public void DestroyTileSlimeSplit()
+	{
+		Destroy (slimeSplit.gameObject);
+	}
 }

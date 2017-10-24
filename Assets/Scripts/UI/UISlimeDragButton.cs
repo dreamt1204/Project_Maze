@@ -35,7 +35,7 @@ public class UISlimeDragButton : UIDragDropItem
 
         SlimeStateType newState = SlimeStateType.None;
 
-        if (surface.name == "Sprite_Slime")
+		if (surface.name == "Sprite_Slime_None")
             newState = SlimeStateType.None;
         else if (surface.name == "Sprite_Slime_Splitting")
             newState = SlimeStateType.Splitting;

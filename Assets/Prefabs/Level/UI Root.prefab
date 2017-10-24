@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 114316268223322346}
   - component: {fileID: 65460422936759756}
   m_Layer: 8
-  m_Name: Sprite_Slime
+  m_Name: Sprite_Slime_None
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,7 +45,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1044051049122270
 GameObject:
   m_ObjectHideFlags: 1
@@ -337,7 +337,7 @@ GameObject:
   - component: {fileID: 4568306428863722}
   - component: {fileID: 114430232370696620}
   m_Layer: 8
-  m_Name: Sprite_ability_icon
+  m_Name: Sprite_ability_button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -360,7 +360,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1401455064458770
 GameObject:
   m_ObjectHideFlags: 1
@@ -442,7 +442,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1636677327856080
 GameObject:
   m_ObjectHideFlags: 1
@@ -501,7 +501,7 @@ GameObject:
   - component: {fileID: 4596087654787840}
   - component: {fileID: 114024708765822164}
   m_Layer: 8
-  m_Name: Sprite_ability_icon
+  m_Name: Sprite_ability_button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -566,7 +566,7 @@ GameObject:
   - component: {fileID: 4096529050032476}
   - component: {fileID: 114888776276983124}
   m_Layer: 8
-  m_Name: Sprite_ability_icon
+  m_Name: Sprite_ability_button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -742,7 +742,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1330729304694840}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -228, y: -524, z: 0}
+  m_LocalPosition: {x: -229, y: -524, z: 0}
   m_LocalScale: {x: 0.9984, y: 0.9984, z: 0.9984}
   m_Children:
   - {fileID: 4344286937739744}
@@ -801,7 +801,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1794371258585108}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1, y: 46, z: 0}
+  m_LocalPosition: {x: -2, y: 46, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4998344387971206}
@@ -1082,7 +1082,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1233626122801526}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1, y: 550, z: 0}
+  m_LocalPosition: {x: -2, y: 550, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4638404316247198}

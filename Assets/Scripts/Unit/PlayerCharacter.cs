@@ -25,7 +25,7 @@ public class PlayerCharacter : Unit {
 	[HideInInspector] public bool hasObjective = false;
     [HideInInspector] public Dictionary<string, PlayerAbility> PlayerAbilities;
 
-    public SlimeSplit slimeSplit;
+	public SlimeSplit slimeSplit;
     [HideInInspector] private SlimeStateType slimeState;
 
     //---------------------------------------
@@ -217,14 +217,13 @@ public class PlayerCharacter : Unit {
     {
         RecieveDamage(slimeSplit.splittingSlimeDamage);
 
-		GameObject splitObj = Instantiate(slimeSplit.gameObject, CurrentTile.transform.position, Quaternion.Euler(0, 0, 0));
-		CurrentTile.slimeSplit = splitObj.GetComponent<SlimeSplit>();
+		CurrentTile.SpawnTileSlimeSplit(slimeSplit.gameObject);
     }
 
 	public void EatSlimeSplit()
 	{
 		RestoreHealth(CurrentTile.slimeSplit.eattingSlimeRecover);
 
-		Destroy(CurrentTile.slimeSplit.gameObject);
+		CurrentTile.DestroyTileSlimeSplit();
 	}
 }
