@@ -330,3 +330,5 @@ MonoBehaviour:
   hasObjective: 0
   slimeSplit: {fileID: 114472983391352266, guid: 4d5f6b42e8ee17346bf61a5ccaee5a83,
     type: 2}
+  compassTagObj: {fileID: 0}
+  compassSprite: {fileID: 0}

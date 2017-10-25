@@ -36,7 +36,7 @@ public static class Formula
     public static int CalculateHealthPackNum(int mazeDifficulty)
     {
         int width = CalculateMazeSideSize(mazeDifficulty);
-        return Mathf.FloorToInt((width * width) / 30);
+        return Mathf.FloorToInt((width * width) / 100);
     }
 
     public static int CalculateBodyPartChestNum(int mazeDifficulty)
@@ -48,7 +48,7 @@ public static class Formula
 	public static int CalculateCompassNum(int mazeDifficulty)
 	{
 		int width = CalculateMazeSideSize(mazeDifficulty);
-		return (Mathf.FloorToInt((width * width) / 250) + 1);
+		return (Mathf.FloorToInt((width * width) / 1500) + 1);
 	}
 
 	public static int CalculateItemLeastDistance(int mazeDifficulty)

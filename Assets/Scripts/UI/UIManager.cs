@@ -36,6 +36,8 @@ public class UIManager : MonoBehaviour
     [HideInInspector] public UISprite slimeDragButtonSprite;
     [HideInInspector] public UIWidget slimeStateSelectWidget;
 
+	[HideInInspector] public UISprite compassSprite;
+
 
     //=======================================
     //      Struct
@@ -72,6 +74,8 @@ public class UIManager : MonoBehaviour
         slimeDragButtonSprite = GameObject.Find("Sprite_Slime").GetComponent<UISprite>();
         slimeStateSelectWidget = GameObject.Find("Widget_SlimeStateSelect").GetComponent<UIWidget>();
         slimeStateSelectWidget.alpha = 0;
+
+		compassSprite = GameObject.Find("Sprite_Compass").GetComponent<UISprite>();
         
         abilityButtons = new Dictionary<string, abilityButton>();
         InitNewButton("Head");
@@ -81,23 +85,20 @@ public class UIManager : MonoBehaviour
 
 	void Update ()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-			joyStickEnabled = true;
-			TryUpdateJoyStickPos();
-        }
-        else if (Input.GetMouseButtonUp(0))
-        {
-			joyStickEnabled = false;
-        }
-
-        timerLabel.text = GetTimerText(LevelManager.instance.timer);
+		UpdateTimer();
+		UpdateJoyStick();
+		UpdateCompassSprite();
     }
 
     //---------------------------------------
     //      Timer
     //---------------------------------------
-    public static string GetTimerText(float time)
+	void UpdateTimer()
+	{
+		timerLabel.text = GetTimerText(LevelManager.instance.timer);
+	}
+
+	public static string GetTimerText(float time)
     {
         int min, sec;
 		string secString;
@@ -115,6 +116,19 @@ public class UIManager : MonoBehaviour
     //---------------------------------------
     //      JoyStick
     //---------------------------------------
+	void UpdateJoyStick()
+	{
+		if (Input.GetMouseButtonDown(0))
+		{
+			joyStickEnabled = true;
+			TryUpdateJoyStickPos();
+		}
+		else if (Input.GetMouseButtonUp(0))
+		{
+			joyStickEnabled = false;
+		}
+	}
+
     void TryUpdateJoyStickPos()
     {
         // Check if player clicks/taps in the joystick area
@@ -209,4 +223,15 @@ public class UIManager : MonoBehaviour
         else if(state == SlimeStateType.Eatting)
             slimeDragButtonSprite.spriteName = "Slime_Eat";
     }
+
+	//---------------------------------------
+	//      Update Compass
+	//---------------------------------------
+	void UpdateCompassSprite()
+	{
+		Vector3 playerPos = LevelManager.instance.playerCharacter.transform.position;
+		Vector3 ObjetivePos = LevelManager.instance.tileObjective.transform.position;
+		float angle = ((180 / Mathf.PI) * Mathf.Atan2(ObjetivePos.z - playerPos.z, ObjetivePos.x - playerPos.x)) - 90;
+		compassSprite.transform.rotation =Quaternion.Euler(0, 0, angle);
+	}
 }
