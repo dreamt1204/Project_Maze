@@ -40,8 +40,6 @@ public class LevelManager : MonoBehaviour {
     public int mazeLength = 10;
     [Space(15)]
     public GameObject customMazeObject;
-    public bool customGameModePosition;
-    public bool customBodyPartChestPosition;
 
     [Header("Game Mode")]
     public float timerStart = 3600;

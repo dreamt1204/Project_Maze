@@ -233,10 +233,16 @@ public static class MazeUTL {
         rangeData.targetTiles = oldList;
 
         List<Tile> newList = GetRangeTiles(org, rangeData);
-        orgs.Remove(org);
+
+		List<Tile> newOrgs = new List<Tile>();
+		foreach (Tile tile in orgs)
+		{
+			if (tile != org)
+				newOrgs.Add (tile);
+		}
 
         // Recursively go over all the org and update the list
-        newList = UpdateTileListOutOfRange(newList, orgs, range);
+		newList = UpdateTileListOutOfRange(newList, newOrgs, range);
 
         return newList;
     }

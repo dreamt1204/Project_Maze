@@ -41,7 +41,7 @@ public static class Formula
 
     public static int CalculateHealthPackLeastDistance(int mazeDifficulty)
     {
-        return 5;
+        return 3;
     }
 
     public static int CalculateBodyPartChestNum(int mazeDifficulty)
@@ -52,6 +52,6 @@ public static class Formula
 
     public static int CalculateBodyPartChestLeastDistance(int mazeDifficulty)
     {
-        return 5;
+        return 3;
     }
 }

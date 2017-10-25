@@ -100,11 +100,16 @@ public class UIManager : MonoBehaviour
     public static string GetTimerText(float time)
     {
         int min, sec;
+		string secString;
 
         min = Mathf.FloorToInt(time / 60f);
         sec = Mathf.FloorToInt(time - (min * 60f));
+		if (sec < 10)
+			secString = "0" + sec;
+		else
+			secString = "" + sec;
 
-        return min + ":" + sec;
+		return min + ":" + secString;
     }
 
     //---------------------------------------

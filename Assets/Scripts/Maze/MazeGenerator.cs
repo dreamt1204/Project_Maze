@@ -504,24 +504,23 @@ public class MazeGenerator : MonoBehaviour
     #region Generate Maze Items
     void GenerateMazeItems(Maze maze)
     {
-        if (level.customMazeObject != null)
-        {
-            GenerateCustomTileItems(maze);
-        }
-        else
-        {
-            if ((customTileItems == null) || (!customTileItems.ContainsKey(ItemType.StartPoint)))
-                GenerateStartPoint_Random(maze);
+		if (level.customMazeObject != null)
+		{
+			GenerateCustomTileItems (maze);
 
-            if ((customTileItems == null) || (!customTileItems.ContainsKey(ItemType.Objective)))
-                GenerateObjective_Random(maze);
+			if (!customTileItems.ContainsKey(ItemType.StartPoint))
+				GenerateStartPoint_Random(maze);
 
-            if ((customTileItems == null) || (!customTileItems.ContainsKey(ItemType.HealthPack)))
-                GenerateHealthPack_Random(maze);
-
-            if ((customTileItems == null) || (!customTileItems.ContainsKey(ItemType.BodyPart)))
-                GenerateBodyPartChest_Random(maze);
-        }
+			if (!customTileItems.ContainsKey(ItemType.Objective))
+				GenerateObjective_Random(maze);
+		}
+		else
+		{
+			GenerateStartPoint_Random(maze);
+			GenerateObjective_Random(maze);
+			GenerateHealthPack_Random(maze);
+			GenerateBodyPartChest_Random(maze);
+		}
     }
 
     #region Custom Maze Items
@@ -592,7 +591,9 @@ public class MazeGenerator : MonoBehaviour
         int numPacks = Formula.CalculateHealthPackNum(level.mazeDifficulty);
 
         List<Tile> tiles = GetItemSpawnRandomTiles(numPacks, Formula.CalculateHealthPackLeastDistance(LevelManager.instance.mazeDifficulty), new List<Tile>(), maze.mazeTileList, TilesWithItem);
-        for (int i = 0; i < numPacks; i++)
+		Utilities.TryCatchError((tiles.Count < numPacks), "Can't find enough tiles to spawn Health Packs. Please check the range condition.");
+
+		for (int i = 0; i < numPacks; i++)
         {
             tiles[i].SpawnTileItem(level.HealthPackPrefab);
             TilesWithItem.Add(tiles[i]);
@@ -607,7 +608,8 @@ public class MazeGenerator : MonoBehaviour
 
         List<Tile> tileList = MazeUTL.UpdateTileListWithDesiredWallLayout(maze.mazeTileList, WallLayout.C);
         List <Tile> tiles = GetItemSpawnRandomTiles(numChests, Formula.CalculateBodyPartChestLeastDistance(LevelManager.instance.mazeDifficulty), new List<Tile>(), tileList, TilesWithItem);
-        List<BodyPart> partList = GetBodyPartList(numChests);
+		Utilities.TryCatchError((tiles.Count < numChests), "Can't find enough tiles to spawn Body Part Chests. Please check the range condition.");
+		List<BodyPart> partList = GetBodyPartList(numChests);
 
         for (int i = 0; i < numChests; i++)
         {
@@ -633,10 +635,10 @@ public class MazeGenerator : MonoBehaviour
             // Add object to customTileItems list
             else
             {
-                if (customTileItems.ContainsKey(item.itemType))
-                    customTileItems[item.itemType].Add(item);
-                else
-                    customTileItems.Add(item.itemType, new List<TileItem>());
+				if (!customTileItems.ContainsKey (item.itemType))
+					customTileItems.Add(item.itemType, new List<TileItem>());
+				
+               	customTileItems[item.itemType].Add(item);      
             }
         }
     }
@@ -654,11 +656,17 @@ public class MazeGenerator : MonoBehaviour
         tilesLeft = MazeUTL.UpdateTileListOutOfRange(tilesLeft, exclusiveTiles, range);
         Tile tile = MazeUTL.GetRandomTileFromList(tilesLeft);
         tileList.Add(tile);
-        exclusiveTiles.Add(tile);
+
+		List<Tile> newExclusiveTiles = new List<Tile>();
+		foreach(Tile t in exclusiveTiles)
+		{
+			newExclusiveTiles.Add(t);
+		}
+		newExclusiveTiles.Add(tile);
 
         numItems--;
 
-        return GetItemSpawnRandomTiles(numItems, range, tileList, tilesLeft, exclusiveTiles);
+		return GetItemSpawnRandomTiles(numItems, range, tileList, tilesLeft, newExclusiveTiles);
     }
 
     List<BodyPart> GetBodyPartList(int numItems)
