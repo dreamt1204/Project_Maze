@@ -14,7 +14,8 @@ public enum ItemType
 	StartPoint,
 	Objective,
     HealthPack,
-    BodyPart
+    BodyPart,
+	Compass
 }
 
 public class TileItem : MonoBehaviour {

@@ -189,6 +189,11 @@ public class PlayerCharacter : Unit {
 			UpdateBodyPart(tile.item.bodyPart);
 			tile.DestroyTileItem();
 		}
+		else if (tile.item.itemType == ItemType.Compass)
+		{
+			// Do something
+			tile.DestroyTileItem();
+		}
 	}
 
     //---------------------------------------

@@ -50,6 +50,7 @@ public class LevelManager : MonoBehaviour {
     public GameObject objectivePrefab;
     public GameObject HealthPackPrefab;
     public GameObject BodyPartChestPrefab;
+	public GameObject CompassPrefab;
 
     //=======================================
     //      Functions

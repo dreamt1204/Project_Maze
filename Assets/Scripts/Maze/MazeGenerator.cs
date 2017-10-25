@@ -520,6 +520,7 @@ public class MazeGenerator : MonoBehaviour
 			GenerateObjective_Random(maze);
 			GenerateHealthPack_Random(maze);
 			GenerateBodyPartChest_Random(maze);
+			GenerateCompass_Random(maze);
 		}
     }
 
@@ -590,7 +591,7 @@ public class MazeGenerator : MonoBehaviour
     {
         int numPacks = Formula.CalculateHealthPackNum(level.mazeDifficulty);
 
-        List<Tile> tiles = GetItemSpawnRandomTiles(numPacks, Formula.CalculateHealthPackLeastDistance(LevelManager.instance.mazeDifficulty), new List<Tile>(), maze.mazeTileList, TilesWithItem);
+		List<Tile> tiles = GetItemSpawnRandomTiles(numPacks, Formula.CalculateItemLeastDistance(LevelManager.instance.mazeDifficulty), new List<Tile>(), maze.mazeTileList, TilesWithItem);
 		Utilities.TryCatchError((tiles.Count < numPacks), "Can't find enough tiles to spawn Health Packs. Please check the range condition.");
 
 		for (int i = 0; i < numPacks; i++)
@@ -607,7 +608,7 @@ public class MazeGenerator : MonoBehaviour
 		numChests = numChests < level.mazeSetting.bodyParts.Count ? numChests : level.mazeSetting.bodyParts.Count;
 
         List<Tile> tileList = MazeUTL.UpdateTileListWithDesiredWallLayout(maze.mazeTileList, WallLayout.C);
-        List <Tile> tiles = GetItemSpawnRandomTiles(numChests, Formula.CalculateBodyPartChestLeastDistance(LevelManager.instance.mazeDifficulty), new List<Tile>(), tileList, TilesWithItem);
+		List <Tile> tiles = GetItemSpawnRandomTiles(numChests, Formula.CalculateItemLeastDistance(LevelManager.instance.mazeDifficulty), new List<Tile>(), tileList, TilesWithItem);
 		Utilities.TryCatchError((tiles.Count < numChests), "Can't find enough tiles to spawn Body Part Chests. Please check the range condition.");
 		List<BodyPart> partList = GetBodyPartList(numChests);
 
@@ -618,6 +619,21 @@ public class MazeGenerator : MonoBehaviour
             item.bodyPart = partList[i];
         }
     }
+
+	void GenerateCompass_Random(Maze maze)
+	{
+		int numCompass = Formula.CalculateCompassNum(level.mazeDifficulty);
+
+		List<Tile> tileList = MazeUTL.UpdateTileListWithDesiredWallLayout(maze.mazeTileList, WallLayout.C);
+		List<Tile> tiles = GetItemSpawnRandomTiles(numCompass, Formula.CalculateItemLeastDistance(LevelManager.instance.mazeDifficulty), new List<Tile>(), tileList, TilesWithItem);
+		Utilities.TryCatchError((tiles.Count < numCompass), "Can't find enough tiles to spawn Compasses. Please check the range condition.");
+
+		for (int i = 0; i < numCompass; i++)
+		{
+			tiles[i].SpawnTileItem(level.CompassPrefab);
+			TilesWithItem.Add(tiles[i]);
+		}
+	}
     #endregion
 
     #region Misc functions for generating maze
