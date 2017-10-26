@@ -140,6 +140,7 @@ MonoBehaviour:
   slimeWidget: {fileID: 0}
   slimeDragButtonSprite: {fileID: 0}
   slimeStateSelectWidget: {fileID: 0}
+  compassWidget: {fileID: 0}
   compassSprite: {fileID: 0}
 --- !u!4 &83332063
 Transform:
@@ -199,7 +200,7 @@ MonoBehaviour:
   tileObjective: {fileID: 0}
   timer: 0
   playerCharacter: {fileID: 0}
-  mazeDifficulty: 10
+  mazeDifficulty: 1
   mazeSetting: {fileID: 114690698242918930, guid: 917fe6d0109bb5942bfdb0a04e7f6396,
     type: 2}
   customMazeSize: 0
@@ -300,6 +301,39 @@ Prefab:
     - target: {fileID: 4658922473715448, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_RootOrder
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4650900690296976, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4650900690296976, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 550
+      objectReference: {fileID: 0}
+    - target: {fileID: 4137429860130042, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -229
+      objectReference: {fileID: 0}
+    - target: {fileID: 4137429860130042, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -524
+      objectReference: {fileID: 0}
+    - target: {fileID: 4297120767566086, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4297120767566086, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 46
+      objectReference: {fileID: 0}
+    - target: {fileID: 114110478972138454, guid: af57739e56be62c43aa85e6e8d11533f,
+        type: 2}
+      propertyPath: mColor.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4965354693859342, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -70
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}

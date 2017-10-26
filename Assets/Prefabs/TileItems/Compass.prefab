@@ -191,3 +191,4 @@ MonoBehaviour:
   itemType: 4
   healAmount: 0
   bodyPart: {fileID: 0}
+  compassDuration: 6

@@ -36,6 +36,7 @@ public class UIManager : MonoBehaviour
     [HideInInspector] public UISprite slimeDragButtonSprite;
     [HideInInspector] public UIWidget slimeStateSelectWidget;
 
+	[HideInInspector] public UIWidget compassWidget;
 	[HideInInspector] public UISprite compassSprite;
 
 
@@ -75,6 +76,8 @@ public class UIManager : MonoBehaviour
         slimeStateSelectWidget = GameObject.Find("Widget_SlimeStateSelect").GetComponent<UIWidget>();
         slimeStateSelectWidget.alpha = 0;
 
+		compassWidget = GameObject.Find("Widget_Compass").GetComponent<UIWidget>();
+		compassWidget.alpha = 0;
 		compassSprite = GameObject.Find("Sprite_Compass").GetComponent<UISprite>();
         
         abilityButtons = new Dictionary<string, abilityButton>();
@@ -87,7 +90,6 @@ public class UIManager : MonoBehaviour
     {
 		UpdateTimer();
 		UpdateJoyStick();
-		UpdateCompassSprite();
     }
 
     //---------------------------------------
@@ -227,11 +229,30 @@ public class UIManager : MonoBehaviour
 	//---------------------------------------
 	//      Update Compass
 	//---------------------------------------
-	void UpdateCompassSprite()
+	public void ActivateCompass(float duration)
 	{
-		Vector3 playerPos = LevelManager.instance.playerCharacter.transform.position;
-		Vector3 ObjetivePos = LevelManager.instance.tileObjective.transform.position;
-		float angle = ((180 / Mathf.PI) * Mathf.Atan2(ObjetivePos.z - playerPos.z, ObjetivePos.x - playerPos.x)) - 90;
-		compassSprite.transform.rotation =Quaternion.Euler(0, 0, angle);
+		StartCoroutine ("UpdateCompass", duration);
+	}
+
+	IEnumerator UpdateCompass(float duration)
+	{
+		float timer = 0;
+
+		while(timer < duration)
+		{
+			compassWidget.alpha = 1;
+
+			Vector3 playerPos = LevelManager.instance.playerCharacter.transform.position;
+			Vector3 ObjetivePos = LevelManager.instance.tileObjective.transform.position;
+			float angle = ((180 / Mathf.PI) * Mathf.Atan2(ObjetivePos.z - playerPos.z, ObjetivePos.x - playerPos.x)) - 90;
+			compassSprite.transform.rotation =Quaternion.Euler(0, 0, angle);
+
+			timer += Time.deltaTime;
+			yield return null;
+		}
+
+
+
+		compassWidget.alpha = 0;
 	}
 }

@@ -26,6 +26,7 @@ public class TileItem : MonoBehaviour {
 	public ItemType itemType;
     public float healAmount;
     public BodyPart bodyPart;
+	public float compassDuration;
 
 	//=======================================
 	//      Functions

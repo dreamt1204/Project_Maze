@@ -23,6 +23,7 @@ public class PlayerCharacter : Unit {
 
     [HideInInspector] public Camera playerCamera;
 	[HideInInspector] public bool hasObjective = false;
+	[HideInInspector] public bool compassEnabled = false;
     [HideInInspector] public Dictionary<string, PlayerAbility> PlayerAbilities;
 
 	public SlimeSplit slimeSplit;
@@ -191,7 +192,7 @@ public class PlayerCharacter : Unit {
 		}
 		else if (tile.item.itemType == ItemType.Compass)
 		{
-			// Do something
+			uiManager.ActivateCompass(tile.item.compassDuration);
 			tile.DestroyTileItem();
 		}
 	}
