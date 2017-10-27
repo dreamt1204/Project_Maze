@@ -55,16 +55,6 @@ public class Unit : MonoBehaviour {
     private const float movementMultiplier = 0.15f;
 
     //---------------------------------------
-    //      Struct
-    //---------------------------------------
-    [Serializable]
-    public struct BodyPartData
-    {
-        public string partType;
-        public BodyPart part;
-    }
-
-    //---------------------------------------
     //      Properties
     //---------------------------------------
     public virtual float Health
@@ -117,19 +107,15 @@ public class Unit : MonoBehaviour {
     //=======================================
     //      Functions
     //=======================================
-    void Start()
-    {
-        skeletonAnim = GetComponentInChildren<SkeletonAnimation>();
-        InitBodyParts();
-        UpdateBody();
-    }
-
     public virtual void Init (Tile spawnTile)
 	{
         level = LevelManager.instance;
-        CurrentTile = spawnTile;
+        skeletonAnim = GetComponentInChildren<SkeletonAnimation>();
 
-		finishedInit = true;
+        CurrentTile = spawnTile;
+        InitBody();
+
+        finishedInit = true;
     }
 
     public virtual void Update()
@@ -185,9 +171,15 @@ public class Unit : MonoBehaviour {
         return id;
     }
 
-    public virtual void InitBodyParts()
+    public void InitBody()
     {
-        // Child unit class can force init BodyParts or specific stuff here
+        AssignMustHaveBodyParts();
+        UpdateBody();
+    }
+
+    public virtual void AssignMustHaveBodyParts()
+    {
+        // Child unit class can update must have BodyPart stuff here
     }
 
     public void InitBodyPartData(string partType)
@@ -205,7 +197,7 @@ public class Unit : MonoBehaviour {
         BodyParts.Add(newData);
     }
 
-    public void UpdateBodyPart(BodyPart newPart)
+    public void AssignBodyPart(BodyPart newPart)
     {
         if (newPart.ownerType != this.ownerType) return;
 
@@ -216,6 +208,12 @@ public class Unit : MonoBehaviour {
         newData.part = newPart;
         BodyParts[id] = newData;
 
+        BodyPartUpdatedEvent(newPart.partType);
+    }
+
+    public void UpdateBodyPart(BodyPart newPart)
+    {
+        AssignBodyPart(newPart);
         UpdateBody();
     }
 
@@ -238,20 +236,9 @@ public class Unit : MonoBehaviour {
 
         foreach (BodyPartData data in BodyParts)
         {
-            // Assign body part via name
+            // Assign body part skin via name
             if ((data.part != null) && (data.part.partType == data.partType))
-            {
                 AddSkinEntries(skeletonData.FindSkin(data.part.partSkinName), newBody);
-            }
-            // Try assign the default body part
-            else
-            {
-                Skin defaultPart = skeletonData.FindSkin(data.partType + "_default");
-                if (defaultPart != null)
-                    AddSkinEntries(defaultPart, newBody);
-            }
-
-            BodyPartUpdatedEvent(data.partType);
         }
 
         // Now that your custom generated skin is complete, assign it to the skeleton...

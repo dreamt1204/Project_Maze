@@ -12,6 +12,18 @@ using UnityEngine;
 public enum BodyPartOwnerType
 {
     PlayerCharacter,
+    TestMonster
+}
+
+//---------------------------------------
+//      Struct
+//---------------------------------------
+[System.Serializable]
+public struct BodyPartData
+{
+    public string partType;
+    public bool mustHave;
+    public BodyPart part;
 }
 
 public class BodyPart : MonoBehaviour {

@@ -80,6 +80,9 @@ public class LevelManager : MonoBehaviour {
 		// Spawn player character
 		playerCharacter = UnitSpawner.SpawnPlayerCharacter(tileStart);
 
+        // (DM) Test Monster
+        UnitSpawner.SpawnMonster(maze.mazeTile[tileStart.X, tileStart.Z + 1]);
+
         // Setup timer
         timer = timerStart;
 

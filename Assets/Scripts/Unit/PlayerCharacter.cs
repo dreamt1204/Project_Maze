@@ -26,6 +26,8 @@ public class PlayerCharacter : Unit {
 	[HideInInspector] public bool compassEnabled = false;
     [HideInInspector] public Dictionary<string, PlayerAbility> PlayerAbilities;
 
+    public List<BodyPartData> defaultBodyParts;
+
 	public SlimeSplit slimeSplit;
     [HideInInspector] private SlimeStateType slimeState;
 
@@ -92,12 +94,27 @@ public class PlayerCharacter : Unit {
 	{
 		uiManager = UIManager.instance;
 
+        // Init Camera
         playerCamera = GameObject.Find("PlayerCamera").GetComponent<Camera>();
         Vector3 camPos = playerCamera.gameObject.transform.position;
         playerCamera.gameObject.transform.position = new Vector3(camPos.x + transform.position.x, camPos.y + transform.position.y, camPos.z + transform.position.z);
         playerCamera.gameObject.transform.parent = transform;
 
-		base.Init(spawnTile);
+        // Init PlayerCharacter BodyParts
+        InitBodyPartData("Slime");
+        InitBodyPartData("Head");
+        InitBodyPartData("Body");
+        InitBodyPartData("Legs");
+
+        // Init PlayerAbilities
+        PlayerAbilities = new Dictionary<string, PlayerAbility>();
+        foreach (BodyPartData data in BodyParts)
+        {
+            if (data.partType != "Slime")
+                PlayerAbilities.Add(data.partType, null);
+        }
+
+        base.Init(spawnTile);
     }
 
 	public override void Update()
@@ -124,20 +141,12 @@ public class PlayerCharacter : Unit {
     //---------------------------------------
     //      Body Part
     //---------------------------------------
-    public override void InitBodyParts()
+    public override void AssignMustHaveBodyParts()
     {
-        // Init PlayerCharacter BodyParts
-        InitBodyPartData("Slime");
-        InitBodyPartData("Head");
-        InitBodyPartData("Body");
-        InitBodyPartData("Legs");
-
-        // Init PlayerAbilities
-        PlayerAbilities = new Dictionary<string, PlayerAbility>();
-        foreach (BodyPartData data in BodyParts)
+        foreach (BodyPartData data in defaultBodyParts)
         {
-            if (data.partType != "Slime")
-                PlayerAbilities.Add(data.partType, null);
+            if (data.mustHave)
+                AssignBodyPart(data.part);
         }
     }
 

@@ -1,0 +1,70 @@
+{"skeleton":{"images":"images/"},
+"bones":[{"name":"root"}],
+"slots":[
+	{"name":"Arm_L_red","bone":"root","attachment":"Arm_L_red"},
+	{"name":"Arm_L_default","bone":"root"},
+	{"name":"Leg_L_red","bone":"root","attachment":"Leg_L_red"},
+	{"name":"Leg_L_default","bone":"root"},
+	{"name":"Body_red","bone":"root","attachment":"Body_red"},
+	{"name":"Body_default","bone":"root"},
+	{"name":"Leg_R_red","bone":"root","attachment":"Leg_R_red"},
+	{"name":"Leg_R_default","bone":"root"},
+	{"name":"Arm_R_red","bone":"root","attachment":"Arm_R_red"},
+	{"name":"Arm_R_default","bone":"root"},
+	{"name":"Head_red","bone":"root","attachment":"Head_red"},
+	{"name":"Head_default","bone":"root"}
+],
+"skins":{
+	"default":{
+	},
+	"Arm_L":{
+		"Arm_L_red":{
+			"Arm_L_red":{"name":"Arm_L/Arm_L_red", "x":323,"y":-295.5,"width":94,"height":159}
+		},
+		"Arm_L_default":{
+			"Arm_L_default":{"name":"Arm_L/Arm_L_default", "x":323,"y":-295.5,"width":94,"height":159}
+		}
+	},
+	"Leg_L":{
+		"Leg_L_red":{
+			"Leg_L_red":{"name":"Leg_L/Leg_L_red", "x":296.5,"y":-400.5,"width":47,"height":153}
+		},
+		"Leg_L_default":{
+			"Leg_L_default":{"name":"Leg_L/Leg_L_default", "x":296.5,"y":-400.5,"width":47,"height":153}
+		}
+	},
+	"Body":{
+		"Body_red":{
+			"Body_red":{"name":"Body/Body_red", "x":257,"y":-274,"width":126,"height":170}
+		},
+		"Body_default":{
+			"Body_default":{"name":"Body/Body_default", "x":257,"y":-274,"width":126,"height":170}
+		}
+	},
+	"Leg_R":{
+		"Leg_R_red":{
+			"Leg_R_red":{"name":"Leg_R/Leg_R_red", "x":217.5,"y":-400.5,"width":47,"height":153}
+		},
+		"Leg_R_default":{
+			"Leg_R_default":{"name":"Leg_R/Leg_R_default", "x":217.5,"y":-400.5,"width":47,"height":153}
+		}
+	},
+	"Arm_R":{
+		"Arm_R_red":{
+			"Arm_R_red":{"name":"Arm_R/Arm_R_red", "x":184,"y":-296,"width":106,"height":158}
+		},
+		"Arm_R_default":{
+			"Arm_R_default":{"name":"Arm_R/Arm_R_default", "x":184,"y":-296,"width":106,"height":158}
+		}
+	}
+	"Head":{
+		"Head_red":{
+			"Head_red":{"name":"Head/Head_red", "x":257,"y":-136,"width":204,"height":204}
+		},
+		"Head_default":{
+			"Head_default":{"name":"Head/Head_default", "x":257,"y":-136,"width":204,"height":204}
+		}
+	}
+},
+"animations":{"animation":{}}
+}

@@ -34,6 +34,9 @@ public class MazeSetting : MonoBehaviour {
     [Header("Item Set")]
     public List<BodyPart> bodyParts;
 
+    [Header("Monster Set")]
+    public List<Monster> Monsters;
+
     //=======================================
     //      Functions
     //=======================================

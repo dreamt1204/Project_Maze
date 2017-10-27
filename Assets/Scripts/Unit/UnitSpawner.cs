@@ -24,4 +24,12 @@ public static class UnitSpawner {
     {
 		return (PlayerCharacter)SpawnUnit(LevelManager.instance.playerCharacterPrefab, targetTile);
     }
+
+    public static Monster SpawnMonster(Tile targetTile)
+    {
+        List<Monster> monsterList = LevelManager.instance.mazeSetting.Monsters;
+        Monster newMonster = monsterList[Random.Range(0, monsterList.Count)];
+
+        return (Monster)SpawnUnit(newMonster.gameObject, targetTile);
+    }
 }
