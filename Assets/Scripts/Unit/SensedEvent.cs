@@ -28,6 +28,7 @@ public class SensedEvent {
 	private EventType type;
 	private Tile eventTile;
 	private int memoryLife; 
+	private bool isTileInvestigated = false;
 
 
 	//---------------------------------------
@@ -36,6 +37,7 @@ public class SensedEvent {
 	public EventType Type { get; set;}
 	public Tile EventTile { get; set;}
 	public int MemoryLife { get; set; }
+	public bool IsTileInvestigated { get; set; }
 
 	//=======================================
 	//      Functions

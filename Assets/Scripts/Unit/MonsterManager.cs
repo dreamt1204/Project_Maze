@@ -12,29 +12,21 @@ public enum InitSpawnMethod // 2 types for now, can append in future
 // SpawningInfo is a struct that holds (1) type of spawning enemy, and (2) spawning location
 public struct spawningInfo
 {
-	public int enemyType;
+	public int monsterType;
 	public Tile tile;
 
-	public spawningInfo(int enemyType0, Tile tile0){
-		enemyType = enemyType0;
+	public spawningInfo(int monsterType0, Tile tile0){
+		monsterType = monsterType0;
 		tile = tile0;
 	}
 }
 
-public class EnemyManager : MonoBehaviour {
+public class MonsterManager : MonoBehaviour {
 	//=======================================
 	//      Variables
 	//=======================================
 
 	LevelManager level;
-
-	/*
-	// public initEnemySpawnSetting m_setting;
-	public int initSpawnQuantity; // roughly equals to number of enemies per tile
-	public int safeRadius;
-	public InitSpawnMethod initSpawnMethod;
-	*/
-
 
 	//=======================================
 	//      Functions
@@ -44,17 +36,6 @@ public class EnemyManager : MonoBehaviour {
 	{
 		level = LevelManager.instance;
 	}
-
-	/*
-	public EnemyManager (InitSpawnMethod spMethod, int spQuantity, int sfRadius)
-	{
-		levelManager = LevelManager.GetLevelManager();
-
-		initSpawnQuantity = spQuantity;
-		safeRadius = sfRadius;
-		initSpawnMethod = spMethod;
-	}
-	*/
 
 	public List<spawningInfo> GenerateInitSpawnList()
 	{
@@ -76,7 +57,6 @@ public class EnemyManager : MonoBehaviour {
 			}
 
 			// Calculate number of enemies to spawn
-//			int numInitEnemy = Mathf.RoundToInt (initSpawnDensity * spawnableTiles.Count);
 			int numInitEnemy = level.spawnQuantity;
 			Debug.Log ("Initial spawn quantity = " + numInitEnemy);
 
@@ -109,7 +89,6 @@ public class EnemyManager : MonoBehaviour {
 		for (int i = 0; i < cumulativeProb.Length; i++) {
 			cumProb = cumProb + spawnProb [i];
 			cumulativeProb [i] = cumProb;
-//			Debug.Log ("cumulativeProb[" + i + "] is " + cumProb);
 		}
 
 		// Determine enemy type by comparing rand(0,1) to cumulative prob list
@@ -131,7 +110,6 @@ public class EnemyManager : MonoBehaviour {
 		if (spawningTiles.Count == spawningEnemyType.Length) {	
 			for (int i = 0; i < spawningTiles.Count; i++) {
 				spawnList.Add (new spawningInfo (spawningEnemyType [i], spawningTiles [i]));
-				//enemyList.Add(SpawnEnemy(spawningEnemyType [i], spawningTiles [i]));
 			}
 		} else {
 			Debug.LogError ("Inconsistent legnth between spawningTiles and spawningEnemyType.");

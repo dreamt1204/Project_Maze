@@ -98,7 +98,6 @@ public class PlayerCharacter : Unit {
 	public override void MoveToTile(Tile targetTile)
 	{
 		base.MoveToTile (targetTile);
-		LevelManager.instance.eventManager.makeNoise (currentTile, stepNoiseLevel);
 		TileWalkingTowards = targetTile;
 		//Debug.Log ("(1) TileWalkingTowards X = " + TileWalkingTowards.X + "; Z = " + TileWalkingTowards.Z);
 

@@ -338,6 +338,16 @@ public static class MazeUTL {
 		}
 	}
 
+	public static List<Tile> GetNeighborTilesWithoutWall (Tile t) {
+		List<Tile> tiles = MazeUTL.GetNeighborTiles (t);
+		tiles.RemoveAll (tile0 => MazeUTL.WallBetweenNeighborTiles (t, tile0));
+
+		if (tiles.Count == 0)
+			Debug.LogError ("No possible tiles to walk towards.");
+
+		return tiles;
+	}
+
 	// Finds path based on address method 
 	// (vulnerable to maze modification after initialization)
 	// For convience of using, output does NOT include starting tile;  Output DOES include target tile

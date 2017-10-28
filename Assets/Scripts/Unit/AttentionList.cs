@@ -26,7 +26,7 @@ public class AttentionList {
 	List<SensedEvent> attnList = new List<SensedEvent>();
 	bool isPlayerDetected = false; // efficiency feature; keep this updated always
 	int veryLargeNumber = 99999999;
-	int noiseEventMemoryLife = 200;
+	int playerLastDetectedMemoryLife = 1000;
 
 //	Tile tilePlayerDetected = null; // always set to null unless player is detected; set back to null at D -> LD logic
 	public Tile tilePlayerHeadingTo = null; // always set to null unless player is detected; set back to null at D -> LD logic
@@ -64,11 +64,6 @@ public class AttentionList {
 
 		case SensedEvent.EventType.PlayerLastDetected:
 			Debug.LogError ("Error: PlayerLastDetected should never be an externally added event; only method is by removing PlayerDetected");
-			break;
-
-		case SensedEvent.EventType.AlertingNoise:
-			attnList.Add (new SensedEvent (SensedEvent.EventType.AlertingNoise, tile, noiseEventMemoryLife));
-			Debug.Log ("Noise Event added.");  ///// PROBLEM IS HERE (BEFORE THIS LINE OK, AFTER THIS LINE BECOMES WIERD
 			break;
 			
 		}
@@ -115,7 +110,7 @@ public class AttentionList {
 					tilePlayerHeadingTo = null; // reset memory
 				}
 				attnList.RemoveAt (0);
-				attnList.Insert (0, new SensedEvent (SensedEvent.EventType.PlayerLastDetected, tileToInvestigate, veryLargeNumber));
+				attnList.Insert (0, new SensedEvent (SensedEvent.EventType.PlayerLastDetected, tileToInvestigate, playerLastDetectedMemoryLife));
 
 				// Debug.Log ("PlayerDetected Event removed.");
 
@@ -127,18 +122,12 @@ public class AttentionList {
 		case SensedEvent.EventType.PlayerLastDetected:
 			if (index == 0) {
 				attnList.RemoveAt (0);
-
-				// Debug.Log ("PlayerLastDetected Event removed.");
+				
 			} else {
 				Debug.LogError ("Error: removing PlayerLastDetected sEvent but PlayerLastDetected is not at first entry");
 			}
 			break;
 
-		case SensedEvent.EventType.AlertingNoise:
-			attnList.RemoveAt (index);
-
-			// Debug.Log ("Noise Event removed.");
-			break;
 		}
 	}
 
@@ -176,9 +165,7 @@ public class AttentionList {
 				case SensedEvent.EventType.PlayerLastDetected:
 					Debug.LogError ("Multiple PlayerLastDetected event is in the AttentionList.  This should never happen.");
 					return attnList [indexOfMaxPriority [0]];
-				case SensedEvent.EventType.AlertingNoise:
-					// return the latest noise heard
-					return attnList [indexOfMaxPriority.Last()];
+
 				}
 			}
 		}
@@ -194,11 +181,9 @@ public class AttentionList {
 				// Does nothing -- PlayerDetected should have memLife = 1 and always gets removed at UpdateMemomry step
 				break;
 			case SensedEvent.EventType.PlayerLastDetected:
-				// Set to very large number again just for sake of consistency
-				sensedEvent.MemoryLife = veryLargeNumber;
-				break;
-			case SensedEvent.EventType.AlertingNoise:
-				sensedEvent.MemoryLife = noiseEventMemoryLife;
+				// if eventTile never checked, then infinite refresh; if already checked, then no refresh
+				if (!sensedEvent.IsTileInvestigated)
+					sensedEvent.MemoryLife = playerLastDetectedMemoryLife;
 				break;
 			}
 		} else {
@@ -221,5 +206,15 @@ public class AttentionList {
 		return attnList.Count;
 	}
 
+	public void RemoveInvestigatedEvent(SensedEvent sensedEvent){
+		// Currently only supports forced removal of NoiseEvent
+		if (sensedEvent.Type != SensedEvent.EventType.AlertingNoise)
+			Debug.LogError ("RemoveInvestigatedEvent is called on event of type other than NoiseEvent (currently not supported).");
+		else {
+			int index = attnList.FindIndex (e => e == sensedEvent);
+			RemoveEventByIndex (index);
+		}
+
+	}
 
 }

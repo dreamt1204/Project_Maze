@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyAction {
+public class MonsterAction {
 
 	//---------------------------------------
 	// Class-specific data types
@@ -22,7 +22,7 @@ public class EnemyAction {
 	public bool isComplete = false; // This is debug / safety feature
 	public bool isCancelable = false;
 
-	public EnemyAction (actionType type0, Tile targetTile0) {
+	public MonsterAction (actionType type0, Tile targetTile0) {
 		type = type0;
 		targetTile = targetTile0;
 	}

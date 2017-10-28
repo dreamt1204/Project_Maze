@@ -25,31 +25,31 @@ public static class UnitSpawner {
 		return (PlayerCharacter)SpawnUnit(LevelManager.instance.playerCharacterPrefab, targetTile);
     }
 
-	public static Enemy SpawnEnemy (int enemyType, Tile targetTile)
+	public static Monster SpawnMonster (int monsterType, Tile targetTile)
 	{
-		GameObject enemyPrefab = new GameObject();
-		switch (enemyType) {
+		GameObject monsterPrefab = new GameObject();
+		switch (monsterType) {
 		case 0:
-			enemyPrefab = LevelManager.instance.prefabA;
+			monsterPrefab = LevelManager.instance.prefabA;
 			break;
 		case 1:
-			enemyPrefab = LevelManager.instance.prefabB;
+			monsterPrefab = LevelManager.instance.prefabB;
 			break;
 		case 2:
-			enemyPrefab = LevelManager.instance.prefabC;
+			monsterPrefab = LevelManager.instance.prefabC;
 			break;
 		}
 
-		return (Enemy)SpawnUnit (enemyPrefab, targetTile);
+		return (Monster)SpawnUnit (monsterPrefab, targetTile);
 	}
 
-	public static List<Enemy> SpawnInitEnemies(List<spawningInfo> spawnList)
+	public static List<Monster> SpawnInitMonsters(List<spawningInfo> spawnList)
 	{
-		List<Enemy> enemyList = new List<Enemy> ();
+		List<Monster> monsterList = new List<Monster> ();
 		foreach (spawningInfo sInfo in spawnList) {
-			enemyList.Add (SpawnEnemy (sInfo.enemyType, sInfo.tile));
+			monsterList.Add (SpawnMonster (sInfo.monsterType, sInfo.tile));
 		}
-		return enemyList;
+		return monsterList;
 	}
 		
 

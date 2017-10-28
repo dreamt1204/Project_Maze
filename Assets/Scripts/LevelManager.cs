@@ -22,8 +22,7 @@ public class LevelManager : MonoBehaviour {
 	[HideInInspector] public UIManager uiManager;
 
     //private UnitSpawner unitSpawner;
-	private EnemyManager enemyManager;
-	public EventManager eventManager; // FIX public to private
+	private MonsterManager monsterManager;
 
 	// Global variables
 	[HideInInspector] public bool finsiedInit = false;
@@ -31,7 +30,7 @@ public class LevelManager : MonoBehaviour {
 	[HideInInspector] public Tile tileStart;
 	[HideInInspector] public Tile tileObjective;
 	[HideInInspector] public PlayerCharacter playerCharacter;
-	[HideInInspector] public List<Enemy> enemyList;
+	[HideInInspector] public List<Monster> enemyList;
 
 	// Global variables in Inspector
     [Header("Maze")]
@@ -83,8 +82,7 @@ public class LevelManager : MonoBehaviour {
 		mazeGenerator = gameObject.AddComponent<MazeGenerator>();
         uiManager = gameObject.AddComponent<UIManager>();
 
-		enemyManager = gameObject.AddComponent<EnemyManager> ();
-		eventManager = gameObject.AddComponent<EventManager> ();
+		monsterManager = gameObject.AddComponent<MonsterManager> ();
 
 		Utilities.TryCatchError ((mazeSetting == null), "Maze Setting cannot be null");
     }
@@ -104,7 +102,7 @@ public class LevelManager : MonoBehaviour {
 		}
 
 		// Spawn enemies
-		enemyList = UnitSpawner.SpawnInitEnemies(enemyManager.GenerateInitSpawnList() );
+		enemyList = UnitSpawner.SpawnInitMonsters(monsterManager.GenerateInitSpawnList() );
 
 		// Spawn player character
 		playerCharacter = UnitSpawner.SpawnPlayerCharacter(tileStart);
