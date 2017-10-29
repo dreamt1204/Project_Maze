@@ -19,8 +19,6 @@ public class Tile : MonoBehaviour {
     //=======================================
     //      Variables
     //=======================================
-	LevelManager level;
-
     // Coordinate info
 	public int X;
     public int Z;
@@ -39,6 +37,9 @@ public class Tile : MonoBehaviour {
 
     // Item
     public TileItem item;
+
+    // Flags
+	public SlimeSplit slimeSplit;
 
     // Selectable highlight variables
     float pulseTime = 0;
@@ -76,8 +77,6 @@ public class Tile : MonoBehaviour {
     //=======================================
     void Awake()
 	{
-        level = LevelManager.instance;
-
         // Init box collider for this tile
         BoxCollider tile_collider = this.gameObject.AddComponent<BoxCollider> ();
 		tile_collider.size = new Vector3 (10, 2, 10);
@@ -107,6 +106,7 @@ public class Tile : MonoBehaviour {
     public TileItem SpawnTileItem(GameObject itemPrefab)
 	{
 		item = Instantiate (itemPrefab, transform.position, Quaternion.Euler (0, 0, 0)).GetComponent<TileItem>();
+		item.transform.parent = this.transform;
 
         return item;
 	}
@@ -124,31 +124,10 @@ public class Tile : MonoBehaviour {
     //      Tile action
     //---------------------------------------
     // Apply tile action when stepped on
-    public void CheckTileAction()
+	// Note: This is only for modifing tile. For unit, check UnitTileAction.
+    public void TileAction()
 	{
         
-    }
-
-    // Player specific tile action
-    public void CheckPlayerTileAction()
-    {
-        if (item == null)
-            return;
-
-        if (item.itemType == ItemType.Objective)
-        {
-            level.playerCharacter.hasObjective = true;
-            DestroyTileItem();
-        }
-        else if (item.itemType == ItemType.StartPoint)
-        {
-            level.CheckWinningCondition();
-        }
-        else if (item.itemType == ItemType.BodyPart)
-        {
-            level.playerCharacter.UpdateBodyPart(item.bodyPart);
-            DestroyTileItem();
-        }
     }
 
     //---------------------------------------
@@ -190,4 +169,20 @@ public class Tile : MonoBehaviour {
         floor_obj.GetComponent<MeshRenderer>().material.color = originalFloorColor;
         ResetHighlightPulseVars();
     }
+
+	//---------------------------------------
+	//      Slime Split
+	//---------------------------------------
+	public SlimeSplit SpawnTileSlimeSplit(GameObject splitPrefab)
+	{
+		slimeSplit = Instantiate (splitPrefab, transform.position, Quaternion.Euler (0, 0, 0)).GetComponent<SlimeSplit>();
+		slimeSplit.transform.parent = this.transform;
+
+		return slimeSplit;
+	}
+
+	public void DestroyTileSlimeSplit()
+	{
+		Destroy (slimeSplit.gameObject);
+	}
 }

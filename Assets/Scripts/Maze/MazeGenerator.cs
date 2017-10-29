@@ -16,11 +16,11 @@ public class MazeGenerator : MonoBehaviour
     //=======================================
     LevelManager level;
 
+    List<Tile> TilesWithItem = new List<Tile>();
+
     // Custom maze object variables
-    List<GameObject> customTileObjList;
-    GameObject customStartPointItem;
-    GameObject customObjectiveItem;
-    List<GameObject> customBodyPartChestList;
+    List<GameObject> customTileObjList = new List<GameObject>();
+    Dictionary<ItemType, List<TileItem>> customTileItems = new Dictionary<ItemType, List<TileItem>>();
 
     //=======================================
     //      Functions
@@ -33,13 +33,12 @@ public class MazeGenerator : MonoBehaviour
     public Maze GenerateMaze()
     {
         Maze maze = BuildMaze();
-        GenerateGameModeObjects(maze);
-        GenerateMazeBodyPartChest(maze);
+        GenerateMazeItems(maze);
 
         return maze;
     }
 
-    #region Build maze layout
+    #region Build Maze Layout
     // Public function that generates empty maze with wall layout
     Maze BuildMaze()
     {
@@ -204,6 +203,7 @@ public class MazeGenerator : MonoBehaviour
         public bool[,] wall_v;  // X, Z
         public bool[,] wall_h;  // X, Z
         public int[,] cell;     // X, Z  cell is the id of each inclosed section in Kruskal's algorithm.
+        public List<Vector2> tileInSquares;
 
         public MazeBlueprint(int width, int length)
         {
@@ -213,6 +213,8 @@ public class MazeGenerator : MonoBehaviour
             wall_v = new bool[m_width + 1, m_length];
             wall_h = new bool[m_width, m_length + 1];
             cell = new int[m_width, m_length];
+            tileInSquares = new List<Vector2>();
+
             for (int i = 0; i < wall_v.GetLength(0); i++)
             {
                 for (int j = 0; j < wall_v.GetLength(1); j++)
@@ -265,6 +267,8 @@ public class MazeGenerator : MonoBehaviour
                 if (IDsAllZero(repl) == true)
                     break;
             }
+
+            AddSquares();
         }
 
         void ReplaceIDs(int[] repl)
@@ -292,6 +296,53 @@ public class MazeGenerator : MonoBehaviour
                 }
             }
             return true;
+        }
+
+        void AddSquares()
+        {
+            int squares2x2 = Formula.Calculate2x2SquareNum(LevelManager.instance.mazeDifficulty);
+            int squares3x3 = Formula.Calculate3x3SquareNum(LevelManager.instance.mazeDifficulty);
+
+            for (int i = 0; i < squares2x2; i++)
+            {
+                AddSquare(2);
+            }
+
+            for (int i = 0; i < squares3x3; i++)
+            {
+                AddSquare(3);
+            }
+        }
+
+        void AddSquare(int size)
+        {
+            int x, z;
+
+            do
+            {
+                x = Random.Range(0, (m_width - size));
+                z = Random.Range(0, (m_length - size));
+
+            } while ((tileInSquares.Contains(new Vector2(x, z))) || (tileInSquares.Contains(new Vector2(x + size - 1, z + size - 1))));
+
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    if ((i + 1) < size )
+                        wall_v[x + i + 1, z + j] = false;
+                    if ((j + 1) < size)
+                        wall_h[x + i , z + j + 1] = false;
+                }
+            }
+
+            for (int i = (x - 1); i <= (x + size) ; i++)
+            {
+                for (int j = (z - 1); j <= (z + size); j++)
+                {
+                    tileInSquares.Add(new Vector2(i, j));
+                }
+            }
         }
     }
 
@@ -450,152 +501,210 @@ public class MazeGenerator : MonoBehaviour
         return wall;
     }
     #endregion
-
     #endregion
 
-    #region Spawn Game Objects
-    void GenerateGameModeObjects(Maze maze)
+    #region Generate Maze Items
+    void GenerateMazeItems(Maze maze)
     {
-		if ((level.customMazeObject != null) && (level.customGameModePosition))
-            GenerateGameModeObjects_Custom(maze);
-        else
-            GenerateGameModeObjects_Random(maze);
+		if (level.customMazeObject != null)
+		{
+			GenerateCustomTileItems (maze);
+
+			if (!customTileItems.ContainsKey(ItemType.StartPoint))
+				GenerateStartPoint_Random(maze);
+
+			if (!customTileItems.ContainsKey(ItemType.Objective))
+				GenerateObjective_Random(maze);
+		}
+		else
+		{
+			GenerateStartPoint_Random(maze);
+			GenerateObjective_Random(maze);
+			GenerateHealthPack_Random(maze);
+			GenerateBodyPartChest_Random(maze);
+			GenerateCompass_Random(maze);
+		}
     }
 
-    public void GenerateGameModeObjects_Random(Maze maze)
+    #region Custom Maze Items
+    void GenerateCustomTileItems(Maze maze)
     {
-        Tile tileStart, tileObj;
-		tileStart = MazeUTL.GetRandomTileFromList(maze.mazeTileList);
+        foreach (KeyValuePair<ItemType, List<TileItem>> items in customTileItems)
+        {
+            foreach (TileItem item in customTileItems[items.Key])
+            {
+                Tile tile= GetObjLocatedTile(maze, item.gameObject);
+                tile.SpawnTileItem(item.gameObject);
 
+                TilesWithItem.Add(tile);
+
+                // Custom item setup
+                CustomTileItemSetup(items.Key, item, tile);
+            }
+        }
+    }
+
+    void CustomTileItemSetup(ItemType itemType, TileItem item, Tile tile)
+    {
+        if (itemType == ItemType.StartPoint)
+        {
+            level.tileStart = tile;
+        }
+        else if (itemType == ItemType.Objective)
+        {
+            level.tileObjective = tile;
+        }
+        else if (itemType == ItemType.BodyPart)
+        {
+            if (item.bodyPart == null)
+            {
+                tile.DestroyTileItem();
+                TilesWithItem.Remove(tile);
+            }
+        }
+    }
+    #endregion
+
+    #region Random Maze Items
+    void GenerateStartPoint_Random(Maze maze)
+    {
+        Tile tile = MazeUTL.GetRandomTileFromList(maze.mazeTileList);
+
+        tile.SpawnTileItem(level.startPointPrefab);
+        level.tileStart = tile;
+        TilesWithItem.Add(tile);
+    }
+
+    void GenerateObjective_Random(Maze maze)
+    {
         // Make sure the objective is at least half map aways from the start point. Also, make it spawn at C shape wall layout. 
         List<Tile> orgs = new List<Tile>();
-        orgs.Add(tileStart);
-		List<Tile> tileList = MazeUTL.UpdateTileListOutOfRange(maze.mazeTileList, orgs, Formula.CalculateObjectiveLeastDistance());
+        orgs.Add(level.tileStart);
+        List<Tile> tileList = MazeUTL.UpdateTileListOutOfRange(maze.mazeTileList, orgs, Formula.CalculateObjectiveLeastDistance(LevelManager.instance.mazeDifficulty));
         tileList = MazeUTL.UpdateTileListWithDesiredWallLayout(tileList, WallLayout.C);
-        tileObj = MazeUTL.GetRandomTileFromList(tileList);
+        Tile tile = MazeUTL.GetRandomTileFromList(tileList);
 
-		tileStart.SpawnTileItem(level.startPointPrefab);
-		tileObj.SpawnTileItem(level.objectivePrefab);
-
-		level.tileStart = tileStart;
-		level.tileObjective = tileObj;
+        tile.SpawnTileItem(level.objectivePrefab);
+        level.tileObjective = tile;
+        TilesWithItem.Add(tile);
     }
 
-    void GenerateGameModeObjects_Custom(Maze maze)
+    void GenerateHealthPack_Random(Maze maze)
     {
-        Tile tileStart = GetObjLocatedTile(maze, customStartPointItem);
-        Tile tileObjective = GetObjLocatedTile(maze, customObjectiveItem);
+        int numPacks = Formula.CalculateHealthPackNum(level.mazeDifficulty);
 
-        tileStart.SpawnTileItem(customStartPointItem);
-        tileObjective.SpawnTileItem(customObjectiveItem);
+		List<Tile> tiles = GetItemSpawnRandomTiles(numPacks, Formula.CalculateItemLeastDistance(LevelManager.instance.mazeDifficulty), new List<Tile>(), maze.mazeTileList, TilesWithItem);
+		Utilities.TryCatchError((tiles.Count < numPacks), "Can't find enough tiles to spawn Health Packs. Please check the range condition.");
 
-		level.tileStart = tileStart;
-		level.tileObjective = tileObjective;
-    }
-    #endregion
-
-    #region Spawn Maze Items (BodyPartChest, Pickups...etc.)
-    void GenerateMazeBodyPartChest(Maze maze)
-    {
-		if ((level.customMazeObject != null) && (level.customBodyPartChestPosition))
-            GenerateMazeBodyPartChest_Custom(maze);
-        else
-            GenerateMazeBodyPartChest_Random(maze);
+		for (int i = 0; i < numPacks; i++)
+        {
+            tiles[i].SpawnTileItem(level.HealthPackPrefab);
+            TilesWithItem.Add(tiles[i]);
+        }
     }
 
-    void GenerateMazeBodyPartChest_Random(Maze maze)
+    void GenerateBodyPartChest_Random(Maze maze)
     {
         // Calculate the number of items needed to spawn for this maze
 		int numChests = Formula.CalculateBodyPartChestNum(level.mazeDifficulty);
 		numChests = numChests < level.mazeSetting.bodyParts.Count ? numChests : level.mazeSetting.bodyParts.Count;
 
-        List <Tile> tiles = GetItemSpawnTiles(maze, numChests);
-        List<BodyPart> partList = GetBodyPartList(numChests);
+        List<Tile> tileList = MazeUTL.UpdateTileListWithDesiredWallLayout(maze.mazeTileList, WallLayout.C);
+		List <Tile> tiles = GetItemSpawnRandomTiles(numChests, Formula.CalculateItemLeastDistance(LevelManager.instance.mazeDifficulty), new List<Tile>(), tileList, TilesWithItem);
+		Utilities.TryCatchError((tiles.Count < numChests), "Can't find enough tiles to spawn Body Part Chests. Please check the range condition.");
+		List<BodyPart> partList = GetBodyPartList(numChests);
 
         for (int i = 0; i < numChests; i++)
         {
 			TileItem item = tiles[i].SpawnTileItem(level.BodyPartChestPrefab);
+            TilesWithItem.Add(tiles[i]);
             item.bodyPart = partList[i];
         }
     }
 
-    void GenerateMazeBodyPartChest_Custom(Maze maze)
+	void GenerateCompass_Random(Maze maze)
+	{
+		int numCompass = Formula.CalculateCompassNum(level.mazeDifficulty);
+
+		List<Tile> tileList = MazeUTL.UpdateTileListWithDesiredWallLayout(maze.mazeTileList, WallLayout.C);
+		List<Tile> tiles = GetItemSpawnRandomTiles(numCompass, Formula.CalculateItemLeastDistance(LevelManager.instance.mazeDifficulty), new List<Tile>(), tileList, TilesWithItem);
+		Utilities.TryCatchError((tiles.Count < numCompass), "Can't find enough tiles to spawn Compasses. Please check the range condition.");
+
+		for (int i = 0; i < numCompass; i++)
+		{
+			tiles[i].SpawnTileItem(level.CompassPrefab);
+			TilesWithItem.Add(tiles[i]);
+		}
+	}
+    #endregion
+
+    #region Misc functions for generating maze
+    void InitCustomMazeObjList()
     {
-        foreach (GameObject obj in customBodyPartChestList)
+        foreach (Transform child in level.customMazeObject.transform)
         {
-            Tile tile = GetObjLocatedTile(maze, obj);
-            tile.SpawnTileItem(obj);
+            TileItem item = child.gameObject.GetComponent<TileItem>();
+
+            // If no item script attached, assume the object is tile layout
+            if (item == null)
+            {
+                customTileObjList.Add(child.gameObject);
+            }
+            // Add object to customTileItems list
+            else
+            {
+				if (!customTileItems.ContainsKey (item.itemType))
+					customTileItems.Add(item.itemType, new List<TileItem>());
+				
+               	customTileItems[item.itemType].Add(item);      
+            }
         }
     }
 
-    List<Tile> GetItemSpawnTiles(Maze maze, int numChests)
+    Tile GetObjLocatedTile(Maze maze, GameObject obj)
     {
-        List<Tile> orgs = new List<Tile>();
-		orgs.Add(level.tileStart);
-		orgs.Add(level.tileObjective);
-
-        List<Tile> exclusiveList = new List<Tile>();
-		exclusiveList.Add(level.tileStart);
-		exclusiveList.Add(level.tileObjective);
-
-		List<Tile> tileList = MazeUTL.UpdateTileListOutOfRange(maze.mazeTileList, orgs, Formula.CalculateBodyPartChestLeastDistance());
-        tileList = MazeUTL.UpdateTileListWithExclusiveList(tileList, exclusiveList);
-        tileList = MazeUTL.UpdateTileListWithDesiredWallLayout(tileList, WallLayout.C);
-
-        List<Tile> newList = new List<Tile>();
-        int[] randomNumbers = Utilities.GetRandomUniqueNumbers(numChests, tileList.Count);
-        for (int i = 0; i < numChests; i++)
-        {
-            newList.Add(tileList[randomNumbers[i]]);
-        }
-
-        return newList;
+        return maze.mazeTile[GetObjX(obj), GetObjZ(obj)];
     }
-    
+
+    List<Tile> GetItemSpawnRandomTiles(int numItems, int range, List<Tile> tileList, List<Tile> tilesLeft, List<Tile> exclusiveTiles)
+    {
+        if (numItems <= 0)
+            return tileList;
+
+        tilesLeft = MazeUTL.UpdateTileListOutOfRange(tilesLeft, exclusiveTiles, range);
+        Tile tile = MazeUTL.GetRandomTileFromList(tilesLeft);
+        tileList.Add(tile);
+
+		List<Tile> newExclusiveTiles = new List<Tile>();
+		foreach(Tile t in exclusiveTiles)
+		{
+			newExclusiveTiles.Add(t);
+		}
+		newExclusiveTiles.Add(tile);
+
+        numItems--;
+
+		return GetItemSpawnRandomTiles(numItems, range, tileList, tilesLeft, newExclusiveTiles);
+    }
+
     List<BodyPart> GetBodyPartList(int numItems)
     {
         List<BodyPart> newList = new List<BodyPart>();
 
-		int[] randomNumbers = Utilities.GetRandomUniqueNumbers(numItems, level.mazeSetting.bodyParts.Count);
+        int[] randomNumbers = Utilities.GetRandomUniqueNumbers(numItems, level.mazeSetting.bodyParts.Count);
 
         for (int i = 0; i < numItems; i++)
         {
-			newList.Add(level.mazeSetting.bodyParts[randomNumbers[i]]);
+            newList.Add(level.mazeSetting.bodyParts[randomNumbers[i]]);
         }
 
         return newList;
     }
     #endregion
 
+    #endregion
+
     #region Misc.
-    void InitCustomMazeObjList()
-    {
-        customTileObjList = new List<GameObject>();
-        customBodyPartChestList = new List<GameObject>();
-
-		foreach (Transform child in level.customMazeObject.transform)
-        {
-            TileItem item = child.gameObject.GetComponent<TileItem>();
-
-            if (item == null)
-            {
-                customTileObjList.Add(child.gameObject);
-            }
-            else
-            {
-                if (item.itemType == ItemType.StartPoint)
-                    customStartPointItem = child.gameObject;
-
-                if (item.itemType == ItemType.Objective)
-                    customObjectiveItem = child.gameObject;
-
-                if (item.itemType == ItemType.BodyPart)
-                    if (item.bodyPart != null)
-                        customBodyPartChestList.Add(child.gameObject);
-            }
-        }
-    }
-
     int GetObjX(GameObject obj)
     {
         return Mathf.FloorToInt(obj.transform.position.x / 10);
@@ -604,11 +713,6 @@ public class MazeGenerator : MonoBehaviour
     int GetObjZ(GameObject obj)
     {
         return Mathf.FloorToInt(obj.transform.position.z / 10);
-    }
-
-    Tile GetObjLocatedTile(Maze maze, GameObject obj)
-    {
-		return maze.mazeTile[GetObjX(obj), GetObjZ(obj)];
     }
     #endregion
 }

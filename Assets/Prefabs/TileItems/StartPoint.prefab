@@ -188,5 +188,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemName: Start Point
-  itemType: 1
+  itemType: 0
+  healAmount: 0
   bodyPart: {fileID: 0}

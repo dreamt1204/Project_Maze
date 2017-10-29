@@ -108,6 +108,53 @@ NavMeshSettings:
     tileSize: 256
     accuratePlacement: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &83332061
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 83332063}
+  - component: {fileID: 83332062}
+  m_Layer: 0
+  m_Name: UIManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &83332062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 83332061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7fbd2b8272ebd2458116912a7a42577, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  joyStick: {fileID: 0}
+  joyStickEnabled: 0
+  slimeWidget: {fileID: 0}
+  slimeDragButtonSprite: {fileID: 0}
+  slimeStateSelectWidget: {fileID: 0}
+  compassWidget: {fileID: 0}
+  compassSprite: {fileID: 0}
+--- !u!4 &83332063
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 83332061}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.378125, y: -0.8203125, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &376402737
 GameObject:
   m_ObjectHideFlags: 0
@@ -148,29 +195,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dacbabb6b832964498355a434ee45653, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiManager: {fileID: 0}
-  finsiedInit: 0
+  finishedInitLevel: 0
   tileStart: {fileID: 0}
   tileObjective: {fileID: 0}
   playerCharacter: {fileID: 0}
+  monsterList: []
+  timer: 0
   mazeDifficulty: 1
   mazeSetting: {fileID: 114690698242918930, guid: 917fe6d0109bb5942bfdb0a04e7f6396,
     type: 2}
   customMazeSize: 0
   mazeWidth: 10
   mazeLength: 10
-  customMazeObject: {fileID: 1754187230317282, guid: 0c8f2be7470a32747a015b514409f86f,
+  customMazeObject: {fileID: 1702378176613766, guid: 31bbc818a3b5948acab200faf77d6721,
     type: 2}
-  customGameModePosition: 1
-  customBodyPartChestPosition: 1
+  timerStart: 3600
+  useItemGenerateLogic: 0
+  numberOfItems: 0
   playerCharacterPrefab: {fileID: 1580977563646686, guid: b6007ed5a665c594f900229921919ff8,
     type: 2}
   startPointPrefab: {fileID: 1319595478763322, guid: b84cedb6474764ae681a2ff96801b519,
     type: 2}
   objectivePrefab: {fileID: 1322906879363412, guid: f448fef0f8ba6419b89e1f5ac8315c1a,
     type: 2}
+  HealthPackPrefab: {fileID: 1109405773331554, guid: c64f8dff735853b4699412ad92c551eb,
+    type: 2}
   BodyPartChestPrefab: {fileID: 1298702626922230, guid: d300446bd734be84fb5899f6f8607576,
     type: 2}
+  CompassPrefab: {fileID: 1037269215654212, guid: 9ea82cde066bf4a9cb74708a58df585b,
+    type: 2}
+  spawnMethod: 0
+  spawnQuantity: 1
+  safeRadius: 2
+  prefabA: {fileID: 1369328945872836, guid: d78b063e3d6814f4dbf30c48a725fa7e, type: 2}
+  prefabB: {fileID: 1526060483942206, guid: a7b2a78b3040b4693ac7153404a7afc0, type: 2}
+  prefabC: {fileID: 1291037138381934, guid: 1ba3aa94ac90a4a8d9832ecf0094e3e3, type: 2}
 --- !u!1001 &1223546763
 Prefab:
   m_ObjectHideFlags: 0
@@ -208,12 +267,12 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4296117611228374, guid: c75ec8af62b40a74797e4750b0cb8ad3, type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c75ec8af62b40a74797e4750b0cb8ad3, type: 2}
   m_IsPrefabParent: 0
---- !u!1001 &1806679152
+--- !u!1001 &1539398304
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -250,7 +309,45 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4658922473715448, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4650900690296976, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4650900690296976, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 550
+      objectReference: {fileID: 0}
+    - target: {fileID: 4137429860130042, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -227
+      objectReference: {fileID: 0}
+    - target: {fileID: 4137429860130042, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -524
+      objectReference: {fileID: 0}
+    - target: {fileID: 4297120767566086, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4297120767566086, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 46
+      objectReference: {fileID: 0}
+    - target: {fileID: 114110478972138454, guid: af57739e56be62c43aa85e6e8d11533f,
+        type: 2}
+      propertyPath: mColor.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4965354693859342, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -70
+      objectReference: {fileID: 0}
+    - target: {fileID: 114061646266175394, guid: af57739e56be62c43aa85e6e8d11533f,
+        type: 2}
+      propertyPath: mTrueTypeFont
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}

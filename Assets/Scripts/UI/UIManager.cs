@@ -8,26 +8,46 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum AbilityButtonState
+{
+	Enabled,
+	Disable,
+	CoolDown
+}
+
 public class UIManager : MonoBehaviour
 {
     //=======================================
     //      Variables
     //=======================================
-    LevelManager level;
+    public static UIManager instance = null;
+
+    private UILabel timerLabel;
 
     private Camera cam;
     private UIWidget joyStickArea;
-    private UIJoyStick joyStick;
+	[HideInInspector] public  UIJoyStick joyStick;
+	[HideInInspector] public bool joyStickEnabled;
+	[HideInInspector] public Dictionary<string, abilityButton> abilityButtons;
 
-    public Dictionary<string, abilityButton> abilityButtons;
-    
+	private UIProgressBar healthBar;
+
+    [HideInInspector] public UIWidget slimeWidget;
+    [HideInInspector] public UISprite slimeDragButtonSprite;
+    [HideInInspector] public UIWidget slimeStateSelectWidget;
+
+	[HideInInspector] public UIWidget compassWidget;
+	[HideInInspector] public UISprite compassSprite;
+
 
     //=======================================
     //      Struct
     //=======================================
     public struct abilityButton
     {
-        public GameObject buttonObj;
+		public AbilityButtonState iconState;
+
+		public GameObject buttonObj;
         public UISprite mainSprite;
         public UISprite iconSprite;
     }
@@ -37,41 +57,80 @@ public class UIManager : MonoBehaviour
     //=======================================
     void Awake()
     {
-        level = LevelManager.instance;
+        // This enforces our singleton pattern, meaning there can only ever be one instance of a LevelManager.
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(gameObject);
+
+        timerLabel = GameObject.Find("Label_Timer").GetComponent<UILabel>();
 
         cam = GameObject.Find("UICamera").GetComponent<Camera>();
         joyStick = GameObject.Find("JoyStick").GetComponent<UIJoyStick>();
         joyStickArea = GameObject.Find("Widget_JoyStickArea").GetComponent<UIWidget>();
 
+		healthBar = GameObject.Find("HealthBar").GetComponent<UIProgressBar>();
+
+        slimeWidget = GameObject.Find("Widget_Slime").GetComponent<UIWidget>();
+        slimeDragButtonSprite = GameObject.Find("Sprite_Slime").GetComponent<UISprite>();
+        slimeStateSelectWidget = GameObject.Find("Widget_SlimeStateSelect").GetComponent<UIWidget>();
+        slimeStateSelectWidget.alpha = 0;
+
+		compassWidget = GameObject.Find("Widget_Compass").GetComponent<UIWidget>();
+		compassWidget.alpha = 0;
+		compassSprite = GameObject.Find("Sprite_Compass").GetComponent<UISprite>();
+        
         abilityButtons = new Dictionary<string, abilityButton>();
         InitNewButton("Head");
-        InitNewButton("Arms");
         InitNewButton("Body");
         InitNewButton("Legs");
-        InitNewButton("Misc");
     }
 
 	void Update ()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            TryUpdateJoyStickPos();
-        }
+		UpdateTimer();
+		UpdateJoyStick();
+    }
 
-        if (Input.GetMouseButtonUp(0))
-        {
-            level.playerCharacter.StopKeepWalkingAnim();
-        }
+    //---------------------------------------
+    //      Timer
+    //---------------------------------------
+	void UpdateTimer()
+	{
+		timerLabel.text = GetTimerText(LevelManager.instance.timer);
+	}
 
-        if (joyStick.joyStickDir != -1)
-        {
-			level.playerCharacter.TryMoveToDirTile(joyStick.joyStickDir);
-        }   
+	public static string GetTimerText(float time)
+    {
+        int min, sec;
+		string secString;
+
+        min = Mathf.FloorToInt(time / 60f);
+        sec = Mathf.FloorToInt(time - (min * 60f));
+		if (sec < 10)
+			secString = "0" + sec;
+		else
+			secString = "" + sec;
+
+		return min + ":" + secString;
     }
 
     //---------------------------------------
     //      JoyStick
     //---------------------------------------
+	void UpdateJoyStick()
+	{
+		if (Input.GetMouseButtonDown(0))
+		{
+			joyStickEnabled = true;
+			TryUpdateJoyStickPos();
+		}
+		else if (Input.GetMouseButtonUp(0))
+		{
+			joyStickEnabled = false;
+		}
+	}
+
     void TryUpdateJoyStickPos()
     {
         // Check if player clicks/taps in the joystick area
@@ -95,19 +154,28 @@ public class UIManager : MonoBehaviour
         abilityButton newButton = new abilityButton();
         newButton.buttonObj = GameObject.Find("Sprite_ability_" + partType);
         newButton.mainSprite = newButton.buttonObj.GetComponent<UISprite>();
-        newButton.iconSprite = newButton.buttonObj.transform.Find("Sprite_ability_icon").GetComponent<UISprite>();
+        newButton.iconSprite = newButton.buttonObj.transform.Find("Sprite_ability_button").GetComponent<UISprite>();
 
         abilityButtons.Add(partType, newButton);
     }
 
+	void UpdateabilityButtonsIconSate(abilityButton button, AbilityButtonState newState)
+	{
+		abilityButton newButton = new abilityButton();
+		newButton = button;
+		newButton.iconState = newState;
+		button = newButton;
+	}
+
     public void UpdateAbilityIcon(string partType)
     {
         abilityButtons[partType].buttonObj.SetActive(true);
+        UpdateabilityButtonsIconSate (abilityButtons [partType], AbilityButtonState.Enabled);
 
-		string newSprite = level.playerCharacter.PlayerAbilities[partType].spriteName;
+		string newSprite = LevelManager.instance.playerCharacter.PlayerAbilities[partType].spriteName;
         if ((newSprite != null) && (AtlasHasSprite(abilityButtons[partType].iconSprite.atlas, newSprite)))
         {
-			abilityButtons[partType].iconSprite.spriteName = level.playerCharacter.PlayerAbilities[partType].spriteName;
+			abilityButtons[partType].iconSprite.spriteName = LevelManager.instance.playerCharacter.PlayerAbilities[partType].spriteName;
         }
         else
         {
@@ -117,7 +185,8 @@ public class UIManager : MonoBehaviour
 
     public void ClearAbilityIcon(string partType)
     {
-        abilityButtons[partType].buttonObj.SetActive(false);
+		UpdateabilityButtonsIconSate (abilityButtons [partType], AbilityButtonState.Disable);
+		abilityButtons[partType].buttonObj.SetActive(false);
     }
 
     bool AtlasHasSprite(UIAtlas atlas, string newSprite)
@@ -135,4 +204,55 @@ public class UIManager : MonoBehaviour
 
         return hasSprite;
     }
+
+	//---------------------------------------
+	//      Slime Health
+	//---------------------------------------
+	public void UpdateHealthBar(float value)
+	{
+		healthBar.value = value;
+	}
+
+    //---------------------------------------
+    //      Slime Drag Button
+    //---------------------------------------
+    public void UpdateSlimeDragButtonSprite(SlimeStateType state)
+    {
+        if (state == SlimeStateType.None)
+            slimeDragButtonSprite.spriteName = "Slime";
+        else if (state == SlimeStateType.Splitting)
+            slimeDragButtonSprite.spriteName = "Slime_Split";
+        else if(state == SlimeStateType.Eatting)
+            slimeDragButtonSprite.spriteName = "Slime_Eat";
+    }
+
+	//---------------------------------------
+	//      Update Compass
+	//---------------------------------------
+	public void ActivateCompass(float duration)
+	{
+		StartCoroutine ("UpdateCompass", duration);
+	}
+
+	IEnumerator UpdateCompass(float duration)
+	{
+		float timer = 0;
+
+		while(timer < duration)
+		{
+			compassWidget.alpha = 1;
+
+			Vector3 playerPos = LevelManager.instance.playerCharacter.transform.position;
+			Vector3 ObjetivePos = LevelManager.instance.tileObjective.transform.position;
+			float angle = ((180 / Mathf.PI) * Mathf.Atan2(ObjetivePos.z - playerPos.z, ObjetivePos.x - playerPos.x)) - 90;
+			compassSprite.transform.rotation =Quaternion.Euler(0, 0, angle);
+
+			timer += Time.deltaTime;
+			yield return null;
+		}
+
+
+
+		compassWidget.alpha = 0;
+	}
 }

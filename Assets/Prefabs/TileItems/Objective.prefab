@@ -188,5 +188,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemName: Objective
-  itemType: 2
+  itemType: 1
+  healAmount: 0
   bodyPart: {fileID: 0}

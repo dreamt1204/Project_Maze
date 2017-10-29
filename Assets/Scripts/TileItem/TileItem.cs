@@ -11,10 +11,11 @@ using UnityEngine;
 
 public enum ItemType
 {
-	Pickup,
 	StartPoint,
 	Objective,
-    BodyPart
+    HealthPack,
+    BodyPart,
+	Compass
 }
 
 public class TileItem : MonoBehaviour {
@@ -23,16 +24,11 @@ public class TileItem : MonoBehaviour {
 	//=======================================
 	public string itemName;
 	public ItemType itemType;
+    public float healAmount;
     public BodyPart bodyPart;
+	public float compassDuration;
 
 	//=======================================
 	//      Functions
 	//=======================================
-	// Use this for initialization
-	void Start ()
-    {
-        // Remove mis-input Body Part
-        if (itemType != ItemType.BodyPart)
-            bodyPart = null;
-    }
 }

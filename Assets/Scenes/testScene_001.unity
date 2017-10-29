@@ -148,12 +148,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dacbabb6b832964498355a434ee45653, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiManager: {fileID: 0}
-  finsiedInit: 0
+  finishedInitLevel: 0
   tileStart: {fileID: 0}
   tileObjective: {fileID: 0}
   playerCharacter: {fileID: 0}
-  enemyList: []
+  monsterList: []
+  timer: 0
   mazeDifficulty: 1
   mazeSetting: {fileID: 114690698242918930, guid: 917fe6d0109bb5942bfdb0a04e7f6396,
     type: 2}
@@ -161,8 +161,7 @@ MonoBehaviour:
   mazeWidth: 10
   mazeLength: 10
   customMazeObject: {fileID: 0}
-  customGameModePosition: 0
-  customBodyPartChestPosition: 0
+  timerStart: 3600
   useItemGenerateLogic: 0
   numberOfItems: 0
   playerCharacterPrefab: {fileID: 1580977563646686, guid: b6007ed5a665c594f900229921919ff8,
@@ -171,7 +170,11 @@ MonoBehaviour:
     type: 2}
   objectivePrefab: {fileID: 1322906879363412, guid: f448fef0f8ba6419b89e1f5ac8315c1a,
     type: 2}
+  HealthPackPrefab: {fileID: 1109405773331554, guid: c64f8dff735853b4699412ad92c551eb,
+    type: 2}
   BodyPartChestPrefab: {fileID: 1298702626922230, guid: d300446bd734be84fb5899f6f8607576,
+    type: 2}
+  CompassPrefab: {fileID: 1037269215654212, guid: 9ea82cde066bf4a9cb74708a58df585b,
     type: 2}
   spawnMethod: 0
   spawnQuantity: 1
@@ -266,11 +269,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4137429860130042, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -282
+      value: -11554
       objectReference: {fileID: 0}
     - target: {fileID: 4137429860130042, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -540
+      value: -29232
       objectReference: {fileID: 0}
     - target: {fileID: 4601673004384178, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.y
@@ -302,7 +305,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4650900690296976, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 550
+      value: -6912
       objectReference: {fileID: 0}
     - target: {fileID: 4627447364854668, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.y
@@ -315,7 +318,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4297120767566086, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 32
+      value: -18039
       objectReference: {fileID: 0}
     - target: {fileID: 4601673004384178, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.x
@@ -324,6 +327,10 @@ Prefab:
     - target: {fileID: 4627447364854668, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.x
       value: -142
+      objectReference: {fileID: 0}
+    - target: {fileID: 4965354693859342, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -11397
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}

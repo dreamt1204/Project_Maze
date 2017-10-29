@@ -31,7 +31,7 @@ public class Monster : Unit {
 	//      Variables
 	//=======================================
 
-	bool debugMode = false;
+	bool debugMode = true;
 
 	// Dynamic lists and variables 
 	AttentionList attnList = new AttentionList();
@@ -108,29 +108,7 @@ public class Monster : Unit {
 	// Output is to update the attention list if monster sees player
 	protected void See ()
 	{
-		List<Tile> visibleTileList = new List<Tile> ();
-
-		if (visionLevel > 0) // if visionLevel <= 0, does not detect opponents even on the same tile
-		{
-			visibleTileList.Add (this.CurrentTile); // if visionLevel >= 1, guarantees one's own tile
-
-			for (int dir = 0; dir < 4; dir++) {
-				Tile tile0 = this.CurrentTile;
-				for (int n = 1; n <= visionLevel; n++) { 
-					Tile tile1 = MazeUTL.GetDirNeighborTile (tile0, dir);
-					// Check if tile out of bound
-					if (tile1 == null) {
-						break;
-					}
-					if (!MazeUTL.WallBetweenNeighborTiles (tile0, tile1)) {
-						visibleTileList.Add (tile1);
-						tile0 = tile1;
-					} else {
-						break; // Stops investigating this direction as soon as hits a wall
-					}
-				}
-			}
-		}
+		List<Tile> visibleTileList = MazeUTL.GetVisibleTiles (this.CurrentTile, visionLevel);
 			
 		Tile playerTile = LevelManager.instance.playerCharacter.CurrentTile;
 		if (visibleTileList.Contains (playerTile)) {
@@ -166,14 +144,14 @@ public class Monster : Unit {
 	protected void AddPriorityBasedStatus (statusType type0) {
 		if (statusList.Count == 0) {
 			statusList.Add (new status (type0, 99999999)); // top-priority-based status have infinite duration; they can only be removed when top-priority changes
-			RefreshEnemyAttributesBasedOnStatus ();
+			RefreshAttributesBasedOnStatus ();
 			return;
 		} else {
 			if (statusList [0].type == statusType.Hyper | statusList [0].type == statusType.Hyper2) {
 				if (statusList [0].type != type0) {
 					statusList.RemoveAt (0);
 					statusList.Insert (0, new status (type0, 99999999));
-					RefreshEnemyAttributesBasedOnStatus ();
+					RefreshAttributesBasedOnStatus ();
 					return;
 				}
 			}
@@ -186,14 +164,14 @@ public class Monster : Unit {
 		} else {
 			if (statusList [0].type == statusType.Hyper | statusList [0].type == statusType.Hyper2) {
 				statusList.RemoveAt (0);
-				RefreshEnemyAttributesBasedOnStatus ();
+				RefreshAttributesBasedOnStatus ();
 			} else {
 				Debug.LogError ("RemovePriorityBasedStatus called when priority-based status is not first element in status list.");
 			}
 		}
 	}
 		
-	protected void RefreshEnemyAttributesBasedOnStatus(){
+	protected void RefreshAttributesBasedOnStatus(){
 
 		// dafault values
 		float moveSpeedModifier = 1.0f;
@@ -277,7 +255,7 @@ public class Monster : Unit {
 	}
 
 	protected virtual MonsterAction ProceedToEventTile(){
-		List<Tile> path = MazeUTL.FindPathByAddress (this.CurrentTile, currTopPriority.EventTile);
+		List<Tile> path = MazeUTL.FindPathByCompleteSearch (this.CurrentTile, currTopPriority.EventTile, false, visionLevel + 2, "Shortest_Random");
 		return new MonsterAction (MonsterAction.actionType.Movement, path [0]); // Sets action to walking towards first element in path
 	}
 
@@ -298,7 +276,7 @@ public class Monster : Unit {
 		int dir = MazeUTL.GetNeighborTileDir(prevTile,CurrentTile);
 		Tile forwardTile = MazeUTL.GetDirNeighborTile (CurrentTile, dir);
 		if (possibleTiles.Contains (forwardTile)) {
-			Debug.Log ("Forward tile available");
+			// Debug.Log ("Forward tile available");
 			return new MonsterAction (MonsterAction.actionType.Movement, forwardTile);
 		} else {
 			// avoids previous tile unless in dead end
@@ -326,7 +304,7 @@ public class Monster : Unit {
 
 		switch (currAction.type) {
 		case MonsterAction.actionType.Attack:
-			Debug.Log ("Enemy attack is initiated!");
+			Debug.Log ("Monster attack is initiated!");
 			StartCoroutine (MeleeAttackCoroutine (this.CurrentTile));
 			break;
 		case MonsterAction.actionType.Movement:
@@ -422,7 +400,7 @@ public class Monster : Unit {
 	{
 		if (!currAction.isCancelable) 
 		{
-			Debug.LogError ("'quitCurrentAction' is called upon a non-cancelable enemy action.");
+			Debug.LogError ("'quitCurrentAction' is called upon a non-cancelable monster action.");
 		}
 		// ...
 	}

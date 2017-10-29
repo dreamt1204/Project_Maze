@@ -4,6 +4,7 @@
 //
 //==============================================================================
 
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -233,10 +234,16 @@ public static class MazeUTL {
         rangeData.targetTiles = oldList;
 
         List<Tile> newList = GetRangeTiles(org, rangeData);
-        orgs.Remove(org);
+
+		List<Tile> newOrgs = new List<Tile>();
+		foreach (Tile tile in orgs)
+		{
+			if (tile != org)
+				newOrgs.Add (tile);
+		}
 
         // Recursively go over all the org and update the list
-        newList = UpdateTileListOutOfRange(newList, orgs, range);
+		newList = UpdateTileListOutOfRange(newList, newOrgs, range);
 
         return newList;
     }
@@ -341,10 +348,6 @@ public static class MazeUTL {
 	public static List<Tile> GetNeighborTilesWithoutWall (Tile t) {
 		List<Tile> tiles = MazeUTL.GetNeighborTiles (t);
 		tiles.RemoveAll (tile0 => MazeUTL.WallBetweenNeighborTiles (t, tile0));
-
-		if (tiles.Count == 0)
-			Debug.LogError ("No possible tiles to walk towards.");
-
 		return tiles;
 	}
 
@@ -400,6 +403,111 @@ public static class MazeUTL {
 		path.AddRange (subPath2);
 
 		return path;
+	}
+
+	public static List<Tile> GetVisibleTiles (Tile currTile, int visionLevel) {
+		List<Tile> visibleTileList = new List<Tile> ();
+
+		if (visionLevel > 0) { // if visionLevel <= 0, does not detect opponents even on the same tile
+			visibleTileList.Add (currTile); // if visionLevel >= 1, guarantees one's own tile
+
+			for (int dir = 0; dir < 4; dir++) {
+				Tile tile0 = currTile;
+				for (int n = 1; n <= visionLevel; n++) { 
+					Tile tile1 = MazeUTL.GetDirNeighborTile (tile0, dir);
+					// Check if tile out of bound
+					if (tile1 == null) {
+						break;
+					}
+					if (!MazeUTL.WallBetweenNeighborTiles (tile0, tile1)) {
+						visibleTileList.Add (tile1);
+						tile0 = tile1;
+					} else {
+						break; // Stops investigating this direction as soon as hits a wall
+					}
+				}
+			}
+		}
+		return visibleTileList;
+	}
+
+	public static List<Tile> FindPathByCompleteSearch (Tile startTile, Tile endTile, bool isSimpleDirection, int maxSearchSteps, string pathSelectionMethod) {
+		// Compile all possible paths from start to end, within maxSearchSteps. 
+		// Use isSimpleDirect to improve efficiency
+
+		List<List<Tile>> paths = new List<List<Tile>> ();
+		List<int> permittedDir;
+
+		if (isSimpleDirection) {
+			permittedDir = new List<int> (new int[] { 0, 1}); // .......
+		} else {
+			permittedDir = new List<int> (new int[] { 0, 1, 2, 3 });
+		}
+
+		List<Tile> pathSoFar = new List<Tile> ();
+		pathSoFar.Add (startTile);
+		HandPathToNeighbors (startTile, pathSoFar, endTile, paths, permittedDir, maxSearchSteps);
+
+		switch (pathSelectionMethod) {
+		case "Random":
+			break;
+		case "Shortest_Random":
+			int[] pathLength = new int[paths.Count];
+			Debug.Log ("Number of paths initial = " + paths.Count);
+			for (int i = 0; i < paths.Count; i++) {
+				pathLength [i] = paths [i].Count;
+				Debug.Log ("Path #" + (i + 1) + " length = " + pathLength [i]);
+			}
+
+			int test = paths.RemoveAll (p => p.Count > pathLength.Min ());
+			Debug.Log ("Number of paths removed = " + test);
+			break;
+		default:
+			Debug.LogError ("invalid argument for pathSelectionMethod");
+			break;
+		}
+
+		if (paths.Count == 0) {
+			return null; // null output means that no paths is found given the filters (simpleDir, maxSearchSteps)
+		} else {
+			List<Tile> selectedPath = paths [Random.Range (0, paths.Count)];
+			selectedPath.RemoveAt (0); // Remove first tile (startTile) for convention
+			return selectedPath; 
+		}
+	}
+
+	// Recursive Helper
+	public static void HandPathToNeighbors(Tile source, List<Tile> pathSofar, Tile endTile, List<List<Tile>> paths, List<int> permittedDir, int searchStepsLeft)
+	{
+		searchStepsLeft--;
+		if (searchStepsLeft < 0)
+			return;
+
+		List<Tile> neighborTilesToContinue = new List<Tile> ();
+
+		for (int i = 0; i < permittedDir.Count; i++) { // Simple Direction Filter
+			Tile t = GetDirNeighborTile (source, permittedDir [i]);
+			if (t != null) { // Edge Filter
+				if (!WallBetweenNeighborTiles(source, t)) { // Wall Filter
+					if (!pathSofar.Contains(t)) { // Tile_has_already_been_in_path Filter
+						neighborTilesToContinue.Add (t);
+					}
+				}
+			}
+		}
+
+		for (int i = 0; i < neighborTilesToContinue.Count; i++) {
+			Tile t = neighborTilesToContinue [i];
+			List<Tile> path = new List<Tile> (pathSofar); // Clone pathSoFar
+			path.Add (t); 
+			if (t == endTile) {
+				paths.Add (path);
+				return;
+			} else {
+				HandPathToNeighbors (t, path, endTile, paths, permittedDir, searchStepsLeft);
+			}
+		}
+
 	}
 
 	public static void PrintAddress (Tile t)

@@ -19,22 +19,25 @@ public class LevelManager : MonoBehaviour {
 
     // Helper classes instances
     private MazeGenerator mazeGenerator;
-	[HideInInspector] public UIManager uiManager;
 
     //private UnitSpawner unitSpawner;
 	private MonsterManager monsterManager;
 
 	// Global variables
-	[HideInInspector] public bool finsiedInit = false;
+	[HideInInspector] public bool finishedInitLevel = false;
 	[HideInInspector] public Maze maze;
 	[HideInInspector] public Tile tileStart;
 	[HideInInspector] public Tile tileObjective;
+
 	[HideInInspector] public PlayerCharacter playerCharacter;
-	[HideInInspector] public List<Monster> enemyList;
+	[HideInInspector] public List<Monster> monsterList;
+
+    [HideInInspector] public float timer;
+
 
 	// Global variables in Inspector
     [Header("Maze")]
-	[Range(1, 100)]
+	[Range(1, 10)]
 	public int mazeDifficulty = 1;
     public MazeSetting mazeSetting;
 
@@ -44,8 +47,9 @@ public class LevelManager : MonoBehaviour {
     public int mazeLength = 10;
     [Space(15)]
     public GameObject customMazeObject;
-    public bool customGameModePosition;
-    public bool customBodyPartChestPosition;
+
+    [Header("Game Mode")]
+    public float timerStart = 3600;
 
     [Header("Items")]
     public bool useItemGenerateLogic;
@@ -55,14 +59,16 @@ public class LevelManager : MonoBehaviour {
     public GameObject playerCharacterPrefab;
     public GameObject startPointPrefab;
     public GameObject objectivePrefab;
+    public GameObject HealthPackPrefab;
     public GameObject BodyPartChestPrefab;
+	public GameObject CompassPrefab;
 
-	[Header("Enemy Spawning")]
+	[Header("Monster Spawning")]
 	public InitSpawnMethod spawnMethod = InitSpawnMethod.Random;
 	public int spawnQuantity = 1;
 	public int safeRadius = 2;
 
-	[Header("Enemy Prefabs")]
+	[Header("Monster Prefabs")]
 	public GameObject prefabA;
 	public GameObject prefabB;
 	public GameObject prefabC;
@@ -80,7 +86,6 @@ public class LevelManager : MonoBehaviour {
 
         // Get component reference to the attached script
 		mazeGenerator = gameObject.AddComponent<MazeGenerator>();
-        uiManager = gameObject.AddComponent<UIManager>();
 
 		monsterManager = gameObject.AddComponent<MonsterManager> ();
 
@@ -93,35 +98,68 @@ public class LevelManager : MonoBehaviour {
 		maze = mazeGenerator.GenerateMaze();
 
 		// Assign address to tiles in maze, for path finding
-		MazeUTL.AssignAddressToTiles (maze);
+//		MazeUTL.AssignAddressToTiles (maze);
 		//MazeUTL.PrintAddress (maze.mazeTile [9, 9]);
-		//MazeUTL.PrintTileList( MazeUTL.FindPathByAddress(maze.mazeTile[4,4], maze.mazeTile[0,0]), "Path");
+		//MazeUTL.PrintTileList( MazeUTL.FindPathByCompleteSearch(maze.mazeTile[0,0], maze.mazeTile[2,2], false, 10, "Shortest_Random"), "Path");
 
-		if (tileStart == null){
-			Debug.Log ("tileStart is null before enemy generation is called!!!!!");
-		}
+
 
 		// Spawn enemies
-		enemyList = UnitSpawner.SpawnInitMonsters(monsterManager.GenerateInitSpawnList() );
+		monsterList = UnitSpawner.SpawnInitMonsters(monsterManager.GenerateInitSpawnList() );
 
 		// Spawn player character
 		playerCharacter = UnitSpawner.SpawnPlayerCharacter(tileStart);
 
-		// Set finsiedInit
-		finsiedInit = true;
+        // Setup timer
+        timer = timerStart;
+
+        // Set init flag to true
+        finishedInitLevel = true;
 	}
+
+    void Update()
+    {
+        if (!finishedInitLevel)
+            return;
+
+        // Update timer
+        if (timer > 0)
+            timer = Mathf.Clamp(timer - Time.deltaTime, 0, timerStart);
+    }
 
     //---------------------------------------
     //      Game Mode
     //---------------------------------------
-	public void CheckWinningCondition()
+	public void CheckLevelFailedCondition()
 	{
-        if (!finsiedInit)
-            return;
+		if (!finishedInitLevel)
+			return;
 
-        if (playerCharacter.hasObjective)
-        {
-            Debug.Log("Level Finished!!");  // Debug: tmp message        
-        }   
+		if (playerCharacter.Health > 0)
+			return;
+
+		FailLevel ();
+	}
+
+	public void CheckLevelPassedCondition()
+	{
+		if (!finishedInitLevel)
+			return;
+
+		if (!playerCharacter.hasObjective)
+			return;
+
+		PassLevel ();
+	}
+
+	void PassLevel()
+	{
+		Debug.Log("Level Finished!!");  // Debug: tmp message 
+        Debug.Log("Time used: " + UIManager.GetTimerText(timerStart - timer));
+    }
+
+	void FailLevel()
+	{
+		Debug.Log("Level Failed...");  // Debug: tmp message 
 	}
 }

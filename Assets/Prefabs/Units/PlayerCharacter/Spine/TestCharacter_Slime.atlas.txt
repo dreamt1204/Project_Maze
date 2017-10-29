@@ -1,0 +1,104 @@
+
+TestCharacter_Slime.png
+size: 1024,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Arm_L/Arm_L_default
+  rotate: false
+  xy: 684, 368
+  size: 139, 142
+  orig: 139, 142
+  offset: 0, 0
+  index: -1
+Arm_L/Arm_L_red
+  rotate: false
+  xy: 684, 224
+  size: 139, 142
+  orig: 139, 142
+  offset: 0, 0
+  index: -1
+Arm_R/Arm_R_default
+  rotate: false
+  xy: 542, 368
+  size: 140, 142
+  orig: 140, 142
+  offset: 0, 0
+  index: -1
+Arm_R/Arm_R_red
+  rotate: false
+  xy: 542, 224
+  size: 140, 142
+  orig: 140, 142
+  offset: 0, 0
+  index: -1
+Body/Body_default
+  rotate: false
+  xy: 414, 340
+  size: 126, 170
+  orig: 126, 170
+  offset: 0, 0
+  index: -1
+Body/Body_red
+  rotate: false
+  xy: 414, 168
+  size: 126, 170
+  orig: 126, 170
+  offset: 0, 0
+  index: -1
+Head/Head_default
+  rotate: false
+  xy: 2, 306
+  size: 204, 204
+  orig: 204, 204
+  offset: 0, 0
+  index: -1
+Head/Head_red
+  rotate: false
+  xy: 2, 100
+  size: 204, 204
+  orig: 204, 204
+  offset: 0, 0
+  index: -1
+Leg_L/Leg_L_default
+  rotate: true
+  xy: 2, 51
+  size: 47, 153
+  orig: 47, 153
+  offset: 0, 0
+  index: -1
+Leg_R/Leg_R_default
+  rotate: true
+  xy: 2, 51
+  size: 47, 153
+  orig: 47, 153
+  offset: 0, 0
+  index: -1
+Leg_L/Leg_L_red
+  rotate: true
+  xy: 2, 2
+  size: 47, 153
+  orig: 47, 153
+  offset: 0, 0
+  index: -1
+Leg_R/Leg_R_red
+  rotate: true
+  xy: 2, 2
+  size: 47, 153
+  orig: 47, 153
+  offset: 0, 0
+  index: -1
+Slime/Slime_default
+  rotate: false
+  xy: 208, 324
+  size: 204, 186
+  orig: 204, 186
+  offset: 0, 0
+  index: -1
+Slime/Slime_red
+  rotate: false
+  xy: 208, 136
+  size: 204, 186
+  orig: 204, 186
+  offset: 0, 0
+  index: -1
