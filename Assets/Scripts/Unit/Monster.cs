@@ -18,9 +18,11 @@ public class Monster : Unit {
     // Detection
     DetectingState detectingState_m = DetectingState.Idle;
     int detectionRange = 3;
+    const float detectionCDTime_Warning = 10;
+    const float detectionCDTime_Alerted = 5;
 
     // Monster Behavior
-	[HideInInspector] public MonsterBehaviour currentBehaviour;
+    [HideInInspector] public MonsterBehaviour currentBehaviour;
 	public Dictionary<DetectingState, List<MonsterBehaviour>> behaviourList = new Dictionary<DetectingState, List<MonsterBehaviour>>();
 
     //---------------------------------------
@@ -45,6 +47,7 @@ public class Monster : Unit {
         set
         {
             detectingState_m = value;
+            StartCoolDownDetectionLevel();
         }
     }
 
@@ -108,6 +111,50 @@ public class Monster : Unit {
     {
         if (MazeUTL.CheckTargetInRangeAndDetectRegion(CurrentTile, level.playerCharacter.CurrentTile, detectionRange))
              detectingState = DetectingState.Alerted;
+    }
+
+    void StartCoolDownDetectionLevel()
+    {
+        float time = 0;
+        switch (detectingState)
+        {
+            case DetectingState.Alerted:
+                time = detectionCDTime_Alerted;
+                break;
+            case DetectingState.Warning:
+                time = detectionCDTime_Warning;
+                break;
+            default:
+            case DetectingState.Idle:
+                return;
+        }
+
+        StopCoroutine("CoolDownDetectionLevel");
+        StartCoroutine("CoolDownDetectionLevel", time);
+    }
+
+    IEnumerator CoolDownDetectionLevel(float time)
+    {
+        float timer = time;
+
+        while (timer > 0)
+        {
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+
+        switch (detectingState)
+        {
+            case DetectingState.Alerted:
+                detectingState = DetectingState.Warning;
+                break;
+            case DetectingState.Warning:
+                detectingState = DetectingState.Idle;
+                break;
+            default:
+            case DetectingState.Idle:
+                break;
+        }
     }
 
     //---------------------------------------
