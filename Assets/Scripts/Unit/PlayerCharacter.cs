@@ -119,9 +119,6 @@ public class PlayerCharacter : Unit {
 
 	public override void Update()
 	{
-		if (!finishedInit)
-			return;
-
 		base.Update ();
 
 		// Update movement based on UIJoyStick
