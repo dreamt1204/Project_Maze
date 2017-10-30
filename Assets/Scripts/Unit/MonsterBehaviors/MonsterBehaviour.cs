@@ -40,26 +40,80 @@ public class MonsterBehaviour : MonoBehaviour {
 	//---------------------------------------
 	//      Path finding
 	//---------------------------------------
-	/*public void TryReachTargetTile(Tile targetTile)
+	public List<Tile> FindShortestPath(Tile org, Tile target, int SearchRange)
 	{
-		List<Tile> path = new List<Tile>();	// WOM
+        List<List<Tile>> paths = FindPathsToTarget(org, target, SearchRange, new List<Tile>());
+        if (paths.Count <= 0)
+            return null;
 
-		for (int i = 0; i < path.Count; i++)
-		{
-			owner.TryMoveToTile (path [i]);
+        List<Tile> shortestPath = paths[0];
 
-			while (true)
-			{
-				yield return null;
-			}
-		}
-	}
+        foreach (List<Tile> path in paths)
+        {
+            if (path.Count < shortestPath.Count)
+                shortestPath = path;
+        }
 
-	List<Tile> FindShortestPath(Tile startTile, Tile endTile, int SearchRange)
-	{
-		
-	}
-    
+        shortestPath.RemoveAt(0);
+
+        return shortestPath;
+    }
+
+    List<List<Tile>> FindPathsToTarget(Tile org, Tile target, int SearchRange, List<Tile> currentPath)
+    {
+        List<Tile> newCurrentPath = new List<Tile>(currentPath);
+        newCurrentPath.Add(org);
+
+        List<List<Tile>> paths = new List<List<Tile>>();
+
+        // If we reach the target, stop finding and return the paths
+        if (org == target)
+        {
+            paths.Add(newCurrentPath);
+            return paths;
+        }
+
+        // If reach the search range but not reach the target yet, stop finding and return null
+        SearchRange--;
+        if (SearchRange < 0)
+            return null;
+
+        // Get all possible continue finding directions
+        List<int> continueDir = new List<int>();
+        for (int i = 0; i < 4; i++)
+        {
+            if (MazeUTL.WallOnDir(org, i))
+                continue;
+
+            if (newCurrentPath.Contains((MazeUTL.GetDirNeighborTile(org, i))))
+                continue;
+
+            continueDir.Add(i);
+        }
+
+        // If reach dead end but not reach the target yet, stop finding and return null
+        if (continueDir.Count == 0)
+            return null;
+
+        // Recursive search for are possible directions
+        foreach (int dir in continueDir)
+        {
+            List<List<Tile>> newPaths = FindPathsToTarget(MazeUTL.GetDirNeighborTile(org, dir), target, SearchRange, newCurrentPath);
+
+            if (newPaths == null)
+                continue;
+
+            foreach (List<Tile> newPath in newPaths)
+            {
+                paths.Add(newPath);
+            }
+        }
+
+        return paths;
+    }
+
+
+    /*
     public static List<Tile> FindShortestPath(Tile startTile, Tile endTile, int maxSearchSteps, string pathSelectionMethod)
     {
         // Compile all possible paths from start to end, within maxSearchSteps. 
@@ -103,7 +157,7 @@ public class MonsterBehaviour : MonoBehaviour {
             return selectedPath;
         }
     }
-
+    */
     // Recursive Helper
     public static void HandPathToNeighbors(Tile source, List<Tile> pathSofar, Tile endTile, List<List<Tile>> paths, List<int> permittedDir, int searchStepsLeft)
     {
@@ -144,5 +198,5 @@ public class MonsterBehaviour : MonoBehaviour {
         }
 
     }
-    */
+    
 }

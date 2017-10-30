@@ -91,10 +91,13 @@ public class Monster : Unit {
 			behaviourList [data.part.monsterBehaviour.detectingStateType].Add (partBehaviour);
 
 		}
-	}
+    }
 
     public override void Update()
     {
+        if (!finishedInit)
+            return;
+
         base.Update();
 
         // If player gets caught by this Monster, change its detecting state to "Alerted".
