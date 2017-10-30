@@ -106,24 +106,8 @@ public class Monster : Unit {
     //---------------------------------------
     void UpdateDetectingState()
     {
-        if (!IsPlayerInDetectionRange())
-            return;
-
-        if (!IsPlayerInSameDetectionRegion())
-            return;
-
-        detectingState = DetectingState.Alerted;
-    }
-
-    bool IsPlayerInDetectionRange()
-    {
-        return MazeUTL.CheckTargetInRange(CurrentTile, level.playerCharacter.CurrentTile, detectionRange);
-    }
-
-    bool IsPlayerInSameDetectionRegion()
-    {
-        // (WOM)
-        return true;
+        if (MazeUTL.CheckTargetInRangeAndDetectRegion(CurrentTile, level.playerCharacter.CurrentTile, detectionRange))
+             detectingState = DetectingState.Alerted;
     }
 
     //---------------------------------------

@@ -33,6 +33,7 @@ public class MazeGenerator : MonoBehaviour
     public Maze GenerateMaze()
     {
         Maze maze = BuildMaze();
+        GenerateDetectRegions(maze);
         GenerateMazeItems(maze);
 
         return maze;
@@ -499,6 +500,175 @@ public class MazeGenerator : MonoBehaviour
         return wall;
     }
     #endregion
+    #endregion
+
+    #region Generate Detect Regions
+    void GenerateDetectRegions(Maze maze)
+    {
+        List<string> regionList = new List<string>();
+
+        for (int i = 0; i < maze.mazeLength; i++)
+        {
+            for (int j = 0; j < maze.mazeWidth; j++)
+            {
+                TryUpdateVerticalRegionForTile(maze.mazeTile[i, j], regionList, maze);
+                TryUpdateHorizontalRegionForTile(maze.mazeTile[i, j], regionList, maze);
+                TryUpdateRectRegionForTile(maze.mazeTile[i, j], regionList, maze);
+            }
+        }
+
+        maze.detectRegions = regionList;
+
+        foreach (Tile tile in maze.mazeTileList)
+        {
+            string tileAddress = tile.X + "" + tile.Z;
+            foreach (string region in regionList)
+            {
+                if (region.Contains(tileAddress))
+                    tile.detectRegions.Add(region);
+            }
+        }
+    }
+
+    void TryUpdateVerticalRegionForTile(Tile tile, List<string> regionList, Maze maze)
+    {
+        string region = GetVerticalRegion(tile, maze);
+
+        if (IsUniqueRegion(region, regionList))
+             regionList.Add(region);
+    }
+
+    void TryUpdateHorizontalRegionForTile(Tile tile, List<string> regionList, Maze maze)
+    {
+        string region = GetHorizontalRegion(tile, maze);
+
+        if (IsUniqueRegion(region, regionList))
+            regionList.Add(region);
+    }
+
+    void TryUpdateRectRegionForTile(Tile tile, List<string> regionList, Maze maze)
+    {
+        if ((tile.X + 1) >= maze.mazeWidth)
+            return;
+
+        string region_col_1 = GetVerticalRegion(tile, maze);
+        if (IsOneTileRegion(region_col_1))
+            return;
+        
+        string region_col_2 = GetVerticalRegion(maze.mazeTile[tile.X + 1, tile.Z], maze);
+        if (IsOneTileRegion(region_col_2))
+            return;
+
+        int regionHeight = Mathf.Min(region_col_1.Length, region_col_2.Length);
+        if (regionHeight <= 1)
+            return;
+
+
+
+        string region = "";
+        for (int i = tile.X; i < maze.mazeWidth; i++)
+        {
+            string newRegion = "";
+            if (i == tile.X)
+                newRegion = GetVerticalRegionWithHeight(maze.mazeTile[i, tile.Z], maze, regionHeight);
+            else
+                newRegion = GetVerticalRegionWithHeightWithoutWestWall(maze.mazeTile[i, tile.Z], maze, regionHeight);
+
+            if (newRegion.Length < regionHeight)
+                break;
+            
+            region += newRegion;
+        }
+
+        if (IsUniqueRegion(region, regionList))
+            regionList.Add(region);
+    }
+
+    string GetVerticalRegion(Tile tile, Maze maze)
+    {
+        return GetVerticalRegionWithHeight(tile, maze, 0);
+    }
+
+    string GetVerticalRegionWithHeight(Tile tile, Maze maze, int height)
+    {
+        string region = "";
+
+        for (int i = tile.Z; i < maze.mazeLength; i++)
+        {
+            region += tile.X + "" + i + "/";
+
+            if (region.Length == height)
+                break;
+            if (MazeUTL.WallOnDir(maze.mazeTile[tile.X, i], 0))
+                break;
+        }
+
+        return region;
+    }
+
+    string GetVerticalRegionWithHeightWithoutWestWall(Tile tile, Maze maze, int height)
+    {
+        string region = "";
+
+        for (int i = tile.Z; i < maze.mazeLength; i++)
+        {
+            if (MazeUTL.WallOnDir(maze.mazeTile[tile.X, i], 3))
+                break;
+
+            region += tile.X + "" + i + "/";
+
+            if (region.Length == height)
+                break;
+            if (MazeUTL.WallOnDir(maze.mazeTile[tile.X, i], 0))
+                break;
+        }
+
+        return region;
+    }
+
+    string GetHorizontalRegion(Tile tile, Maze maze)
+    {
+        return GetHorizontalRegionWithWidth(tile, maze, 0);
+    }
+
+    string GetHorizontalRegionWithWidth(Tile tile, Maze maze, int width)
+    {
+        string region = "";
+
+        for (int i = tile.X; i < maze.mazeWidth; i++)
+        {
+            region += i + "" + tile.Z + "/";
+
+            if (region.Length == width)
+                break;
+            if (MazeUTL.WallOnDir(maze.mazeTile[i, tile.Z], 1))
+                break;
+        }
+
+        return region;
+    }
+
+    bool IsOneTileRegion(string region)
+    {
+        return (region.Length <= 3);
+    }
+
+    bool IsUniqueRegion(string region, List<string> regionList)
+    {
+        if (IsOneTileRegion(region))
+            return false;
+
+        foreach (string existRegion in regionList)
+        {
+            if (existRegion.Contains(region))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     #endregion
 
     #region Generate Maze Items

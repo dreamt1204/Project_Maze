@@ -17,11 +17,14 @@ public class Maze  {
 	public Tile[,] mazeTile;
     public List<Tile> mazeTileList;
 
+    public List<string> detectRegions;
+
 	public Maze(int width, int length)
 	{
 		mazeWidth = width;
 		mazeLength = length;
 		mazeTile = new Tile[mazeWidth, mazeLength];
 		mazeTileList = new List<Tile>();
-	}
+        detectRegions = new List<string>();
+    }
 }

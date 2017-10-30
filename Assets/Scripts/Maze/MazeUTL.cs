@@ -79,7 +79,7 @@ public static class MazeUTL {
 
 
     //---------------------------------------
-    //      Range check functions
+    //      Range / Detect Region check functions
     //---------------------------------------
     public static bool CheckTargetInRange(Tile org, Tile target, int range)
     {
@@ -96,6 +96,21 @@ public static class MazeUTL {
         return (GetDistanceBetweenTiles(org, target) == range);
     }
 
+    public static bool CheckTargetInDetectRegion(Tile org, Tile target)
+    {
+        string targetAddress = target.X + "" + target.Z;
+        foreach (string region in org.detectRegions)
+        {
+            if (region.Contains(targetAddress))
+                return true;
+        }
+        return false;
+    }
+
+    public static bool CheckTargetInRangeAndDetectRegion(Tile org, Tile target, int range)
+    {
+        return (CheckTargetInRange(org, target, range) && CheckTargetInDetectRegion(org, target));
+    }
 
     //---------------------------------------
     //      Get direction functions

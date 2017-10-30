@@ -40,7 +40,7 @@ public class MonsterBehaviour : MonoBehaviour {
 	//---------------------------------------
 	//      Path finding
 	//---------------------------------------
-	public void TryReachTargetTile(Tile targetTile)
+	/*public void TryReachTargetTile(Tile targetTile)
 	{
 		List<Tile> path = new List<Tile>();	// WOM
 
@@ -59,9 +59,7 @@ public class MonsterBehaviour : MonoBehaviour {
 	{
 		
 	}
-
-
-
+    
     public static List<Tile> FindShortestPath(Tile startTile, Tile endTile, int maxSearchSteps, string pathSelectionMethod)
     {
         // Compile all possible paths from start to end, within maxSearchSteps. 
@@ -146,4 +144,5 @@ public class MonsterBehaviour : MonoBehaviour {
         }
 
     }
+    */
 }
