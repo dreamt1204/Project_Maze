@@ -20,8 +20,8 @@ public class Monster : Unit {
     int detectionRange = 3;
 
     // Monster Behavior
-    public MonsterBehaviour currentBehaviour;
-    public Dictionary<DetectingState, List<MonsterBehaviour>> behaviourList;
+	[HideInInspector] public MonsterBehaviour currentBehaviour;
+	public Dictionary<DetectingState, List<MonsterBehaviour>> behaviourList = new Dictionary<DetectingState, List<MonsterBehaviour>>();
 
     //---------------------------------------
     //      Struct
@@ -54,15 +54,41 @@ public class Monster : Unit {
     // Use this for initialization
     public override void Init(Tile spawnTile)
     {
-        behaviourList.Add(DetectingState.Idle, new List<MonsterBehaviour>());
-        behaviourList.Add(DetectingState.Warning, new List<MonsterBehaviour>());
-        behaviourList.Add(DetectingState.Alerted, new List<MonsterBehaviour>());
-
-        behaviourList[DetectingState.Idle].Add(new BasicMonsterPatrol());
-        behaviourList[DetectingState.Alerted].Add(new BasicMonsterAttack());
+		InitMonsterBehaviours();
 
         base.Init(spawnTile);
     }
+
+	void InitMonsterBehaviours()
+	{
+		behaviourList.Add(DetectingState.Idle, new List<MonsterBehaviour>());
+		behaviourList.Add(DetectingState.Warning, new List<MonsterBehaviour>());
+		behaviourList.Add(DetectingState.Alerted, new List<MonsterBehaviour>());
+
+		// Init Basic Behaviours
+		behaviourList[DetectingState.Idle].Add(gameObject.AddComponent<BasicMonsterPatrol>());
+		behaviourList [DetectingState.Idle] [0].owner = this;
+		behaviourList[DetectingState.Warning].Add(gameObject.AddComponent<BasicMonsterSearch>());
+		behaviourList [DetectingState.Warning] [0].owner = this;
+		behaviourList[DetectingState.Alerted].Add(gameObject.AddComponent<BasicMonsterAttack>());
+		behaviourList [DetectingState.Alerted] [0].owner = this;
+
+		// Init Body Part Behaviours
+		foreach (BodyPartData data in BodyParts)
+		{
+			if (data.part == null)
+				continue;
+			if (data.part.monsterBehaviour == null)
+				continue;
+
+
+			System.Type behaviourScriptType = System.Type.GetType (data.part.monsterBehaviour.name);
+			MonsterBehaviour partBehaviour = (MonsterBehaviour)gameObject.AddComponent(behaviourScriptType);
+			partBehaviour.owner = this;
+			behaviourList [data.part.monsterBehaviour.detectingStateType].Add (partBehaviour);
+
+		}
+	}
 
     public override void Update()
     {
@@ -109,7 +135,7 @@ public class Monster : Unit {
             return;
 
         currentBehaviour = PickMonsterBehaviour();
-        currentBehaviour.ExecuteActiveBehaviour();
+        currentBehaviour.StartActiveBehaviour();
     }
 
     MonsterBehaviour PickMonsterBehaviour()

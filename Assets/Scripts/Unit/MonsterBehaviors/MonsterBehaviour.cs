@@ -6,6 +6,8 @@ public class MonsterBehaviour : MonoBehaviour {
     //=======================================
     //      Variables
     //=======================================
+	[HideInInspector] public Monster owner;
+
     public bool isPassiveBehavior = false;
     public DetectingState detectingStateType = DetectingState.Alerted;
     public int behaviourPriority;
@@ -14,31 +16,59 @@ public class MonsterBehaviour : MonoBehaviour {
     //=======================================
     //      Functions
     //=======================================
-    public void ExecuteActiveBehaviour()
+    public void StartActiveBehaviour()
     {
-
+		ExecuteActiveBehaviour ();
+		ClearBehaviour ();
     }
 
-    public void ExecutePassiveBehaviour()
-    {
+	protected virtual void ExecuteActiveBehaviour()
+	{
 
-    }
+	}
 
-    public static List<Tile> FindShortestPath(Tile startTile, Tile endTile, bool isSimpleDirection, int maxSearchSteps, string pathSelectionMethod)
+	public void StartPassiveBehaviour()
+	{
+
+	}
+
+	void ClearBehaviour()
+	{
+		owner.currentBehaviour = null;
+	}
+
+	//---------------------------------------
+	//      Path finding
+	//---------------------------------------
+	public void TryReachTargetTile(Tile targetTile)
+	{
+		List<Tile> path = new List<Tile>();	// WOM
+
+		for (int i = 0; i < path.Count; i++)
+		{
+			owner.TryMoveToTile (path [i]);
+
+			while (true)
+			{
+				yield return null;
+			}
+		}
+	}
+
+	List<Tile> FindShortestPath(Tile startTile, Tile endTile, int SearchRange)
+	{
+		
+	}
+
+
+
+    public static List<Tile> FindShortestPath(Tile startTile, Tile endTile, int maxSearchSteps, string pathSelectionMethod)
     {
         // Compile all possible paths from start to end, within maxSearchSteps. 
         // Use isSimpleDirect to improve efficiency
 
         List<List<Tile>> paths = new List<List<Tile>>();
         List<int> permittedDir;
-
-        if (isSimpleDirection)
-        {
-            permittedDir = new List<int>(new int[] { 0, 1 }); // .......
-        }
-        else {
-            permittedDir = new List<int>(new int[] { 0, 1, 2, 3 });
-        }
 
         List<Tile> pathSoFar = new List<Tile>();
         pathSoFar.Add(startTile);
@@ -63,11 +93,13 @@ public class MonsterBehaviour : MonoBehaviour {
                 break;
         }
 
-        if (paths.Count == 0)
-        {
-            return null; // null output means that no paths is found given the filters (simpleDir, maxSearchSteps)
-        }
-        else {
+		// null output means that no paths is found given the filter
+		if (paths.Count == 0)
+		{
+			return null; 
+		}
+        else
+		{
             List<Tile> selectedPath = paths[Random.Range(0, paths.Count)];
             selectedPath.RemoveAt(0); // Remove first tile (startTile) for convention
             return selectedPath;

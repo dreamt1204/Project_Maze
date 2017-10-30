@@ -35,6 +35,7 @@ public class BodyPart : MonoBehaviour {
     public string partType;
     public string partSkinName;
     public PlayerAbility playerAbility;
+	public MonsterBehaviour monsterBehaviour;
 
     //=======================================
     //      Functions

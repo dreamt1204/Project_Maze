@@ -156,6 +156,7 @@ MonoBehaviour:
     partList:
     - {fileID: 114495352630981584, guid: cfb626c1578ce9b4a9021375adb4b227, type: 2}
     - {fileID: 114418054345478636, guid: c7f2df5e4839a324ea78b0c0cbaab1f1, type: 2}
+  currentBehaviour: {fileID: 0}
 --- !u!114 &114630776372437562
 MonoBehaviour:
   m_ObjectHideFlags: 1
