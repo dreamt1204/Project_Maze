@@ -98,13 +98,7 @@ public static class MazeUTL {
 
     public static bool CheckTargetInDetectRegion(Tile org, Tile target)
     {
-        string targetAddress = target.X + "" + target.Z;
-        foreach (string region in org.detectRegions)
-        {
-            if (region.Contains(targetAddress))
-                return true;
-        }
-        return false;
+		return (GetSharedDetectRegion(org, target) != null);
     }
 
     public static bool CheckTargetInRangeAndDetectRegion(Tile org, Tile target, int range)
@@ -161,6 +155,19 @@ public static class MazeUTL {
 
         return GetMazeTile()[x, z];
     }
+
+	public static List<Tile> GetTilesRightOnRange(Tile org, List<Tile> tileList, int range)
+	{
+		List<Tile> newList = new List<Tile> ();
+
+		foreach (Tile tile in tileList)
+		{
+			if (CheckTargetIsRightOnRange (org, tile, range))
+				newList.Add (tile);
+		}
+
+		return newList;
+	}
 
 
     //---------------------------------------
@@ -293,6 +300,138 @@ public static class MazeUTL {
     }
 
 
+	//---------------------------------------
+	//      Region functions
+	//---------------------------------------
+	public static string GetSharedDetectRegion(Tile org, Tile target)
+	{
+		string targetAddress = target.X + "" + target.Z;
+		foreach (string region in org.detectRegions)
+		{
+			if (region.Contains(targetAddress))
+				return region;
+		}
+		return null;
+	}
+
+	public static List<Tile> GetTilesFromRegion(string region)
+	{
+		List<Tile> tileList = new List<Tile> ();
+		string[] addressList = region.Split('/');
+
+		foreach (string address in addressList)
+		{
+			tileList.Add (LevelManager.instance.maze.mazeTile [address [0], address [1]]);
+		}
+
+		return tileList;
+	}
+
+
+	//---------------------------------------
+	//      Path finding
+	//---------------------------------------
+	public static List<Tile> PathRemoveStartTile(List<Tile> path)
+	{
+		path.RemoveAt(0);
+		return path;
+	}
+
+	public static List<Tile> GetShortestPath(Tile org, Tile target, int SearchRange)
+	{
+		List<Tile> shortestPath = new List<Tile> ();
+
+		List<List<Tile>> paths = GetPathsToTarget(org, target, SearchRange, new List<Tile>());
+		if (paths.Count <= 0)
+			return shortestPath;
+
+		shortestPath = paths[0];
+
+		foreach (List<Tile> path in paths)
+		{
+			if (path.Count < shortestPath.Count)
+				shortestPath = path;
+		}
+
+		return shortestPath;
+	}
+
+	public static List<Tile> GetPathToActionRange(Tile org, Tile target, int SearchRange, int actionRange)
+	{
+		List<Tile> path = new List<Tile> ();
+
+		// Get the destination tile to apply action right on the range
+		List<Tile> tiles = GetTilesFromRegion (GetSharedDetectRegion (org, target));
+		if (tiles.Count <= 0)
+			return path;
+
+		tiles = GetTilesRightOnRange (org, tiles, actionRange);
+		if (tiles.Count <= 0)
+			return path;
+		
+		Tile destination = tiles [Random.Range (0, tiles.Count)];
+
+
+		// Get the shortest path to destination tile
+		path = GetShortestPath (org, destination, SearchRange);
+
+		return path;
+	}
+
+	public static List<List<Tile>> GetPathsToTarget(Tile org, Tile target, int SearchRange, List<Tile> currentPath)
+	{
+		List<Tile> newCurrentPath = new List<Tile>(currentPath);
+		newCurrentPath.Add(org);
+
+		List<List<Tile>> paths = new List<List<Tile>>();
+
+		// If we reach the target, stop finding and return the paths
+		if (org == target)
+		{
+			paths.Add(newCurrentPath);
+			return paths;
+		}
+
+		// If reach the search range but not reach the target yet, stop finding and return null
+		SearchRange--;
+		if (SearchRange < 0)
+			return null;
+
+		// Get all possible continue finding directions
+		List<int> continueDir = new List<int>();
+		for (int i = 0; i < 4; i++)
+		{
+			if (WallOnDir(org, i))
+				continue;
+
+			if (newCurrentPath.Contains((GetDirNeighborTile(org, i))))
+				continue;
+
+			continueDir.Add(i);
+		}
+
+		// If reach dead end but not reach the target yet, stop finding and return null
+		if (continueDir.Count == 0)
+			return null;
+
+		// Recursive search for are possible directions
+		foreach (int dir in continueDir)
+		{
+			List<List<Tile>> newPaths = GetPathsToTarget(GetDirNeighborTile(org, dir), target, SearchRange, newCurrentPath);
+
+			if (newPaths == null)
+				continue;
+
+			foreach (List<Tile> newPath in newPaths)
+			{
+				paths.Add(newPath);
+			}
+		}
+
+		return paths;
+	}
+
+
     //---------------------------------------
     //      Tile state
     //---------------------------------------
@@ -318,6 +457,4 @@ public static class MazeUTL {
     {
         return (int)Mathf.Abs(tile_2.X - tile_1.X) + Mathf.Abs(tile_2.Z - tile_1.Z);
     }
-
-
 }

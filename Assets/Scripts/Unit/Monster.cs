@@ -16,14 +16,17 @@ public class Monster : Unit {
     public List<MonsterBodyPartData> monsterBodyPartList;
 
     // Detection
+	public Unit alertedTarget;
+	public int detectionRange = 3;
+
     DetectingState detectingState_m = DetectingState.Idle;
-    int detectionRange = 3;
     const float detectionCDTime_Warning = 10;
     const float detectionCDTime_Alerted = 5;
 
     // Monster Behavior
     [HideInInspector] public MonsterBehaviour currentBehaviour;
-	public Dictionary<DetectingState, List<MonsterBehaviour>> behaviourList = new Dictionary<DetectingState, List<MonsterBehaviour>>();
+	public Dictionary<DetectingState, List<MonsterBehaviour>> behaviourList_active = new Dictionary<DetectingState, List<MonsterBehaviour>>();
+	public List<MonsterBehaviour> behaviourList_passive = new List<MonsterBehaviour>();
 
     //---------------------------------------
     //      Struct
@@ -64,17 +67,17 @@ public class Monster : Unit {
 
 	void InitMonsterBehaviours()
 	{
-		behaviourList.Add(DetectingState.Idle, new List<MonsterBehaviour>());
-		behaviourList.Add(DetectingState.Warning, new List<MonsterBehaviour>());
-		behaviourList.Add(DetectingState.Alerted, new List<MonsterBehaviour>());
+		behaviourList_active.Add(DetectingState.Idle, new List<MonsterBehaviour>());
+		behaviourList_active.Add(DetectingState.Warning, new List<MonsterBehaviour>());
+		behaviourList_active.Add(DetectingState.Alerted, new List<MonsterBehaviour>());
 
 		// Init Basic Behaviours
-		behaviourList[DetectingState.Idle].Add(gameObject.AddComponent<BasicMonsterPatrol>());
-		behaviourList [DetectingState.Idle] [0].owner = this;
-		behaviourList[DetectingState.Warning].Add(gameObject.AddComponent<BasicMonsterSearch>());
-		behaviourList [DetectingState.Warning] [0].owner = this;
-		behaviourList[DetectingState.Alerted].Add(gameObject.AddComponent<BasicMonsterAttack>());
-		behaviourList [DetectingState.Alerted] [0].owner = this;
+		behaviourList_active[DetectingState.Idle].Add(gameObject.AddComponent<MonsterPatrol>());
+		behaviourList_active [DetectingState.Idle] [0].owner = this;
+		behaviourList_active[DetectingState.Warning].Add(gameObject.AddComponent<MonsterSearch>());
+		behaviourList_active [DetectingState.Warning] [0].owner = this;
+		behaviourList_active[DetectingState.Alerted].Add(gameObject.AddComponent<MonsterAttack>());
+		behaviourList_active [DetectingState.Alerted] [0].owner = this;
 
 		// Init Body Part Behaviours
 		foreach (BodyPartData data in BodyParts)
@@ -88,7 +91,7 @@ public class Monster : Unit {
 			System.Type behaviourScriptType = System.Type.GetType (data.part.monsterBehaviour.name);
 			MonsterBehaviour partBehaviour = (MonsterBehaviour)gameObject.AddComponent(behaviourScriptType);
 			partBehaviour.owner = this;
-			behaviourList [data.part.monsterBehaviour.detectingStateType].Add (partBehaviour);
+			behaviourList_active [data.part.monsterBehaviour.detectingStateType].Add (partBehaviour);
 
 		}
     }
@@ -112,8 +115,11 @@ public class Monster : Unit {
     //---------------------------------------
     void UpdateDetectingState()
     {
-        if (MazeUTL.CheckTargetInRangeAndDetectRegion(CurrentTile, level.playerCharacter.CurrentTile, detectionRange))
-             detectingState = DetectingState.Alerted;
+		if (MazeUTL.CheckTargetInRangeAndDetectRegion (CurrentTile, level.playerCharacter.CurrentTile, detectionRange))
+		{
+			detectingState = DetectingState.Alerted;
+			alertedTarget = level.playerCharacter;
+		}   
     }
 
     void StartCoolDownDetectionLevel()
@@ -184,9 +190,9 @@ public class Monster : Unit {
         List<MonsterBehaviour> tmpList = new List<MonsterBehaviour>();
         int hightestPri = 5;
 
-        foreach (MonsterBehaviour behaviour in behaviourList[detectingState])
+        foreach (MonsterBehaviour behaviour in behaviourList_active[detectingState])
         {
-            if (behaviour.isCoolingDown)
+			if (behaviour.isCoolingDown)
                 continue;
 
             if (behaviour.behaviourPriority < hightestPri)

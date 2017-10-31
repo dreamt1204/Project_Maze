@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BasicMonsterPatrol : MonsterBehaviour
+public class MonsterSearch : MonsterBehaviour
 {
-
+	
 }
