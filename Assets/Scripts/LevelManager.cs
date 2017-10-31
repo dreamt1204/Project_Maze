@@ -18,7 +18,7 @@ public class LevelManager : MonoBehaviour {
 	public static LevelManager instance = null;
 
     // Helper classes instances
-    private MazeGenerator mazeGenerator;
+    public MazeGenerator mazeGenerator;
 
 	// Global variables
 	[HideInInspector] public bool finishedInitLevel = false;
@@ -81,7 +81,7 @@ public class LevelManager : MonoBehaviour {
 		playerCharacter = UnitSpawner.SpawnPlayerCharacter(tileStart);
 
         // (DM) Test Monster
-        UnitSpawner.SpawnMonster(maze.mazeTile[tileStart.X, tileStart.Z + 1]);
+        UnitSpawner.SpawnMonsters();
 
         // Setup timer
         timer = timerStart;

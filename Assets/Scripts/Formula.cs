@@ -55,4 +55,14 @@ public static class Formula
 	{
 		return 3;
 	}
+
+    public static int CalculateMonsterNum(int mazeDifficulty)
+    {
+        return mazeDifficulty;
+    }
+
+    public static int CalculateMonsterLeastDistance(int mazeDifficulty)
+    {
+        return 7;
+    }
 }

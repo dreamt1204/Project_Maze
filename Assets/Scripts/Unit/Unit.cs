@@ -280,10 +280,16 @@ public class Unit : MonoBehaviour {
 			keepWalkingAnim = false;
 	}
 
-	//---------------------------------------
-	//      Tile Action
-	//---------------------------------------
-	public virtual void UnitTileAction(Tile tile)
+    public void StopWalkingAnim()
+    {
+        keepWalkingAnim = false;
+        playWalkingAnim = false;
+    }
+
+    //---------------------------------------
+    //      Tile Action
+    //---------------------------------------
+    public virtual void UnitTileAction(Tile tile)
 	{
 		// Apply effect when unit steps on this tile
 	}

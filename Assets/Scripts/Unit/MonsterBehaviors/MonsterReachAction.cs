@@ -28,7 +28,7 @@ public class MonsterReachAction : MonsterBehaviour
 	{
 		if (actionTarget != null)
 		{
-			List<Tile> path = MazeUTL.PathRemoveStartTile (MazeUTL.GetPathToActionRange (owner.CurrentTile, actionTarget.CurrentTile, owner.detectionRange, actionRange));
+            List<Tile> path = MazeUTL.PathRemoveStartTile (MazeUTL.GetPathToActionRange(owner.CurrentTile, actionTarget.CurrentTile, owner.detectionRange, actionRange));
 			for (int i = 0; i < path.Count; i++)
 			{
 				owner.TryMoveToTile (path [i]);
@@ -40,8 +40,8 @@ public class MonsterReachAction : MonsterBehaviour
 			}
 		}
 
-		owner.StopKeepWalkingAnim ();
+        owner.StopWalkingAnim();
 
-		SetActionFinished ("TryReachActionRangeCoroutine");
+        SetActionFinished ("TryReachActionRangeCoroutine");
 	}
 }

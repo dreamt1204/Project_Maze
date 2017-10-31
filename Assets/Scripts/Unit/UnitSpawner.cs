@@ -32,4 +32,57 @@ public static class UnitSpawner {
 
         return (Monster)SpawnUnit(newMonster.gameObject, targetTile);
     }
+
+    public static void SpawnMonsters()
+    {
+        if (LevelManager.instance.customMazeObject != null)
+        {
+            if (LevelManager.instance.mazeGenerator.customMazeMonsterObjList.Count > 0)
+                SpawnMonsters_Custom();
+        }
+        else
+        {
+            SpawnMonsters_Random();
+        }
+    }
+
+    public static void SpawnMonsters_Custom()
+    {
+        List<Monster> MonsterObjList = LevelManager.instance.mazeGenerator.customMazeMonsterObjList;
+
+        foreach (Monster monster in MonsterObjList)
+        {
+            int X = Mathf.FloorToInt(monster.gameObject.transform.position.x / 10);
+            int Z = Mathf.FloorToInt(monster.gameObject.transform.position.z / 10);
+
+            Unit unit = GameObject.Instantiate(monster.gameObject, monster.transform.position, Quaternion.Euler(0, 0, 0)).GetComponent<Unit>();
+            unit.Init(LevelManager.instance.maze.mazeTile[X, Z]);
+        }
+    }
+
+    public static void SpawnMonsters_Random()
+    {
+        List<Tile> spawnTiles = new List<Tile>();
+
+        int monsterNum = Formula.CalculateMonsterNum(LevelManager.instance.mazeDifficulty);
+        int distance = Formula.CalculateMonsterLeastDistance(LevelManager.instance.mazeDifficulty);
+        List<Tile> oldList = LevelManager.instance.maze.mazeTileList;
+        List<Tile> exclusiveTiles = new List<Tile>();
+
+        exclusiveTiles.Add(LevelManager.instance.tileStart);
+
+        for (int i = 0; i < monsterNum; i++)
+        {
+            oldList = MazeUTL.UpdateTileListOutOfRange(oldList, exclusiveTiles, distance);
+
+            Tile spawnTile = oldList[Random.Range(0, oldList.Count)];
+            spawnTiles.Add(spawnTile);
+            exclusiveTiles.Add(spawnTile);
+        }
+
+        foreach (Tile tile in spawnTiles)
+        {
+            SpawnMonster(tile);
+        }
+    }
 }

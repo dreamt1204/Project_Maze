@@ -173,7 +173,7 @@ public class Monster : Unit {
     {
         if (currentBehaviour != null)
             return;
-
+        
         currentBehaviour = PickMonsterBehaviour();
         currentBehaviour.StartActiveBehaviour();
     }

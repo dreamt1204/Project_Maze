@@ -300,12 +300,17 @@ public static class MazeUTL {
     }
 
 
-	//---------------------------------------
-	//      Region functions
-	//---------------------------------------
-	public static string GetSharedDetectRegion(Tile org, Tile target)
+    //---------------------------------------
+    //      Region functions
+    //---------------------------------------
+    public static string GetTileAddress(int X, int Z)
+    {
+        return X + "," + Z + "/";
+    }
+
+    public static string GetSharedDetectRegion(Tile org, Tile target)
 	{
-		string targetAddress = target.X + "" + target.Z;
+		string targetAddress = MazeUTL.GetTileAddress(target.X, target.Z);
 		foreach (string region in org.detectRegions)
 		{
 			if (region.Contains(targetAddress))
@@ -319,9 +324,16 @@ public static class MazeUTL {
 		List<Tile> tileList = new List<Tile> ();
 		string[] addressList = region.Split('/');
 
-		foreach (string address in addressList)
+        foreach (string address in addressList)
 		{
-			tileList.Add (LevelManager.instance.maze.mazeTile [address [0], address [1]]);
+            if (address == "")
+                continue;
+
+            string[] XZ = address.Split(',');
+            int X = int.Parse(XZ[0]);
+            int Z = int.Parse(XZ[1]);
+
+            tileList.Add (LevelManager.instance.maze.mazeTile [X, Z]);
 		}
 
 		return tileList;
@@ -365,7 +377,7 @@ public static class MazeUTL {
 		if (tiles.Count <= 0)
 			return path;
 
-		tiles = GetTilesRightOnRange (org, tiles, actionRange);
+		tiles = GetTilesRightOnRange (target, tiles, actionRange);
 		if (tiles.Count <= 0)
 			return path;
 		

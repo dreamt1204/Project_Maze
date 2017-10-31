@@ -21,11 +21,12 @@ public class MazeGenerator : MonoBehaviour
     // Custom maze object variables
     List<GameObject> customTileObjList = new List<GameObject>();
     Dictionary<ItemType, List<TileItem>> customTileItems = new Dictionary<ItemType, List<TileItem>>();
+    public List<Monster> customMazeMonsterObjList = new List<Monster>();
 
     //=======================================
     //      Functions
     //=======================================
-	void Awake()
+    void Awake()
 	{
 		level = LevelManager.instance;
 	}
@@ -521,7 +522,7 @@ public class MazeGenerator : MonoBehaviour
 
         foreach (Tile tile in maze.mazeTileList)
         {
-            string tileAddress = tile.X + "" + tile.Z;
+            string tileAddress = MazeUTL.GetTileAddress(tile.X, tile.Z);
             foreach (string region in regionList)
             {
                 if (region.Contains(tileAddress))
@@ -595,7 +596,7 @@ public class MazeGenerator : MonoBehaviour
 
         for (int i = tile.Z; i < maze.mazeLength; i++)
         {
-            region += tile.X + "" + i + "/";
+            region += MazeUTL.GetTileAddress(tile.X, i);
 
             if (region.Length == height)
                 break;
@@ -615,7 +616,7 @@ public class MazeGenerator : MonoBehaviour
             if (MazeUTL.WallOnDir(maze.mazeTile[tile.X, i], 3))
                 break;
 
-            region += tile.X + "" + i + "/";
+            region += MazeUTL.GetTileAddress(tile.X, i);
 
             if (region.Length == height)
                 break;
@@ -637,7 +638,7 @@ public class MazeGenerator : MonoBehaviour
 
         for (int i = tile.X; i < maze.mazeWidth; i++)
         {
-            region += i + "" + tile.Z + "/";
+            region += MazeUTL.GetTileAddress(i, tile.Z);
 
             if (region.Length == width)
                 break;
@@ -812,19 +813,24 @@ public class MazeGenerator : MonoBehaviour
         foreach (Transform child in level.customMazeObject.transform)
         {
             TileItem item = child.gameObject.GetComponent<TileItem>();
+            Monster monster = child.gameObject.GetComponent<Monster>();
 
-            // If no item script attached, assume the object is tile layout
-            if (item == null)
-            {
-                customTileObjList.Add(child.gameObject);
-            }
             // Add object to customTileItems list
+            if (item != null)
+            {
+                if (!customTileItems.ContainsKey(item.itemType))
+                    customTileItems.Add(item.itemType, new List<TileItem>());
+
+                customTileItems[item.itemType].Add(item);
+            }
+            else if (monster != null)
+            {
+                customMazeMonsterObjList.Add(monster);
+            }
+            // If no item script attached, assume the object is tile layout
             else
             {
-				if (!customTileItems.ContainsKey (item.itemType))
-					customTileItems.Add(item.itemType, new List<TileItem>());
-				
-               	customTileItems[item.itemType].Add(item);      
+                customTileObjList.Add(child.gameObject);
             }
         }
     }
