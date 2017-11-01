@@ -815,8 +815,16 @@ public class MazeGenerator : MonoBehaviour
             TileItem item = child.gameObject.GetComponent<TileItem>();
             Monster monster = child.gameObject.GetComponent<Monster>();
 
-            // Add object to customTileItems list
-            if (item != null)
+            // Add all the layout object from "Maze" parent object
+            if (child.gameObject.name == "Maze")
+            {
+                foreach (Transform layout in child.gameObject.transform)
+                {
+                    customTileObjList.Add(layout.gameObject);
+                }
+            }
+            // Add object to customTileItems list based on script attached
+            else if (item != null)
             {
                 if (!customTileItems.ContainsKey(item.itemType))
                     customTileItems.Add(item.itemType, new List<TileItem>());
@@ -826,11 +834,6 @@ public class MazeGenerator : MonoBehaviour
             else if (monster != null)
             {
                 customMazeMonsterObjList.Add(monster);
-            }
-            // If no item script attached, assume the object is tile layout
-            else
-            {
-                customTileObjList.Add(child.gameObject);
             }
         }
     }

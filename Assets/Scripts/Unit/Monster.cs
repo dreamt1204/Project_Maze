@@ -17,16 +17,26 @@ public class Monster : Unit {
 
     // Detection
 	public Unit alertedTarget;
-	public int detectionRange = 3;
+	public int detectionRange = 2;
 
     DetectingState detectingState_m = DetectingState.Idle;
     const float detectionCDTime_Warning = 10;
     const float detectionCDTime_Alerted = 5;
 
+    AlertedIcon alertedIcon;
+
+    // Stat
+    public float moveSpeedIdle;
+    public float moveSpeedWarning;
+    public float moveSpeedAlerted;
+
     // Monster Behavior
     [HideInInspector] public MonsterBehaviour currentBehaviour;
-	public Dictionary<DetectingState, List<MonsterBehaviour>> behaviourList_active = new Dictionary<DetectingState, List<MonsterBehaviour>>();
-	public List<MonsterBehaviour> behaviourList_passive = new List<MonsterBehaviour>();
+    [HideInInspector] public Dictionary<DetectingState, List<MonsterBehaviour>> activeBehaviourList = new Dictionary<DetectingState, List<MonsterBehaviour>>();
+	[HideInInspector] public List<MonsterBehaviour> passiveBehaviourList = new List<MonsterBehaviour>();
+    public bool defaultIdleBehaviour = true;
+    public bool defaultWarningBehaviour = true;
+    public bool defaultAlertedBehaviour = true;
 
     //---------------------------------------
     //      Struct
@@ -51,6 +61,9 @@ public class Monster : Unit {
         {
             detectingState_m = value;
             StartCoolDownDetectionLevel();
+            UpdateAlertedTarget();
+            alertedIcon.UpdateIconSprite(value);
+            UpdateMoveSpeed();
         }
     }
 
@@ -60,24 +73,51 @@ public class Monster : Unit {
     // Use this for initialization
     public override void Init(Tile spawnTile)
     {
-		InitMonsterBehaviours();
+        InitMoveSpeed();
+        InitAlertedIcon();
+        InitMonsterBehaviours();
 
         base.Init(spawnTile);
     }
 
+    void InitMoveSpeed()
+    {
+        if (moveSpeedIdle <= 0)
+            moveSpeedIdle = MoveSpeed * 0.4f;
+        if (moveSpeedWarning <= 0)
+            moveSpeedWarning = MoveSpeed * 0.7f;
+
+        moveSpeedAlerted = MoveSpeed;
+    }
+
+    void InitAlertedIcon()
+    {
+        alertedIcon = ((GameObject)Instantiate(Resources.Load("Sprite_AlertedIcon"))).GetComponent<AlertedIcon>();
+        alertedIcon.Init(this);
+    }
+
 	void InitMonsterBehaviours()
 	{
-		behaviourList_active.Add(DetectingState.Idle, new List<MonsterBehaviour>());
-		behaviourList_active.Add(DetectingState.Warning, new List<MonsterBehaviour>());
-		behaviourList_active.Add(DetectingState.Alerted, new List<MonsterBehaviour>());
+		activeBehaviourList.Add(DetectingState.Idle, new List<MonsterBehaviour>());
+		activeBehaviourList.Add(DetectingState.Warning, new List<MonsterBehaviour>());
+		activeBehaviourList.Add(DetectingState.Alerted, new List<MonsterBehaviour>());
 
-		// Init Basic Behaviours
-		behaviourList_active[DetectingState.Idle].Add(gameObject.AddComponent<MonsterPatrol>());
-		behaviourList_active [DetectingState.Idle] [0].owner = this;
-		behaviourList_active[DetectingState.Warning].Add(gameObject.AddComponent<MonsterSearch>());
-		behaviourList_active [DetectingState.Warning] [0].owner = this;
-		behaviourList_active[DetectingState.Alerted].Add(gameObject.AddComponent<MonsterAttack>());
-		behaviourList_active [DetectingState.Alerted] [0].owner = this;
+        // Init Default Behaviours
+        if (defaultIdleBehaviour)
+        {
+            activeBehaviourList[DetectingState.Idle].Add(gameObject.AddComponent<MonsterPatrol>());
+            activeBehaviourList[DetectingState.Idle][0].owner = this;
+        }
+        if (defaultWarningBehaviour)
+        {
+            activeBehaviourList[DetectingState.Warning].Add(gameObject.AddComponent<MonsterSearch>());
+            activeBehaviourList[DetectingState.Warning][0].owner = this;
+        }
+        if (defaultAlertedBehaviour)
+        {
+            activeBehaviourList[DetectingState.Alerted].Add(gameObject.AddComponent<MonsterAttack>());
+            activeBehaviourList[DetectingState.Alerted][0].owner = this;
+        }
 
 		// Init Body Part Behaviours
 		foreach (BodyPartData data in BodyParts)
@@ -91,7 +131,7 @@ public class Monster : Unit {
 			System.Type behaviourScriptType = System.Type.GetType (data.part.monsterBehaviour.name);
 			MonsterBehaviour partBehaviour = (MonsterBehaviour)gameObject.AddComponent(behaviourScriptType);
 			partBehaviour.owner = this;
-			behaviourList_active [data.part.monsterBehaviour.detectingStateType].Add (partBehaviour);
+			activeBehaviourList [data.part.monsterBehaviour.detectingStateType].Add (partBehaviour);
 
 		}
     }
@@ -118,8 +158,19 @@ public class Monster : Unit {
 		if (MazeUTL.CheckTargetInRangeAndDetectRegion (CurrentTile, level.playerCharacter.CurrentTile, detectionRange))
 		{
 			detectingState = DetectingState.Alerted;
-			alertedTarget = level.playerCharacter;
 		}   
+    }
+
+    void UpdateAlertedTarget()
+    {
+        if (detectingState == DetectingState.Idle)
+        {
+            alertedTarget = null;
+        }
+        else if (detectingState == DetectingState.Alerted)
+        {
+            alertedTarget = level.playerCharacter;
+        }
     }
 
     void StartCoolDownDetectionLevel()
@@ -166,6 +217,23 @@ public class Monster : Unit {
         }
     }
 
+    void UpdateMoveSpeed()
+    {
+        switch (detectingState)
+        {
+            case DetectingState.Idle:
+                MoveSpeed = moveSpeedIdle;
+                break;
+            case DetectingState.Warning:
+                MoveSpeed = moveSpeedWarning;
+                break;
+            default:
+            case DetectingState.Alerted:
+                MoveSpeed = moveSpeedAlerted;
+                break;
+        }
+    }
+
     //---------------------------------------
     //      Monster Behaviour Logic
     //---------------------------------------
@@ -173,9 +241,11 @@ public class Monster : Unit {
     {
         if (currentBehaviour != null)
             return;
-        
+
         currentBehaviour = PickMonsterBehaviour();
-        currentBehaviour.StartActiveBehaviour();
+
+        if (currentBehaviour != null)
+            currentBehaviour.StartActiveBehaviour();
     }
 
     MonsterBehaviour PickMonsterBehaviour()
@@ -190,7 +260,7 @@ public class Monster : Unit {
         List<MonsterBehaviour> tmpList = new List<MonsterBehaviour>();
         int hightestPri = 5;
 
-        foreach (MonsterBehaviour behaviour in behaviourList_active[detectingState])
+        foreach (MonsterBehaviour behaviour in activeBehaviourList[detectingState])
         {
 			if (behaviour.isCoolingDown)
                 continue;

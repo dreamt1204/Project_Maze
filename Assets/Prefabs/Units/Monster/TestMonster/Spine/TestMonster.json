@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "LiIYac44v2ev6fwBee/yC4F5NKM", "spine": "3.6.46", "width": 239, "height": 443, "images": "./images/" },
+"skeleton": { "hash": "wuVMlJ8Jvga/Rj+bO8AABXWyakA", "spine": "3.6.46", "width": 239, "height": 443, "images": "./images/" },
 "bones": [
 	{ "name": "root" },
 	{ "name": "Body", "parent": "root", "length": 101.41, "rotation": -90, "x": -2.54, "y": 252.37 },
@@ -14,8 +14,8 @@
 	{ "name": "Leg_L", "bone": "Leg_L", "attachment": "Leg_L" },
 	{ "name": "Body", "bone": "Body", "attachment": "Body" },
 	{ "name": "Leg_R", "bone": "Leg_R", "attachment": "Leg_R" },
-	{ "name": "Arms_R", "bone": "Arm_R", "attachment": "Arms_R" },
-	{ "name": "Head", "bone": "Head", "attachment": "Head" }
+	{ "name": "Head", "bone": "Head", "attachment": "Head" },
+	{ "name": "Arms_R", "bone": "Arm_R", "attachment": "Arms_R" }
 ],
 "skins": {
 	"default": {},
@@ -92,7 +92,75 @@
 		}
 	}
 },
+"events": {
+	"Attack": {}
+},
 "animations": {
+	"Attack": {
+		"bones": {
+			"Arm_R": {
+				"rotate": [
+					{ "time": 0, "angle": 0 },
+					{ "time": 0.2667, "angle": 132.62 },
+					{ "time": 0.5, "angle": -114.08 },
+					{ "time": 0.6667, "angle": 78.95, "curve": "stepped" },
+					{ "time": 1, "angle": 78.95 }
+				],
+				"scale": [
+					{ "time": 0, "x": 1, "y": 1, "curve": "stepped" },
+					{ "time": 0.5, "x": 1, "y": 1 },
+					{ "time": 0.6667, "x": 1.36, "y": 1, "curve": "stepped" },
+					{ "time": 1, "x": 1.36, "y": 1 }
+				]
+			},
+			"Arm_L": {
+				"rotate": [
+					{ "time": 0, "angle": 0 },
+					{ "time": 0.5, "angle": 112.63 },
+					{ "time": 0.6667, "angle": 34.34, "curve": "stepped" },
+					{ "time": 1, "angle": 34.34 }
+				],
+				"scale": [
+					{ "time": 0, "x": 1, "y": 1, "curve": "stepped" },
+					{ "time": 0.5, "x": 1, "y": 1 },
+					{ "time": 0.6667, "x": 1.14, "y": 1, "curve": "stepped" },
+					{ "time": 1, "x": 1.14, "y": 1 }
+				]
+			},
+			"Body": {
+				"rotate": [
+					{ "time": 0, "angle": 0 },
+					{ "time": 0.5, "angle": 8.09 },
+					{ "time": 1, "angle": 0 }
+				]
+			},
+			"Leg_R": {
+				"rotate": [
+					{ "time": 0, "angle": 0 },
+					{ "time": 0.5, "angle": -17.75 },
+					{ "time": 1, "angle": 0 }
+				]
+			},
+			"Leg_L": {
+				"rotate": [
+					{ "time": 0, "angle": 0 },
+					{ "time": 0.5, "angle": 16.07 },
+					{ "time": 1, "angle": 0 }
+				]
+			},
+			"Head": {
+				"rotate": [
+					{ "time": 0, "angle": 0 },
+					{ "time": 0.5, "angle": 12.33 },
+					{ "time": 0.6667, "angle": 344.69 },
+					{ "time": 1, "angle": 0 }
+				]
+			}
+		},
+		"events": [
+			{ "time": 0.6667, "name": "Attack" }
+		]
+	},
 	"Idle": {
 		"bones": {
 			"Head": {

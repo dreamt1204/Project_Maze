@@ -190,6 +190,20 @@ public static class MazeUTL {
         return neighbors;
     }
 
+    public static List<Tile> GetNeighborTilesWithoutWall(Tile org)
+    {
+        List<Tile> newList = new List<Tile>();
+        List <Tile> neighbors = GetNeighborTiles(org);
+
+        foreach (Tile tile in neighbors)
+        {
+            if (!WallBetweenNeighborTiles(org, tile))
+                newList.Add(tile);
+        }
+
+        return newList;
+    }
+
     // Get tiles using Range Data
     public static List<Tile> GetRangeTiles(Tile org, RangeData rangeData)
     {
@@ -343,12 +357,6 @@ public static class MazeUTL {
 	//---------------------------------------
 	//      Path finding
 	//---------------------------------------
-	public static List<Tile> PathRemoveStartTile(List<Tile> path)
-	{
-		path.RemoveAt(0);
-		return path;
-	}
-
 	public static List<Tile> GetShortestPath(Tile org, Tile target, int SearchRange)
 	{
 		List<Tile> shortestPath = new List<Tile> ();
@@ -368,28 +376,6 @@ public static class MazeUTL {
 		return shortestPath;
 	}
 
-	public static List<Tile> GetPathToActionRange(Tile org, Tile target, int SearchRange, int actionRange)
-	{
-		List<Tile> path = new List<Tile> ();
-
-		// Get the destination tile to apply action right on the range
-		List<Tile> tiles = GetTilesFromRegion (GetSharedDetectRegion (org, target));
-		if (tiles.Count <= 0)
-			return path;
-
-		tiles = GetTilesRightOnRange (target, tiles, actionRange);
-		if (tiles.Count <= 0)
-			return path;
-		
-		Tile destination = tiles [Random.Range (0, tiles.Count)];
-
-
-		// Get the shortest path to destination tile
-		path = GetShortestPath (org, destination, SearchRange);
-
-		return path;
-	}
-
 	public static List<List<Tile>> GetPathsToTarget(Tile org, Tile target, int SearchRange, List<Tile> currentPath)
 	{
 		List<Tile> newCurrentPath = new List<Tile>(currentPath);
@@ -401,7 +387,8 @@ public static class MazeUTL {
 		if (org == target)
 		{
 			paths.Add(newCurrentPath);
-			return paths;
+            newCurrentPath.RemoveAt(0); // Remove the start tile for unit movement
+            return paths;
 		}
 
 		// If reach the search range but not reach the target yet, stop finding and return null

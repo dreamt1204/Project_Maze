@@ -4,44 +4,108 @@ using UnityEngine;
 
 public class MonsterReachAction : MonsterBehaviour 
 {
-	//=======================================
-	//      Variables
-	//=======================================
-	protected Unit actionTarget;
-	protected int actionRange;
+    //=======================================
+    //      Variables
+    //=======================================
+    public Unit actionTarget;
+	public int actionRange;
+    public bool reached;
+    public bool turnToWarningWhileLostTarget = true;
+    public bool finishedPostReachAction;
 
-	//=======================================
-	//      Functions
-	//=======================================
-	protected override void  Start()
+    //=======================================
+    //      Functions
+    //=======================================
+    protected override void  Start()
 	{
-		actionTarget = LevelManager.instance.playerCharacter;
+        base.Start();
 
-		AddActiveAction ("TryReachActionRangeCoroutine");
+		AddActiveAction("TryReachActionRangeCoroutine");
+        AddActiveAction("PostReachActionCoroutine");
+    }
+
+    protected override void ResetBehaviour()
+    {
+        reached = false;
+        finishedPostReachAction = false;
+        actionTarget = owner.alertedTarget;
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+
+        CheckReached();
+    }
+
+    void CheckReached()
+    {
+        if (reached)
+            return;
+        if (actionTarget == null)
+            return;
+        if (!MazeUTL.CheckTargetInRangeAndDetectRegion(owner.CurrentTile, actionTarget.CurrentTile, actionRange))
+            return;
+
+        reached = true;
+    }
+
+    //---------------------------------------
+    //      Action
+    //---------------------------------------
+    IEnumerator TryReachActionRangeCoroutine()
+	{
+        if (!MazeUTL.CheckTargetInRangeAndDetectRegion(owner.CurrentTile, actionTarget.CurrentTile, actionRange))
+        {
+            List<Tile> path = MazeUTL.GetShortestPath(owner.CurrentTile, actionTarget.CurrentTile, owner.detectionRange);
+            for (int i = 0; i < path.Count; i++)
+            {
+                owner.TryMoveToTile(path[i]);
+                do
+                {
+                    yield return new WaitForSeconds(0.01f);
+                } while (owner.CurrentAction == ActionType.Walking);
+
+                if (reached)
+                    break;
+            }
+            owner.StopWalkingAnim();
+        }
+
+        SetActionFinished ("TryReachActionRangeCoroutine", true);
 	}
 
+    IEnumerator PostReachActionCoroutine()
+    {
+        // If the target is in action range, execute PostReachAction
+        if ((MazeUTL.CheckTargetInRangeAndDetectRegion(owner.CurrentTile, actionTarget.CurrentTile, actionRange)) && (actionCDTimer <= 0))
+        {
+            StartActionCD();
+            StartCoroutine("PostReachAction");
+            while (!finishedPostReachAction)
+            {
+                yield return null;
+            }
+        }
+        // If lost target, turns to Warning state
+        else if (!MazeUTL.CheckTargetInRangeAndDetectRegion(owner.CurrentTile, actionTarget.CurrentTile, owner.detectionRange))
+        {
+            if (turnToWarningWhileLostTarget)
+            {
+                yield return new WaitForSeconds(0.5f);
+                if (owner.detectingState == DetectingState.Alerted)
+                    owner.detectingState = DetectingState.Warning;
+            }
+        }
 
-	//---------------------------------------
-	//      Action
-	//---------------------------------------
-	IEnumerator TryReachActionRangeCoroutine()
-	{
-		if (actionTarget != null)
-		{
-            List<Tile> path = MazeUTL.PathRemoveStartTile (MazeUTL.GetPathToActionRange(owner.CurrentTile, actionTarget.CurrentTile, owner.detectionRange, actionRange));
-			for (int i = 0; i < path.Count; i++)
-			{
-				owner.TryMoveToTile (path [i]);
+        SetActionFinished("PostReachActionCoroutine", true);
+        yield return null;
+    }
 
-				do
-				{
-					yield return new WaitForSeconds(0.1f);
-				} while (owner.CurrentAction == ActionType.Walking);
-			}
-		}
-
-        owner.StopWalkingAnim();
-
-        SetActionFinished ("TryReachActionRangeCoroutine");
-	}
+    public virtual IEnumerator PostReachAction()
+    {
+        // override me, remember to copy the following lines.
+        finishedPostReachAction = true;
+        yield return null;
+    }
 }

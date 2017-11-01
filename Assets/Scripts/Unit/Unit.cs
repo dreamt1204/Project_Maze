@@ -32,8 +32,8 @@ public class Unit : MonoBehaviour {
 	[SerializeField] protected float health = 100;
 	[SerializeField] protected float moveSpeed = 100;
 
-	// Tile
-	protected Tile currentTile;
+    // Tile
+    protected Tile currentTile;
 
     // Action
     protected ActionType currentAction;
@@ -45,7 +45,7 @@ public class Unit : MonoBehaviour {
     // Anim
     protected bool facingRight = false;
     protected string currentAnim;
-    protected SkeletonAnimation skeletonAnim;
+    public SkeletonAnimation skeletonAnim;
     private const float walkAnimScaleMultiplier = 3f;
 
     protected bool keepWalkingAnim = false;
@@ -122,7 +122,7 @@ public class Unit : MonoBehaviour {
     {
 		if (!finishedInit)
 			return;
-
+        
 		if (playWalkingAnim)
             PlayLoopAnim("Walk");
         else
@@ -263,14 +263,22 @@ public class Unit : MonoBehaviour {
         // Child unit class can update specific BodyPart stuff here
     }
 
-	//---------------------------------------
-	//      Anim
-	//---------------------------------------
-	public void PlayLoopAnim(string animName)
+    //---------------------------------------
+    //      Anim
+    //---------------------------------------
+    public void PlayAnim(string animName)
+    {
+        if (currentAnim == animName) return;
+        
+        currentAnim = animName;
+        skeletonAnim.state.SetAnimation(1, animName, false);
+    }
+
+    public void PlayLoopAnim(string animName)
 	{
 		if (currentAnim == animName) return;
 
-		currentAnim = animName;
+        currentAnim = animName;
 		skeletonAnim.state.SetAnimation(0, animName, true);
 	}
 

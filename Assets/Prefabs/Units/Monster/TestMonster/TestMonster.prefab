@@ -11,24 +11,6 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1064335113678150}
   m_IsPrefabParent: 1
---- !u!1 &1046304288346064
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 4283914777489712}
-  - component: {fileID: 33872393835878136}
-  - component: {fileID: 23749253491500534}
-  - component: {fileID: 114630776372437562}
-  m_Layer: 0
-  m_Name: Spine GameObject (TestMonster)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &1064335113678150
 GameObject:
   m_ObjectHideFlags: 0
@@ -45,12 +27,45 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4283914777489712
+--- !u!1 &1173154749179722
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4450617068427188}
+  - component: {fileID: 33955967134355470}
+  - component: {fileID: 23799996439503828}
+  - component: {fileID: 114800497428695786}
+  m_Layer: 0
+  m_Name: Spine GameObject (TestMonster)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1840121132353432
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4767820353437488}
+  m_Layer: 0
+  m_Name: AlertedIconObj
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4450617068427188
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1046304288346064}
+  m_GameObject: {fileID: 1173154749179722}
   m_LocalRotation: {x: 0.5, y: 0, z: 0, w: 0.8660254}
   m_LocalPosition: {x: 0, y: 0.5, z: -0.5}
   m_LocalScale: {x: 1.25, y: 1.25, z: 1}
@@ -68,16 +83,30 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4283914777489712}
+  - {fileID: 4450617068427188}
+  - {fileID: 4767820353437488}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &23749253491500534
+--- !u!4 &4767820353437488
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1840121132353432}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 4, z: 6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4680874994930836}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &23799996439503828
 MeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1046304288346064}
+  m_GameObject: {fileID: 1173154749179722}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -104,12 +133,12 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!33 &33872393835878136
+--- !u!33 &33955967134355470
 MeshFilter:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1046304288346064}
+  m_GameObject: {fileID: 1173154749179722}
   m_Mesh: {fileID: 0}
 --- !u!114 &114376943140014626
 MonoBehaviour:
@@ -124,14 +153,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthMax: 100
   health: 100
-  moveSpeed: 100
+  moveSpeed: 70
   ownerType: 1
   BodyParts:
   - partType: Head
-    mustHave: 0
+    mustHave: 1
     part: {fileID: 0}
   - partType: Arms
-    mustHave: 0
+    mustHave: 1
     part: {fileID: 0}
   - partType: Body
     mustHave: 1
@@ -139,6 +168,7 @@ MonoBehaviour:
   - partType: Legs
     mustHave: 1
     part: {fileID: 0}
+  skeletonAnim: {fileID: 0}
   monsterBodyPartList:
   - partType: Head
     partList:
@@ -156,13 +186,22 @@ MonoBehaviour:
     partList:
     - {fileID: 114495352630981584, guid: cfb626c1578ce9b4a9021375adb4b227, type: 2}
     - {fileID: 114418054345478636, guid: c7f2df5e4839a324ea78b0c0cbaab1f1, type: 2}
+  alertedTarget: {fileID: 0}
+  detectionRange: 3
+  moveSpeedIdle: 0
+  moveSpeedWarning: 0
+  moveSpeedAlerted: 0
   currentBehaviour: {fileID: 0}
---- !u!114 &114630776372437562
+  passiveBehaviourList: []
+  defaultIdleBehaviour: 1
+  defaultWarningBehaviour: 1
+  defaultAlertedBehaviour: 1
+--- !u!114 &114800497428695786
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1046304288346064}
+  m_GameObject: {fileID: 1173154749179722}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d247ba06193faa74d9335f5481b2b56c, type: 3}

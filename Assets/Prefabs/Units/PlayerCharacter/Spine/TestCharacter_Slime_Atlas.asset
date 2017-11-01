@@ -11,6 +11,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6b194f808b1af6499c93410e504af42, type: 3}
   m_Name: TestCharacter_Slime_Atlas
   m_EditorClassIdentifier: 
-  atlasFile: {fileID: 4900000, guid: 99c4543b22eca404c841eb54d4304c37, type: 3}
+  atlasFile: {fileID: 4900000, guid: ffc7d1957fd0b2f4f9d4fa9d4a6032a6, type: 3}
   materials:
   - {fileID: 2100000, guid: 62ba8686c8f7cb0429c565f38e5fb65b, type: 2}
