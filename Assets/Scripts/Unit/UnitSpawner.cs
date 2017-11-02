@@ -37,7 +37,7 @@ public static class UnitSpawner {
     {
         if (LevelManager.instance.customMazeObject != null)
         {
-            if (LevelManager.instance.mazeGenerator.customMazeMonsterObjList.Count > 0)
+			if (LevelManager.instance.mazeGenerator.customMonsterSpawnerList.Count > 0)
                 SpawnMonsters_Custom();
         }
         else
@@ -48,14 +48,16 @@ public static class UnitSpawner {
 
     public static void SpawnMonsters_Custom()
     {
-        List<Monster> MonsterObjList = LevelManager.instance.mazeGenerator.customMazeMonsterObjList;
+		List<MonsterSpawner> spawners = LevelManager.instance.mazeGenerator.customMonsterSpawnerList;
 
-        foreach (Monster monster in MonsterObjList)
+		foreach (MonsterSpawner spawner in spawners)
         {
-            int X = Mathf.FloorToInt(monster.gameObject.transform.position.x / 10);
-            int Z = Mathf.FloorToInt(monster.gameObject.transform.position.z / 10);
+			Monster monster = spawner.Monsters[Random.Range(0, spawner.Monsters.Count)];
 
-            Unit unit = GameObject.Instantiate(monster.gameObject, monster.transform.position, Quaternion.Euler(0, 0, 0)).GetComponent<Unit>();
+			int X = Mathf.FloorToInt(spawner.transform.position.x / 10);
+			int Z = Mathf.FloorToInt(spawner.transform.position.z / 10);
+
+			Unit unit = GameObject.Instantiate(monster.gameObject, spawner.transform.position, Quaternion.Euler(0, 0, 0)).GetComponent<Unit>();
             unit.Init(LevelManager.instance.maze.mazeTile[X, Z]);
         }
     }

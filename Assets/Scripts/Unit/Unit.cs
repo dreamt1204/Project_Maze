@@ -45,7 +45,7 @@ public class Unit : MonoBehaviour {
     // Anim
     protected bool facingRight = false;
     protected string currentAnim;
-    public SkeletonAnimation skeletonAnim;
+	[HideInInspector] public SkeletonAnimation skeletonAnim;
     private const float walkAnimScaleMultiplier = 3f;
 
     protected bool keepWalkingAnim = false;
@@ -351,14 +351,16 @@ public class Unit : MonoBehaviour {
         float originalTimeScale = skeletonAnim.timeScale;
         skeletonAnim.timeScale = moveSpeed * 0.01f * walkAnimScaleMultiplier;
         
-        Vector3 target = targetTile.gameObject.transform.position;
-        while (Vector3.Distance(transform.position, target) > 0.25f)
+        Vector3 targetPos = targetTile.transform.position;
+		while (Vector3.Distance(transform.position, targetPos) > 0.25f)
         {
-			transform.Translate((target - transform.position).normalized * Time.deltaTime * moveSpeed * movementMultiplier);
+			transform.Translate((targetPos - transform.position).normalized * Time.deltaTime * moveSpeed * movementMultiplier);
+
+			TryUpdateCurrentTile(targetTile);
 
             yield return null;
 		}
-        transform.position = target;
+		transform.position = targetPos;
         CurrentTile = targetTile;
 
         // Reset unit state
@@ -368,6 +370,18 @@ public class Unit : MonoBehaviour {
         if (!keepWalkingAnim)
             playWalkingAnim = false;
     }
+
+	void TryUpdateCurrentTile(Tile targetTile)
+	{
+		if (CurrentTile == targetTile)
+			return;
+
+		float tileDistance = Vector3.Distance(CurrentTile.transform.position, targetTile.transform.position);
+		float unitDistance = Vector3.Distance(transform.position, targetTile.transform.position);
+
+		if ((unitDistance / tileDistance) > 0.5f)
+			CurrentTile = targetTile;
+	}
 
 	//---------------------------------------
 	//      Action

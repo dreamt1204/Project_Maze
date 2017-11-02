@@ -21,7 +21,7 @@ public class MazeGenerator : MonoBehaviour
     // Custom maze object variables
     List<GameObject> customTileObjList = new List<GameObject>();
     Dictionary<ItemType, List<TileItem>> customTileItems = new Dictionary<ItemType, List<TileItem>>();
-    public List<Monster> customMazeMonsterObjList = new List<Monster>();
+	public List<MonsterSpawner> customMonsterSpawnerList = new List<MonsterSpawner>();
 
     //=======================================
     //      Functions
@@ -395,7 +395,7 @@ public class MazeGenerator : MonoBehaviour
 		// Get wall objects / or assign floor object
 		Dictionary<int,GameObject> wall_obj_list = new Dictionary<int,GameObject>();
 
-		foreach (Transform child in tile.gameObject.transform)
+		foreach (Transform child in tile.transform)
         {
             if (child.name.Contains("Wall_"))
             {
@@ -506,7 +506,8 @@ public class MazeGenerator : MonoBehaviour
     #region Generate Detect Regions
     void GenerateDetectRegions(Maze maze)
     {
-        List<string> regionList = new List<string>();
+        // Generate regions
+		List<string> regionList = new List<string>();
 
         for (int i = 0; i < maze.mazeLength; i++)
         {
@@ -520,12 +521,13 @@ public class MazeGenerator : MonoBehaviour
 
         maze.detectRegions = regionList;
 
+		// Assign regions to each tile
         foreach (Tile tile in maze.mazeTileList)
         {
             string tileAddress = MazeUTL.GetTileAddress(tile.X, tile.Z);
             foreach (string region in regionList)
             {
-                if (region.Contains(tileAddress))
+				if (MazeUTL.CheckRegionHasAddress(region, tileAddress))
                     tile.detectRegions.Add(region);
             }
         }
@@ -813,12 +815,12 @@ public class MazeGenerator : MonoBehaviour
         foreach (Transform child in level.customMazeObject.transform)
         {
             TileItem item = child.gameObject.GetComponent<TileItem>();
-            Monster monster = child.gameObject.GetComponent<Monster>();
+			MonsterSpawner monsterSpawner = child.gameObject.GetComponent<MonsterSpawner>();
 
             // Add all the layout object from "Maze" parent object
             if (child.gameObject.name == "Maze")
             {
-                foreach (Transform layout in child.gameObject.transform)
+                foreach (Transform layout in child.transform)
                 {
                     customTileObjList.Add(layout.gameObject);
                 }
@@ -831,9 +833,9 @@ public class MazeGenerator : MonoBehaviour
 
                 customTileItems[item.itemType].Add(item);
             }
-            else if (monster != null)
+			else if (monsterSpawner != null)
             {
-                customMazeMonsterObjList.Add(monster);
+				customMonsterSpawnerList.Add(monsterSpawner);
             }
         }
     }

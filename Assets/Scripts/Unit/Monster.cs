@@ -16,7 +16,7 @@ public class Monster : Unit {
     public List<MonsterBodyPartData> monsterBodyPartList;
 
     // Detection
-	public Unit alertedTarget;
+	[HideInInspector] public Unit alertedTarget;
 	public int detectionRange = 2;
 
     DetectingState detectingState_m = DetectingState.Idle;

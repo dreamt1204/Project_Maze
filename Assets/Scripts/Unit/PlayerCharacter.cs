@@ -96,9 +96,9 @@ public class PlayerCharacter : Unit {
 
         // Init Camera
         playerCamera = GameObject.Find("PlayerCamera").GetComponent<Camera>();
-        Vector3 camPos = playerCamera.gameObject.transform.position;
-        playerCamera.gameObject.transform.position = new Vector3(camPos.x + transform.position.x, camPos.y + transform.position.y, camPos.z + transform.position.z);
-        playerCamera.gameObject.transform.parent = transform;
+        Vector3 camPos = playerCamera.transform.position;
+        playerCamera.transform.position = new Vector3(camPos.x + transform.position.x, camPos.y + transform.position.y, camPos.z + transform.position.z);
+        playerCamera.transform.parent = transform;
 
         // Init PlayerCharacter BodyParts
         InitBodyPartData("Slime");
@@ -245,5 +245,15 @@ public class PlayerCharacter : Unit {
 		RestoreHealth(CurrentTile.slimeSplit.eattingSlimeRecover);
 
 		CurrentTile.DestroyTileSlimeSplit();
+	}
+
+	//---------------------------------------
+	//      Stats
+	//---------------------------------------
+	public override void RecieveDamage(float amount)
+	{
+		base.RecieveDamage(amount);
+
+		uiManager.PlayDamagedScreenEffect();
 	}
 }

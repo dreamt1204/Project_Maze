@@ -10,7 +10,6 @@ public class MonsterReachAction : MonsterBehaviour
     public Unit actionTarget;
 	public int actionRange;
     public bool reached;
-    public bool turnToWarningWhileLostTarget = true;
     public bool finishedPostReachAction;
 
     //=======================================
@@ -78,24 +77,21 @@ public class MonsterReachAction : MonsterBehaviour
     IEnumerator PostReachActionCoroutine()
     {
         // If the target is in action range, execute PostReachAction
-        if ((MazeUTL.CheckTargetInRangeAndDetectRegion(owner.CurrentTile, actionTarget.CurrentTile, actionRange)) && (actionCDTimer <= 0))
-        {
-            StartActionCD();
-            StartCoroutine("PostReachAction");
-            while (!finishedPostReachAction)
-            {
-                yield return null;
-            }
-        }
+		if (reached)
+		{
+			StartActionCD();
+			StartCoroutine("PostReachAction");
+			while (!finishedPostReachAction)
+			{
+				yield return null;
+			}
+		}
         // If lost target, turns to Warning state
         else if (!MazeUTL.CheckTargetInRangeAndDetectRegion(owner.CurrentTile, actionTarget.CurrentTile, owner.detectionRange))
         {
-            if (turnToWarningWhileLostTarget)
-            {
-                yield return new WaitForSeconds(0.5f);
-                if (owner.detectingState == DetectingState.Alerted)
-                    owner.detectingState = DetectingState.Warning;
-            }
+			yield return new WaitForSeconds(0.5f);
+			if (owner.detectingState == DetectingState.Alerted)
+				owner.detectingState = DetectingState.Warning;
         }
 
         SetActionFinished("PostReachActionCoroutine", true);

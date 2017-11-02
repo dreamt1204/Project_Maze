@@ -79,7 +79,7 @@ public static class MazeUTL {
 
 
     //---------------------------------------
-    //      Range / Detect Region check functions
+    //      Range check functions
     //---------------------------------------
     public static bool CheckTargetInRange(Tile org, Tile target, int range)
     {
@@ -96,15 +96,66 @@ public static class MazeUTL {
         return (GetDistanceBetweenTiles(org, target) == range);
     }
 
-    public static bool CheckTargetInDetectRegion(Tile org, Tile target)
-    {
-		return (GetSharedDetectRegion(org, target) != null);
-    }
-
     public static bool CheckTargetInRangeAndDetectRegion(Tile org, Tile target, int range)
     {
         return (CheckTargetInRange(org, target, range) && CheckTargetInDetectRegion(org, target));
     }
+
+	//---------------------------------------
+	//      Region functions
+	//---------------------------------------
+	public static string GetTileAddress(int X, int Z)
+	{
+		return X + "," + Z + "/";
+	}
+
+	public static bool CheckTargetInDetectRegion(Tile org, Tile target)
+	{
+		return (GetSharedDetectRegion(org, target) != null);
+	}
+
+	public static bool CheckRegionHasAddress(string region, string targetAddress)
+	{
+		string[] addressList = region.Split('/');
+		foreach (string address in addressList)
+		{
+			if ((address + "/") == targetAddress)
+				return true;
+		}
+
+		return false;
+	}
+
+	public static string GetSharedDetectRegion(Tile org, Tile target)
+	{
+		string targetAddress = MazeUTL.GetTileAddress(target.X, target.Z);
+		foreach (string region in org.detectRegions)
+		{
+			if (CheckRegionHasAddress(region, targetAddress))
+				return region;
+		}
+		return null;
+	}
+
+	public static List<Tile> GetTilesFromRegion(string region)
+	{
+		List<Tile> tileList = new List<Tile> ();
+		string[] addressList = region.Split('/');
+
+		foreach (string address in addressList)
+		{
+			if (address == "")
+				continue;
+
+			string[] XZ = address.Split(',');
+			int X = int.Parse(XZ[0]);
+			int Z = int.Parse(XZ[1]);
+
+			tileList.Add (LevelManager.instance.maze.mazeTile [X, Z]);
+		}
+
+		return tileList;
+	}
 
     //---------------------------------------
     //      Get direction functions
@@ -312,46 +363,6 @@ public static class MazeUTL {
 
         return newList;
     }
-
-
-    //---------------------------------------
-    //      Region functions
-    //---------------------------------------
-    public static string GetTileAddress(int X, int Z)
-    {
-        return X + "," + Z + "/";
-    }
-
-    public static string GetSharedDetectRegion(Tile org, Tile target)
-	{
-		string targetAddress = MazeUTL.GetTileAddress(target.X, target.Z);
-		foreach (string region in org.detectRegions)
-		{
-			if (region.Contains(targetAddress))
-				return region;
-		}
-		return null;
-	}
-
-	public static List<Tile> GetTilesFromRegion(string region)
-	{
-		List<Tile> tileList = new List<Tile> ();
-		string[] addressList = region.Split('/');
-
-        foreach (string address in addressList)
-		{
-            if (address == "")
-                continue;
-
-            string[] XZ = address.Split(',');
-            int X = int.Parse(XZ[0]);
-            int Z = int.Parse(XZ[1]);
-
-            tileList.Add (LevelManager.instance.maze.mazeTile [X, Z]);
-		}
-
-		return tileList;
-	}
 
 
 	//---------------------------------------
