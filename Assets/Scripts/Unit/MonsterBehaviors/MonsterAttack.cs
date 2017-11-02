@@ -9,6 +9,8 @@ public class MonsterAttack : MonsterReachAction
     //=======================================
     public float attackDamage = 10;
     bool finishedAttack;
+    public float attackCDTime = 2;
+    public float attackCDTimer;
 
     //=======================================
     //      Functions
@@ -33,12 +35,17 @@ public class MonsterAttack : MonsterReachAction
     //---------------------------------------
     public override IEnumerator PostReachAction()
     {
-        owner.PlayAnim("Attack");
-
-        while (!finishedAttack)
+        if (attackCDTimer <= 0)
         {
-            yield return null;
-        }
+            StartAttackCD();
+
+            owner.PlayAnim("Attack");
+
+            while (!finishedAttack)
+            {
+                yield return null;
+            }
+        } 
 
         finishedPostReachAction = true;
         yield return null;
@@ -60,5 +67,27 @@ public class MonsterAttack : MonsterReachAction
             finishedAttack = true;
             owner.skeletonAnim.state.SetEmptyAnimation(entry.TrackIndex, 0);
         }
+    }
+
+    //---------------------------------------
+    //      Cool Down
+    //---------------------------------------
+    public void StartAttackCD()
+    {
+        attackCDTimer = attackCDTime;
+        StopCoroutine("UpdateAttackCDCoroutine");
+        StartCoroutine("UpdateAttackCDCoroutine");
+    }
+
+    IEnumerator UpdateAttackCDCoroutine()
+    {
+        while (attackCDTimer > 0)
+        {
+            attackCDTimer -= Time.deltaTime;
+            yield return null;
+        }
+
+        attackCDTimer = 0;
+        yield return null;
     }
 }

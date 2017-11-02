@@ -34,7 +34,7 @@ public class MonsterReachAction : MonsterBehaviour
     {
         base.Update();
 
-        CheckReached();
+        //CheckReached();
     }
 
     void CheckReached()
@@ -54,21 +54,27 @@ public class MonsterReachAction : MonsterBehaviour
     //---------------------------------------
     IEnumerator TryReachActionRangeCoroutine()
 	{
-        if (!MazeUTL.CheckTargetInRangeAndDetectRegion(owner.CurrentTile, actionTarget.CurrentTile, actionRange))
-        {
-            List<Tile> path = MazeUTL.GetShortestPath(owner.CurrentTile, actionTarget.CurrentTile, owner.detectionRange);
-            for (int i = 0; i < path.Count; i++)
-            {
-                owner.TryMoveToTile(path[i]);
-                do
-                {
-                    yield return new WaitForSeconds(0.01f);
-                } while (owner.CurrentAction == ActionType.Walking);
+        CheckReached();
 
-                if (reached)
-                    break;
+        if (!reached)
+        {
+            if (!MazeUTL.CheckTargetInRangeAndDetectRegion(owner.CurrentTile, actionTarget.CurrentTile, actionRange))
+            {
+                List<Tile> path = MazeUTL.GetShortestPath(owner.CurrentTile, actionTarget.CurrentTile, owner.detectionRange);
+                for (int i = 0; i < path.Count; i++)
+                {
+                    owner.TryMoveToTile(path[i]);
+                    do
+                    {
+                        CheckReached();
+                        yield return new WaitForSeconds(0.01f);
+                    } while (owner.CurrentAction == ActionType.Walking);
+
+                    if (reached)
+                        break;
+                }
+                owner.StopWalkingAnim();
             }
-            owner.StopWalkingAnim();
         }
 
         SetActionFinished ("TryReachActionRangeCoroutine", true);
@@ -79,7 +85,6 @@ public class MonsterReachAction : MonsterBehaviour
         // If the target is in action range, execute PostReachAction
 		if (reached)
 		{
-			StartActionCD();
 			StartCoroutine("PostReachAction");
 			while (!finishedPostReachAction)
 			{

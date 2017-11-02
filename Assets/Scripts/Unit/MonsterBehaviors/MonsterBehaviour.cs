@@ -15,8 +15,6 @@ public class MonsterBehaviour : MonoBehaviour {
 	// Active behaviour variables
 	[HideInInspector] public List<ActiveAction> ActiveActionList = new List<ActiveAction>();
     [HideInInspector] public bool isCoolingDown;
-    public float actionCDTime = 2;
-    public float actionCDTimer;
 
     //---------------------------------------
     //      Struct
@@ -99,26 +97,4 @@ public class MonsterBehaviour : MonoBehaviour {
 		newAction.finished = finished;
 		ActiveActionList [actionID] = newAction;
 	}
-
-    //---------------------------------------
-    //      Cool Down
-    //---------------------------------------
-    public void StartActionCD()
-    {
-        actionCDTimer = actionCDTime;
-        StopCoroutine("UpdateActionCDCoroutine");
-        StartCoroutine("UpdateActionCDCoroutine");
-    }
-
-    IEnumerator UpdateActionCDCoroutine()
-    {
-        while (actionCDTimer > 0)
-        {
-            actionCDTimer -= Time.deltaTime;
-            yield return null;
-        }
-
-        actionCDTimer = 0;
-        yield return null;
-    }
 }
