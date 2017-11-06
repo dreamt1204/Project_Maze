@@ -48,7 +48,7 @@ public class Tile : MonoBehaviour {
 	Color pulseEndColor  = new Color(1.5f, 1.5f, 0.2f);
 
     // Detect Region
-    [HideInInspector] public List<string> detectRegions = new List<string>();
+    public List<string> detectRegions = new List<string>();
 
     //---------------------------------------
     //      Properties
