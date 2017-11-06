@@ -5,12 +5,6 @@ using UnityEngine;
 public class MonsterSearch : MonsterBehaviour
 {
     //=======================================
-    //      Variables
-    //=======================================
-    const float searchSpeedMultiplier = 0.7f;
-    Unit actionTarget;
-
-    //=======================================
     //      Functions
     //=======================================
     protected override void Start()
@@ -20,11 +14,6 @@ public class MonsterSearch : MonsterBehaviour
         AddActiveAction("SearchAlertedTargetCoroutine");
     }
 
-    protected override void ResetBehaviour()
-    {
-        actionTarget = owner.alertedTarget;
-    }
-
     //---------------------------------------
     //      Action
     //---------------------------------------
@@ -32,15 +21,15 @@ public class MonsterSearch : MonsterBehaviour
     {
         Tile previousTile = owner.CurrentTile;
 
-        // Smart search till the first intersection
-        List<Tile> path = MazeUTL.GetShortestPath(owner.CurrentTile, actionTarget.CurrentTile, (owner.detectRange * 2));
+        // Smart search till the first intersection or being alerted
+        List<Tile> path = MazeUTL.GetShortestPath(owner.CurrentTile, owner.alertedTarget.CurrentTile, (owner.searchRange));
         for (int i = 0; i < path.Count; i++)
         {
             previousTile = owner.CurrentTile;
             owner.TryMoveToTile(path[i]);
             do
             {
-                yield return new WaitForSeconds(0.05f);
+                yield return new WaitForSeconds(0.01f);
             } while (owner.CurrentAction == ActionType.Walking);
 
             if ((owner.detectState == DetectState.Alerted))

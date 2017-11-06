@@ -7,10 +7,7 @@ public class MonsterPatrol : MonsterBehaviour
     //=======================================
     //      Variables
     //=======================================
-    const float patrolSpeedMultiplier = 0.4f;
     float idleTimer;
-    const float idleTime_Min = 1.0f;
-    const float idleTime_Max = 4.0f;
 
     //=======================================
     //      Functions
@@ -28,7 +25,7 @@ public class MonsterPatrol : MonsterBehaviour
     IEnumerator PatrolToNeighborCoroutine()
     {
         // Idle for random seconds
-        idleTimer = Random.Range(idleTime_Min, idleTime_Max);
+        idleTimer = Random.Range(owner.idleTimeMin, owner.idleTimeMax);
         while (idleTimer > 0)
         {
             //Debug.Log(idleTimer);

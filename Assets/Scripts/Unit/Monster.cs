@@ -22,18 +22,21 @@ public class Monster : Unit {
 	UIWorldSprite detectStateIcon;
 
 	[Header("Detection")]
-	public int detectRange = 2;
+	public int detectRange = 3;
 
 	[Header("Default Idle")]
 	public float moveSpeedIdle;
 	public bool defaultPatrol = true;
+    public float idleTimeMin = 1.0f;
+    public float idleTimeMax = 4.0f;
 
-	[Header("Default Warning")]
+    [Header("Default Warning")]
 	public float moveSpeedWarning;
 	public float WarningCDTime = 10;
 	public bool defaultSearch = true;
+    public int searchRange = 6;
 
-	[Header("Default Alerted")]
+    [Header("Default Alerted")]
 	public float moveSpeedAlerted;
 	public float AlertedCDTime = 10;
 	public bool defaultAttack = true;
@@ -78,30 +81,30 @@ public class Monster : Unit {
     // Use this for initialization
     public override void Init(Tile spawnTile)
     {
+        InitDetectStateIcon();
         InitMoveSpeed();
-		InitDetectStateIcon();
         InitMonsterBehaviours();
 
         base.Init(spawnTile);
     }
 
+    void InitDetectStateIcon()
+    {
+        detectStateIcon = transform.Find("DetectStateHUD").GetComponent<UIWorldSprite>();
+        detectStateIcon.Init();
+        UpdateDetectStateIcon(detectState);
+    }
+
     void InitMoveSpeed()
     {
         if (moveSpeedIdle <= 0)
-            moveSpeedIdle = MoveSpeed * 0.4f;
+            moveSpeedIdle = MoveSpeed * 0.5f;
         if (moveSpeedWarning <= 0)
-            moveSpeedWarning = MoveSpeed * 0.7f;
+            moveSpeedWarning = MoveSpeed * 0.75f;
 
         moveSpeedAlerted = MoveSpeed;
 
 		UpdateMoveSpeed(detectState);
-    }
-
-	void InitDetectStateIcon()
-    {
-		detectStateIcon = transform.Find("DetectStateHUD").GetComponent<UIWorldSprite>();
-		detectStateIcon.Init();
-		UpdateDetectStateIcon(detectState);
     }
 
 	void InitMonsterBehaviours()
@@ -135,12 +138,10 @@ public class Monster : Unit {
 			if (data.part.monsterBehaviour == null)
 				continue;
 
-
 			System.Type behaviourScriptType = System.Type.GetType (data.part.monsterBehaviour.name);
 			MonsterBehaviour partBehaviour = (MonsterBehaviour)gameObject.AddComponent(behaviourScriptType);
 			partBehaviour.owner = this;
 			activeBehaviourList [data.part.monsterBehaviour.detectingStateType].Add (partBehaviour);
-
 		}
     }
 
@@ -152,7 +153,7 @@ public class Monster : Unit {
         base.Update();
 
         // If player gets caught by this Monster, change its detecting state to "Alerted".
-        UpdateDetectingState();
+        UpdateDetectState();
 
         // If this Monster doesn't have any current behaviour, pick one and execute the behaviour.
         UpdateMonsterBehaviour();
@@ -161,12 +162,10 @@ public class Monster : Unit {
     //---------------------------------------
     //      Detection Logic
     //---------------------------------------
-    void UpdateDetectingState()
+    void UpdateDetectState()
     {
 		if (MazeUTL.CheckTargetInRangeAndDetectRegion (CurrentTile, level.playerCharacter.CurrentTile, detectRange))
-		{
-			detectState = DetectState.Alerted;
-		}   
+            detectState = DetectState.Alerted;
     }
 
 	public void UpdateDetectStateIcon(DetectState state)

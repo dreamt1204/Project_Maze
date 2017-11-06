@@ -13,17 +13,17 @@ public static class Formula
 {
     public static int CalculateMazeSideSize(int mazeDifficulty)
     {
-		return 20;
+		return 25;
     }
 
     public static int Calculate2x2SquareNum(int mazeDifficulty)
     {
-		return 10;
+		return 15;
     }
 
     public static int Calculate3x3SquareNum(int mazeDifficulty)
     {
-		return 3;
+		return 5;
     }
 
     public static int CalculateObjectiveLeastDistance(int mazeDifficulty)
@@ -31,19 +31,14 @@ public static class Formula
         return (int)Mathf.Floor(MazeUTL.GetMazeShortestSide() / 2);		// 10
     }
 
-	public static int CalculateObjectiveLeastSteps(int mazeDifficulty)
-	{
-		return 10;
-	}
-
     public static int CalculateHealthPackNum(int mazeDifficulty)
     {
-		return 12;
+		return 16;
     }
 
     public static int CalculateBodyPartChestNum(int mazeDifficulty)
     {
-        return 1;
+        return 4;
     }
 
 	public static int CalculateCompassNum(int mazeDifficulty)
@@ -53,17 +48,17 @@ public static class Formula
 
 	public static int CalculateItemLeastDistance(int mazeDifficulty)
 	{
-		return 3;
+		return 4;
 	}
 
     public static int CalculateMonsterNum(int mazeDifficulty)
     {
-		return 8;
+		return 12;
     }
 
 	public static int CalculateMonsterPlayerLeastDistance(int mazeDifficulty)
 	{
-		return 8;
+		return 10;
 	}
 
     public static int CalculateMonsterLeastDistance(int mazeDifficulty)

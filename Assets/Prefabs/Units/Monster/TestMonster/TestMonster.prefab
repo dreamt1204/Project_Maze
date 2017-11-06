@@ -112,7 +112,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1607374810173176}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 4, z: 6}
+  m_LocalPosition: {x: 0, y: 6, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4680874994930836}
@@ -141,7 +141,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1840121132353432}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4, z: 6}
+  m_LocalPosition: {x: 0, y: 6, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4680874994930836}
@@ -153,9 +153,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1868046900505514}
-  m_LocalRotation: {x: 0.5, y: -0, z: -0, w: 0.8660254}
-  m_LocalPosition: {x: 0, y: 0.5, z: -0.5}
-  m_LocalScale: {x: 1.25, y: 1.25, z: 1}
+  m_LocalRotation: {x: 0.4226183, y: 0, z: 0, w: 0.9063078}
+  m_LocalPosition: {x: 0, y: 0.5, z: -3}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children:
   - {fileID: 4450617068427188}
   m_Father: {fileID: 4680874994930836}
@@ -246,12 +246,15 @@ MonoBehaviour:
     - {fileID: 114495352630981584, guid: cfb626c1578ce9b4a9021375adb4b227, type: 2}
     - {fileID: 114418054345478636, guid: c7f2df5e4839a324ea78b0c0cbaab1f1, type: 2}
   alertedTarget: {fileID: 0}
-  detectRange: 2
+  detectRange: 3
   moveSpeedIdle: 0
   defaultPatrol: 1
+  idleTimeMin: 1
+  idleTimeMax: 4
   moveSpeedWarning: 0
   WarningCDTime: 10
   defaultSearch: 1
+  searchRange: 6
   moveSpeedAlerted: 0
   AlertedCDTime: 10
   defaultAttack: 1

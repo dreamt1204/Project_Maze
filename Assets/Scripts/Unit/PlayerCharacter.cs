@@ -246,14 +246,4 @@ public class PlayerCharacter : Unit {
 
 		CurrentTile.DestroyTileSlimeSplit();
 	}
-
-	//---------------------------------------
-	//      Stats
-	//---------------------------------------
-	public override void RecieveDamage(float amount)
-	{
-		base.RecieveDamage(amount);
-
-		//uiManager.PlayDamagedScreenEffect();
-	}
 }

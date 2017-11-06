@@ -30,13 +30,6 @@ public class MonsterReachAction : MonsterBehaviour
         actionTarget = owner.alertedTarget;
     }
 
-    protected override void Update()
-    {
-        base.Update();
-
-        //CheckReached();
-    }
-
     void CheckReached()
     {
         if (reached)

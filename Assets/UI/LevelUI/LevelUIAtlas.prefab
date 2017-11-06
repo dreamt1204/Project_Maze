@@ -54,8 +54,8 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 35d0bedc8216a3f4c8e07a609d77e81e, type: 2}
   mSprites:
   - name: Amulet-Icon
-    x: 3225
-    y: 1773
+    x: 3293
+    y: 2973
     width: 580
     height: 522
     borderLeft: 0
@@ -67,8 +67,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Arrow-Down-Icon
-    x: 2589
-    y: 1963
+    x: 535
+    y: 2500
     width: 534
     height: 302
     borderLeft: 0
@@ -80,8 +80,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Arrow-Left-Icon
-    x: 3743
-    y: 3568
+    x: 0
+    y: 1862
     width: 306
     height: 528
     borderLeft: 0
@@ -93,8 +93,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Arrow-Right-Icon
-    x: 0
-    y: 1314
+    x: 307
+    y: 1862
     width: 306
     height: 528
     borderLeft: 0
@@ -106,8 +106,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Arrow-Up-Icon
-    x: 2054
-    y: 2168
+    x: 0
+    y: 2500
     width: 534
     height: 302
     borderLeft: 0
@@ -118,22 +118,9 @@ MonoBehaviour:
     paddingRight: 0
     paddingTop: 0
     paddingBottom: 0
-  - name: BloodOverlay-2
-    x: 2049
-    y: 3072
-    width: 1024
-    height: 1024
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
-    paddingLeft: 0
-    paddingRight: 0
-    paddingTop: 0
-    paddingBottom: 0
   - name: Circle
-    x: 2054
-    y: 1766
+    x: 1070
+    y: 2401
     width: 401
     height: 401
     borderLeft: 0
@@ -145,8 +132,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Clock-Basic-Icon
-    x: 0
-    y: 2276
+    x: 3293
+    y: 2446
     width: 526
     height: 526
     borderLeft: 0
@@ -158,8 +145,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Colors
-    x: 2456
-    y: 1927
+    x: 0
+    y: 2464
     width: 578
     height: 35
     borderLeft: 0
@@ -171,8 +158,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Compass-Arrow
-    x: 3820
-    y: 2477
+    x: 3225
+    y: 2459
     width: 63
     height: 467
     borderLeft: 0
@@ -184,8 +171,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 79
   - name: Compass-Background
-    x: 1108
-    y: 2297
+    x: 2049
+    y: 2391
     width: 505
     height: 505
     borderLeft: 0
@@ -210,8 +197,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Hands-Icon
-    x: 527
-    y: 1871
+    x: 2555
+    y: 1995
     width: 517
     height: 469
     borderLeft: 0
@@ -223,8 +210,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Head-Icon
-    x: 1045
-    y: 1808
+    x: 3451
+    y: 1517
     width: 373
     height: 488
     borderLeft: 0
@@ -236,8 +223,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Heart-Icon
-    x: 0
-    y: 1843
+    x: 3073
+    y: 2013
     width: 478
     height: 432
     borderLeft: 0
@@ -249,8 +236,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Heart-Outline-Icon
-    x: 3225
-    y: 2296
+    x: 2049
+    y: 2897
     width: 594
     height: 538
     borderLeft: 0
@@ -262,8 +249,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 1
   - name: Icon-Alerted
-    x: 3884
-    y: 2614
+    x: 2555
+    y: 2566
     width: 84
     height: 330
     borderLeft: 0
@@ -275,8 +262,8 @@ MonoBehaviour:
     paddingTop: 121
     paddingBottom: 121
   - name: Icon-Warning
-    x: 3806
-    y: 1965
+    x: 3820
+    y: 2642
     width: 222
     height: 330
     borderLeft: 0
@@ -288,8 +275,8 @@ MonoBehaviour:
     paddingTop: 121
     paddingBottom: 121
   - name: Legs-Icon
-    x: 3675
-    y: 2945
+    x: 3073
+    y: 1522
     width: 377
     height: 490
     borderLeft: 0
@@ -301,8 +288,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Line
-    x: 1614
-    y: 2477
+    x: 0
+    y: 2462
     width: 400
     height: 1
     borderLeft: 0
@@ -314,8 +301,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Movement-Icon-White
-    x: 1614
-    y: 2031
+    x: 3552
+    y: 2006
     width: 439
     height: 439
     borderLeft: 0
@@ -327,8 +314,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Radiobutton-Dark-Skin
-    x: 3675
-    y: 2883
+    x: 2555
+    y: 2504
     width: 61
     height: 61
     borderLeft: 0
@@ -340,8 +327,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Radiobutton-Light-Skin
-    x: 3737
-    y: 2883
+    x: 2644
+    y: 3374
     width: 61
     height: 61
     borderLeft: 0
@@ -353,7 +340,7 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Rectangle
-    x: 3074
+    x: 2049
     y: 3436
     width: 668
     height: 660
@@ -366,8 +353,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Rectangle-Basic
-    x: 2049
-    y: 2471
+    x: 2718
+    y: 3496
     width: 600
     height: 600
     borderLeft: 0
@@ -379,8 +366,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Rectangle-Rounded
-    x: 3074
-    y: 2835
+    x: 3319
+    y: 3496
     width: 600
     height: 600
     borderLeft: 0
@@ -392,8 +379,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Settings-Icon
-    x: 2650
-    y: 2266
+    x: 2718
+    y: 2927
     width: 574
     height: 568
     borderLeft: 0
@@ -405,8 +392,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Slime
-    x: 1614
-    y: 2479
+    x: 0
+    y: 1538
     width: 429
     height: 323
     borderLeft: 0
@@ -418,8 +405,8 @@ MonoBehaviour:
     paddingTop: 95
     paddingBottom: 94
   - name: Slime_Eat
-    x: 1419
-    y: 1707
+    x: 614
+    y: 2176
     width: 429
     height: 323
     borderLeft: 0
@@ -431,8 +418,8 @@ MonoBehaviour:
     paddingTop: 95
     paddingBottom: 94
   - name: Slime_Split
-    x: 479
-    y: 1449
+    x: 0
+    y: 1100
     width: 429
     height: 421
     borderLeft: 0
@@ -444,8 +431,8 @@ MonoBehaviour:
     paddingTop: 32
     paddingBottom: 59
   - name: Torso-Icon
-    x: 527
-    y: 2341
+    x: 2644
+    y: 2465
     width: 580
     height: 461
     borderLeft: 0

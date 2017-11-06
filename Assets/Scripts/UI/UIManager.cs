@@ -36,8 +36,6 @@ public class UIManager : MonoBehaviour
     [HideInInspector] public UISprite slimeDragButtonSprite;
     [HideInInspector] public UIWidget slimeStateSelectWidget;
 
-	private UITweener damageOverlay;
-
     [HideInInspector] public UIWidget compassWidget;
 	[HideInInspector] public UISprite compassSprite;
 
@@ -77,8 +75,6 @@ public class UIManager : MonoBehaviour
         slimeDragButtonSprite = GameObject.Find("Sprite_Slime").GetComponent<UISprite>();
         slimeStateSelectWidget = GameObject.Find("Widget_SlimeStateSelect").GetComponent<UIWidget>();
         slimeStateSelectWidget.alpha = 0;
-
-        damageOverlay = GameObject.Find("Sprite_DamageOverlay").GetComponent<UITweener>();
 
         compassWidget = GameObject.Find("Widget_Compass").GetComponent<UIWidget>();
 		compassWidget.alpha = 0;
@@ -208,16 +204,6 @@ public class UIManager : MonoBehaviour
 
         return hasSprite;
     }
-
-    //---------------------------------------
-    //      Damage Overlay
-    //---------------------------------------
-    public void PlayDamagedScreenEffect()
-	{
-        damageOverlay.ResetToBeginning();
-        damageOverlay.PlayForward();
-    }
- 
 
 	//---------------------------------------
 	//      Slime Health
