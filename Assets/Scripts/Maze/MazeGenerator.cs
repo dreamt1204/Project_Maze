@@ -31,13 +31,13 @@ public class MazeGenerator : MonoBehaviour
 		level = LevelManager.instance;
 	}
 
-    public Maze GenerateMaze()
+    public void GenerateMaze()
     {
-        Maze maze = BuildMaze();
-        GenerateDetectRegions(maze);
-        GenerateMazeItems(maze);
+        Maze newMaze = BuildMaze();
 
-        return maze;
+		level.maze = newMaze;
+		GenerateDetectRegions(newMaze);
+		GenerateMazeItems(newMaze);
     }
 
     #region Build Maze Layout
@@ -752,7 +752,7 @@ public class MazeGenerator : MonoBehaviour
         List<Tile> orgs = new List<Tile>();
         orgs.Add(level.tileStart);
         List<Tile> tileList = MazeUTL.UpdateTileListOutOfRange(maze.mazeTileList, orgs, Formula.CalculateObjectiveLeastDistance(LevelManager.instance.mazeDifficulty));
-        tileList = MazeUTL.UpdateTileListWithDesiredWallLayout(tileList, WallLayout.C);
+		tileList = MazeUTL.UpdateTileListWithDesiredWallLayout(tileList, WallLayout.C);
         Tile tile = MazeUTL.GetRandomTileFromList(tileList);
 
         tile.SpawnTileItem(level.objectivePrefab);

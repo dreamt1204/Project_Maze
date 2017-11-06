@@ -189,5 +189,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Health Pack
   itemType: 2
-  healAmount: 10
+  healAmount: 20
   bodyPart: {fileID: 0}
+  compassDuration: 0

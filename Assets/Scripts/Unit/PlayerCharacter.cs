@@ -254,6 +254,6 @@ public class PlayerCharacter : Unit {
 	{
 		base.RecieveDamage(amount);
 
-		uiManager.PlayDamagedScreenEffect();
+		//uiManager.PlayDamagedScreenEffect();
 	}
 }

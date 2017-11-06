@@ -72,7 +72,7 @@ public class LevelManager : MonoBehaviour {
 	void Start()
 	{
 		// Generate a maze
-		maze = mazeGenerator.GenerateMaze();
+		mazeGenerator.GenerateMaze();
 
 		// Spawn enemies
 		// (WIP......)

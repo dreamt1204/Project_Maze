@@ -7,7 +7,7 @@ public class MonsterAttack : MonsterReachAction
     //=======================================
     //      Variables
     //=======================================
-    public float attackDamage = 10;
+    public float attackDamage = 20;
     bool finishedAttack;
     public float attackCDTime = 2;
     public float attackCDTimer;

@@ -67,15 +67,16 @@ public static class UnitSpawner {
         List<Tile> spawnTiles = new List<Tile>();
 
         int monsterNum = Formula.CalculateMonsterNum(LevelManager.instance.mazeDifficulty);
-        int distance = Formula.CalculateMonsterLeastDistance(LevelManager.instance.mazeDifficulty);
-        List<Tile> oldList = LevelManager.instance.maze.mazeTileList;
+		int distancePlayer = Formula.CalculateMonsterPlayerLeastDistance(LevelManager.instance.mazeDifficulty);
+        int distanceMonster = Formula.CalculateMonsterLeastDistance(LevelManager.instance.mazeDifficulty);
         List<Tile> exclusiveTiles = new List<Tile>();
-
         exclusiveTiles.Add(LevelManager.instance.tileStart);
+
+		List<Tile> oldList = MazeUTL.UpdateTileListOutOfRange(LevelManager.instance.maze.mazeTileList, exclusiveTiles, distancePlayer);
 
         for (int i = 0; i < monsterNum; i++)
         {
-            oldList = MazeUTL.UpdateTileListOutOfRange(oldList, exclusiveTiles, distance);
+			oldList = MazeUTL.UpdateTileListOutOfRange(oldList, exclusiveTiles, distanceMonster);
 
             Tile spawnTile = oldList[Random.Range(0, oldList.Count)];
             spawnTiles.Add(spawnTile);

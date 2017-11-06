@@ -301,11 +301,10 @@ public static class MazeUTL {
         return newList;
     }
 
-
     //---------------------------------------
     //      Update tile list
     //---------------------------------------
-    // Get tiles 'distance' away from the org tiles
+	// Get tiles 'range' away from the org tiles
     public static List<Tile> UpdateTileListOutOfRange(List<Tile> oldList, List<Tile> orgs, int range)
     {
         if (orgs.Count <= 0)
@@ -414,7 +413,7 @@ public static class MazeUTL {
 			if (WallOnDir(org, i))
 				continue;
 
-			if (newCurrentPath.Contains((GetDirNeighborTile(org, i))))
+			if (GetDirNeighborTile(org, i) != null && newCurrentPath.Contains(GetDirNeighborTile(org, i)))
 				continue;
 
 			continueDir.Add(i);

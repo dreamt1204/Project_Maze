@@ -361,7 +361,9 @@ public class Unit : MonoBehaviour {
             yield return null;
 		}
 		transform.position = targetPos;
-        CurrentTile = targetTile;
+
+		if (CurrentTile != targetTile)
+        	CurrentTile = targetTile;
 
         // Reset unit state
         skeletonAnim.timeScale = originalTimeScale;
@@ -379,7 +381,7 @@ public class Unit : MonoBehaviour {
 		float tileDistance = Vector3.Distance(CurrentTile.transform.position, targetTile.transform.position);
 		float unitDistance = Vector3.Distance(transform.position, targetTile.transform.position);
 
-		if ((unitDistance / tileDistance) > 0.5f)
+		if ((unitDistance / tileDistance) < 0.5f)
 			CurrentTile = targetTile;
 	}
 

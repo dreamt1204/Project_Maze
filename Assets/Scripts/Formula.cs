@@ -13,42 +13,42 @@ public static class Formula
 {
     public static int CalculateMazeSideSize(int mazeDifficulty)
     {
-        return (10 + (mazeDifficulty - 1) * 5);
+		return 20;
     }
 
     public static int Calculate2x2SquareNum(int mazeDifficulty)
     {
-        int width = CalculateMazeSideSize(mazeDifficulty);
-        return Mathf.FloorToInt((width * width) / 50);
+		return 10;
     }
 
     public static int Calculate3x3SquareNum(int mazeDifficulty)
     {
-        int width = CalculateMazeSideSize(mazeDifficulty);
-        return Mathf.FloorToInt((width * width) / 200);
+		return 3;
     }
 
     public static int CalculateObjectiveLeastDistance(int mazeDifficulty)
     {
-        return (int)Mathf.Floor(MazeUTL.GetMazeShortestSide() / 2);
+        return (int)Mathf.Floor(MazeUTL.GetMazeShortestSide() / 2);		// 10
     }
+
+	public static int CalculateObjectiveLeastSteps(int mazeDifficulty)
+	{
+		return 10;
+	}
 
     public static int CalculateHealthPackNum(int mazeDifficulty)
     {
-        int width = CalculateMazeSideSize(mazeDifficulty);
-        return Mathf.FloorToInt((width * width) / 100);
+		return 12;
     }
 
     public static int CalculateBodyPartChestNum(int mazeDifficulty)
     {
-        int numItems = Mathf.CeilToInt(CalculateMazeSideSize(mazeDifficulty) / 10.0f);
-        return numItems;
+        return 1;
     }
 
 	public static int CalculateCompassNum(int mazeDifficulty)
 	{
-		int width = CalculateMazeSideSize(mazeDifficulty);
-		return (Mathf.FloorToInt((width * width) / 1500) + 1);
+		return 2;
 	}
 
 	public static int CalculateItemLeastDistance(int mazeDifficulty)
@@ -58,11 +58,16 @@ public static class Formula
 
     public static int CalculateMonsterNum(int mazeDifficulty)
     {
-        return mazeDifficulty;
+		return 8;
     }
+
+	public static int CalculateMonsterPlayerLeastDistance(int mazeDifficulty)
+	{
+		return 8;
+	}
 
     public static int CalculateMonsterLeastDistance(int mazeDifficulty)
     {
-        return 7;
+        return 6;
     }
 }
