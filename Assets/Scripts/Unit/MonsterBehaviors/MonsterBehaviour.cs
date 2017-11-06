@@ -9,7 +9,7 @@ public class MonsterBehaviour : MonoBehaviour {
 	[HideInInspector] public Monster owner;
 
     public bool isPassiveBehavior = false;
-    public DetectingState detectingStateType = DetectingState.Alerted;
+    public DetectState detectingStateType = DetectState.Alerted;
     public int behaviourPriority;
 
 	// Active behaviour variables

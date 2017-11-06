@@ -32,7 +32,7 @@ public class MonsterPatrol : MonsterBehaviour
         while (idleTimer > 0)
         {
             //Debug.Log(idleTimer);
-            if (owner.detectingState != DetectingState.Idle)
+            if (owner.detectState != DetectState.Idle)
                 break;
 
             idleTimer -= Time.deltaTime;
@@ -40,7 +40,7 @@ public class MonsterPatrol : MonsterBehaviour
         }
 
         // Patrol to a random neighbor
-        if (owner.detectingState == DetectingState.Idle)
+        if (owner.detectState == DetectState.Idle)
         {
             List<Tile> neighbors = MazeUTL.GetNeighborTilesWithoutWall(owner.CurrentTile);
             Tile targetTile = MazeUTL.GetRandomTileFromList(neighbors);

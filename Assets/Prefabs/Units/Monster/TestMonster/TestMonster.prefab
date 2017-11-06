@@ -53,8 +53,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4767820353437488}
+  - component: {fileID: 114729757250188118}
   m_Layer: 0
-  m_Name: AlertedIconObj
+  m_Name: DetectStateHUD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -94,9 +95,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1064335113678150}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.0015625, y: 0.0015625, z: 0.0015625}
   m_Children:
   - {fileID: 4918733132274222}
   - {fileID: 4767820353437488}
@@ -181,7 +182,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthMax: 100
-  health: 100
   moveSpeed: 70
   ownerType: 1
   BodyParts:
@@ -216,15 +216,31 @@ MonoBehaviour:
     - {fileID: 114495352630981584, guid: cfb626c1578ce9b4a9021375adb4b227, type: 2}
     - {fileID: 114418054345478636, guid: c7f2df5e4839a324ea78b0c0cbaab1f1, type: 2}
   alertedTarget: {fileID: 0}
-  detectionRange: 2
+  detectRange: 2
   moveSpeedIdle: 0
+  defaultPatrol: 1
   moveSpeedWarning: 0
+  WarningCDTime: 10
+  defaultSearch: 1
   moveSpeedAlerted: 0
+  AlertedCDTime: 10
+  defaultAttack: 1
   currentBehaviour: {fileID: 0}
   passiveBehaviourList: []
-  defaultIdleBehaviour: 1
-  defaultWarningBehaviour: 1
-  defaultAlertedBehaviour: 1
+--- !u!114 &114729757250188118
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1840121132353432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96d4ba2af7a6741e3a601334002bf316, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 0
+  widgetWidth: 60
+  widgetHeight: 60
 --- !u!114 &114800497428695786
 MonoBehaviour:
   m_ObjectHideFlags: 1

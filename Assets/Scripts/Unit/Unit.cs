@@ -27,18 +27,23 @@ public class Unit : MonoBehaviour {
 	// Flags
 	protected bool finishedInit;
 
+	// Const
+	private const float movementMultiplier = 0.15f;
+
     // Stat
+	[Header("Stat")]
 	[SerializeField] protected float healthMax = 100;
-	[SerializeField] protected float health = 100;
+	protected float health_m;
 	[SerializeField] protected float moveSpeed = 100;
 
-    // Tile
-    protected Tile currentTile;
+	// Tile
+	protected Tile currentTile;
 
-    // Action
-    protected ActionType currentAction;
+	// ACtion
+	protected ActionType currentAction;
 
-    // Body Part
+	// Body Part
+	[Header("Body Part")]
     public BodyPartOwnerType ownerType;
     public List<BodyPartData> BodyParts;
 
@@ -51,9 +56,6 @@ public class Unit : MonoBehaviour {
     protected bool keepWalkingAnim = false;
     protected bool playWalkingAnim = false;
 
-    // Const
-    private const float movementMultiplier = 0.15f;
-
     //---------------------------------------
     //      Properties
     //---------------------------------------
@@ -61,11 +63,11 @@ public class Unit : MonoBehaviour {
 	{
 		get
 		{
-			return health;
+			return health_m;
 		}
 		set
 		{
-			health = Mathf.Clamp (value, 0, healthMax);
+			health_m = Mathf.Clamp (value, 0, healthMax);
 		}
 	}
 	public virtual float MoveSpeed
@@ -111,6 +113,8 @@ public class Unit : MonoBehaviour {
 	{
         level = LevelManager.instance;
         skeletonAnim = GetComponentInChildren<SkeletonAnimation>();
+
+		Health = healthMax;
 
         CurrentTile = spawnTile;
         InitBody();

@@ -60,7 +60,7 @@ public class MonsterReachAction : MonsterBehaviour
         {
             if (!MazeUTL.CheckTargetInRangeAndDetectRegion(owner.CurrentTile, actionTarget.CurrentTile, actionRange))
             {
-                List<Tile> path = MazeUTL.GetShortestPath(owner.CurrentTile, actionTarget.CurrentTile, owner.detectionRange);
+                List<Tile> path = MazeUTL.GetShortestPath(owner.CurrentTile, actionTarget.CurrentTile, owner.detectRange);
                 for (int i = 0; i < path.Count; i++)
                 {
                     owner.TryMoveToTile(path[i]);
@@ -92,11 +92,11 @@ public class MonsterReachAction : MonsterBehaviour
 			}
 		}
         // If lost target, turns to Warning state
-        else if (!MazeUTL.CheckTargetInRangeAndDetectRegion(owner.CurrentTile, actionTarget.CurrentTile, owner.detectionRange))
+        else if (!MazeUTL.CheckTargetInRangeAndDetectRegion(owner.CurrentTile, actionTarget.CurrentTile, owner.detectRange))
         {
 			yield return new WaitForSeconds(0.5f);
-			if (owner.detectingState == DetectingState.Alerted)
-				owner.detectingState = DetectingState.Warning;
+			if (owner.detectState == DetectState.Alerted)
+				owner.detectState = DetectState.Warning;
         }
 
         SetActionFinished("PostReachActionCoroutine", true);

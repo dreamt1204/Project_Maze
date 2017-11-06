@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum DetectingState
+public enum DetectState
 {
     Idle,
     Warning,
@@ -13,30 +13,35 @@ public class Monster : Unit {
     //=======================================
     //      Variables
     //=======================================
+	// Body Part List
     public List<MonsterBodyPartData> monsterBodyPartList;
 
     // Detection
+	DetectState detectState_m = DetectState.Idle;
 	[HideInInspector] public Unit alertedTarget;
-	public int detectionRange = 2;
+	WorldHUD detectStateIcon;
 
-    DetectingState detectingState_m = DetectingState.Idle;
-    const float detectionCDTime_Warning = 10;
-    const float detectionCDTime_Alerted = 5;
+	[Header("Detection")]
+	public int detectRange = 2;
 
-    AlertedIcon alertedIcon;
+	[Header("Default Idle")]
+	public float moveSpeedIdle;
+	public bool defaultPatrol = true;
 
-    // Stat
-    public float moveSpeedIdle;
-    public float moveSpeedWarning;
-    public float moveSpeedAlerted;
+	[Header("Default Warning")]
+	public float moveSpeedWarning;
+	public float WarningCDTime = 10;
+	public bool defaultSearch = true;
+
+	[Header("Default Alerted")]
+	public float moveSpeedAlerted;
+	public float AlertedCDTime = 10;
+	public bool defaultAttack = true;
 
     // Monster Behavior
     [HideInInspector] public MonsterBehaviour currentBehaviour;
-    [HideInInspector] public Dictionary<DetectingState, List<MonsterBehaviour>> activeBehaviourList = new Dictionary<DetectingState, List<MonsterBehaviour>>();
+    [HideInInspector] public Dictionary<DetectState, List<MonsterBehaviour>> activeBehaviourList = new Dictionary<DetectState, List<MonsterBehaviour>>();
 	[HideInInspector] public List<MonsterBehaviour> passiveBehaviourList = new List<MonsterBehaviour>();
-    public bool defaultIdleBehaviour = true;
-    public bool defaultWarningBehaviour = true;
-    public bool defaultAlertedBehaviour = true;
 
     //---------------------------------------
     //      Struct
@@ -51,19 +56,19 @@ public class Monster : Unit {
     //---------------------------------------
     //      Properties
     //---------------------------------------
-    public DetectingState detectingState
+    public DetectState detectState
     {
         get
         {
-            return detectingState_m;
+            return detectState_m;
         }
         set
         {
-            detectingState_m = value;
+            detectState_m = value;
             StartCoolDownDetectionLevel();
             UpdateAlertedTarget();
-            alertedIcon.UpdateIconSprite(value);
-            UpdateMoveSpeed();
+			UpdateDetectStateIcon(value);
+			UpdateMoveSpeed(value);
         }
     }
 
@@ -74,7 +79,7 @@ public class Monster : Unit {
     public override void Init(Tile spawnTile)
     {
         InitMoveSpeed();
-        InitAlertedIcon();
+		InitDetectStateIcon();
         InitMonsterBehaviours();
 
         base.Init(spawnTile);
@@ -88,35 +93,38 @@ public class Monster : Unit {
             moveSpeedWarning = MoveSpeed * 0.7f;
 
         moveSpeedAlerted = MoveSpeed;
+
+		UpdateMoveSpeed(detectState);
     }
 
-    void InitAlertedIcon()
+	void InitDetectStateIcon()
     {
-        alertedIcon = ((GameObject)Instantiate(Resources.Load("Sprite_AlertedIcon"))).GetComponent<AlertedIcon>();
-        alertedIcon.Init(this);
+		detectStateIcon = transform.Find("DetectStateIcon").GetComponent<WorldHUD>();
+		detectStateIcon.Init();
+		UpdateDetectStateIcon(detectState);
     }
 
 	void InitMonsterBehaviours()
 	{
-		activeBehaviourList.Add(DetectingState.Idle, new List<MonsterBehaviour>());
-		activeBehaviourList.Add(DetectingState.Warning, new List<MonsterBehaviour>());
-		activeBehaviourList.Add(DetectingState.Alerted, new List<MonsterBehaviour>());
+		activeBehaviourList.Add(DetectState.Idle, new List<MonsterBehaviour>());
+		activeBehaviourList.Add(DetectState.Warning, new List<MonsterBehaviour>());
+		activeBehaviourList.Add(DetectState.Alerted, new List<MonsterBehaviour>());
 
         // Init Default Behaviours
-        if (defaultIdleBehaviour)
+        if (defaultPatrol)
         {
-            activeBehaviourList[DetectingState.Idle].Add(gameObject.AddComponent<MonsterPatrol>());
-            activeBehaviourList[DetectingState.Idle][0].owner = this;
+            activeBehaviourList[DetectState.Idle].Add(gameObject.AddComponent<MonsterPatrol>());
+            activeBehaviourList[DetectState.Idle][0].owner = this;
         }
-        if (defaultWarningBehaviour)
+        if (defaultSearch)
         {
-            activeBehaviourList[DetectingState.Warning].Add(gameObject.AddComponent<MonsterSearch>());
-            activeBehaviourList[DetectingState.Warning][0].owner = this;
+            activeBehaviourList[DetectState.Warning].Add(gameObject.AddComponent<MonsterSearch>());
+            activeBehaviourList[DetectState.Warning][0].owner = this;
         }
-        if (defaultAlertedBehaviour)
+        if (defaultAttack)
         {
-            activeBehaviourList[DetectingState.Alerted].Add(gameObject.AddComponent<MonsterAttack>());
-            activeBehaviourList[DetectingState.Alerted][0].owner = this;
+            activeBehaviourList[DetectState.Alerted].Add(gameObject.AddComponent<MonsterAttack>());
+            activeBehaviourList[DetectState.Alerted][0].owner = this;
         }
 
 		// Init Body Part Behaviours
@@ -155,19 +163,37 @@ public class Monster : Unit {
     //---------------------------------------
     void UpdateDetectingState()
     {
-		if (MazeUTL.CheckTargetInRangeAndDetectRegion (CurrentTile, level.playerCharacter.CurrentTile, detectionRange))
+		if (MazeUTL.CheckTargetInRangeAndDetectRegion (CurrentTile, level.playerCharacter.CurrentTile, detectRange))
 		{
-			detectingState = DetectingState.Alerted;
+			detectState = DetectState.Alerted;
 		}   
     }
 
+	public void UpdateDetectStateIcon(DetectState state)
+	{
+		if (state == DetectState.Warning)
+		{
+			detectStateIcon.UpdateSprite("Icon-Warning");
+			detectStateIcon.UpdateSpriteAlpha(1);
+		}
+		else if (state == DetectState.Alerted)
+		{
+			detectStateIcon.UpdateSprite("Icon-Alerted");
+			detectStateIcon.UpdateSpriteAlpha(1);
+		}
+		else
+		{
+			detectStateIcon.UpdateSpriteAlpha(0);
+		}
+	}
+
     void UpdateAlertedTarget()
     {
-        if (detectingState == DetectingState.Idle)
+        if (detectState == DetectState.Idle)
         {
             alertedTarget = null;
         }
-        else if (detectingState == DetectingState.Alerted)
+        else if (detectState == DetectState.Alerted)
         {
             alertedTarget = level.playerCharacter;
         }
@@ -176,16 +202,16 @@ public class Monster : Unit {
     void StartCoolDownDetectionLevel()
     {
         float time = 0;
-        switch (detectingState)
+        switch (detectState)
         {
-            case DetectingState.Alerted:
-                time = detectionCDTime_Alerted;
+            case DetectState.Alerted:
+                time = AlertedCDTime;
                 break;
-            case DetectingState.Warning:
-                time = detectionCDTime_Warning;
+            case DetectState.Warning:
+                time = WarningCDTime;
                 break;
             default:
-            case DetectingState.Idle:
+            case DetectState.Idle:
                 return;
         }
 
@@ -203,32 +229,32 @@ public class Monster : Unit {
             yield return null;
         }
 
-        switch (detectingState)
+        switch (detectState)
         {
-            case DetectingState.Alerted:
-                detectingState = DetectingState.Warning;
+            case DetectState.Alerted:
+                detectState = DetectState.Warning;
                 break;
-            case DetectingState.Warning:
-                detectingState = DetectingState.Idle;
+            case DetectState.Warning:
+                detectState = DetectState.Idle;
                 break;
             default:
-            case DetectingState.Idle:
+            case DetectState.Idle:
                 break;
         }
     }
 
-    void UpdateMoveSpeed()
+	void UpdateMoveSpeed(DetectState state)
     {
-        switch (detectingState)
+		switch (state)
         {
-            case DetectingState.Idle:
+            case DetectState.Idle:
                 MoveSpeed = moveSpeedIdle;
                 break;
-            case DetectingState.Warning:
+            case DetectState.Warning:
                 MoveSpeed = moveSpeedWarning;
                 break;
             default:
-            case DetectingState.Alerted:
+            case DetectState.Alerted:
                 MoveSpeed = moveSpeedAlerted;
                 break;
         }
@@ -260,7 +286,7 @@ public class Monster : Unit {
         List<MonsterBehaviour> tmpList = new List<MonsterBehaviour>();
         int hightestPri = 5;
 
-        foreach (MonsterBehaviour behaviour in activeBehaviourList[detectingState])
+        foreach (MonsterBehaviour behaviour in activeBehaviourList[detectState])
         {
 			if (behaviour.isCoolingDown)
                 continue;
