@@ -65,7 +65,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4701153185875960}
-  - component: {fileID: 114772391511811056}
+  - component: {fileID: 114474177775173930}
   m_Layer: 0
   m_Name: DamageValueHUD
   m_TagString: Untagged
@@ -158,7 +158,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1580977563646686}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -214,7 +214,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1485068094600346}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 3, z: 6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4346475852037586}
@@ -331,6 +331,20 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &114474177775173930
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1485068094600346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3acb25ecf1ec0ee45bdaeec5af795c0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hudPrefab: {fileID: 1645641764915264, guid: aa6ee3a54df374c4f91b5e1f89396748, type: 2}
+  widgetWidth: 200
+  widgetHeight: 40
 --- !u!114 &114480426306365440
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -377,20 +391,6 @@ MonoBehaviour:
     part: {fileID: 114599257883934778, guid: 8c2697ea0006179419da654ff324a5f7, type: 2}
   slimeSplit: {fileID: 114472983391352266, guid: 4d5f6b42e8ee17346bf61a5ccaee5a83,
     type: 2}
---- !u!114 &114772391511811056
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1485068094600346}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96d4ba2af7a6741e3a601334002bf316, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 1
-  widgetWidth: 200
-  widgetHeight: 40
 --- !u!114 &114852796941320154
 MonoBehaviour:
   m_ObjectHideFlags: 1

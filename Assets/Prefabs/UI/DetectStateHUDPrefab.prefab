@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4092007450542820}
   - component: {fileID: 114970687672913496}
   m_Layer: 8
-  m_Name: Sprite_WorldHUD
+  m_Name: DetectStateHUDPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -70,8 +70,8 @@ MonoBehaviour:
   updateAnchors: 1
   mColor: {r: 1, g: 1, b: 1, a: 1}
   mPivot: 4
-  mWidth: 100
-  mHeight: 100
+  mWidth: 60
+  mHeight: 60
   mDepth: 10
   mMat: {fileID: 0}
   autoResizeBoxCollider: 0
