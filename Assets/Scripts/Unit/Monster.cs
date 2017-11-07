@@ -19,7 +19,7 @@ public class Monster : Unit {
     // Detection
 	DetectState detectState_m = DetectState.Idle;
 	[HideInInspector] public Unit alertedTarget;
-	UIWorldSprite detectStateIcon;
+    UIWorldHUD detectStateIcon;
 
 	[Header("Detection")]
 	public int detectRange = 3;
@@ -90,8 +90,8 @@ public class Monster : Unit {
 
     void InitDetectStateIcon()
     {
-        detectStateIcon = transform.Find("DetectStateHUD").GetComponent<UIWorldSprite>();
-        detectStateIcon.Init();
+        detectStateIcon = transform.Find("DetectStateHUD").GetComponent<UIWorldHUD>();
+        detectStateIcon.SpawnHUD();
         UpdateDetectStateIcon(detectState);
     }
 
@@ -170,7 +170,7 @@ public class Monster : Unit {
 
 	public void UpdateDetectStateIcon(DetectState state)
 	{
-		if (state == DetectState.Warning)
+        if (state == DetectState.Warning)
 		{
 			detectStateIcon.UpdateSprite("Icon-Warning");
 			detectStateIcon.UpdateSpriteAlpha(1);

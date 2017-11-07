@@ -207,7 +207,8 @@ MonoBehaviour:
   customMazeSize: 0
   mazeWidth: 10
   mazeLength: 10
-  customMazeObject: {fileID: 0}
+  customMazeObject: {fileID: 1658703754155034, guid: 37d79ddb006fa0244b3adf02e1e1fbf3,
+    type: 2}
   timerStart: 3600
   playerCharacterPrefab: {fileID: 1580977563646686, guid: b6007ed5a665c594f900229921919ff8,
     type: 2}

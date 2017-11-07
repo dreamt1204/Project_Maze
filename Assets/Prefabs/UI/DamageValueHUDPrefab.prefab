@@ -21,7 +21,8 @@ GameObject:
   - component: {fileID: 4923629089113612}
   - component: {fileID: 114712669876918708}
   - component: {fileID: 114513587174930104}
-  - component: {fileID: 114840368754803924}
+  - component: {fileID: 114766776591215158}
+  - component: {fileID: 114734228556591874}
   m_Layer: 8
   m_Name: DamageValueHUDPrefab
   m_TagString: Untagged
@@ -48,7 +49,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1645641764915264}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e2747e3775af504da1a4d5a46c5a1ce, type: 3}
   m_Name: 
@@ -75,7 +76,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   ignoreTimeScale: 1
   delay: 0
-  duration: 1.5
+  duration: 1
   steeperCurves: 0
   tweenGroup: 0
   useFixedUpdate: 0
@@ -152,13 +153,24 @@ MonoBehaviour:
   mMaxLineHeight: 0
   mLineWidth: 0
   mMultiline: 1
---- !u!114 &114840368754803924
+--- !u!114 &114734228556591874
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1645641764915264}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5926a5768cc6b324a8d80438b431f137, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114766776591215158
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1645641764915264}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 75e7459110b9666449485c40f25362a5, type: 3}
   m_Name: 
@@ -185,7 +197,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   ignoreTimeScale: 1
   delay: 0
-  duration: 1.5
+  duration: 1
   steeperCurves: 0
   tweenGroup: 0
   useFixedUpdate: 0
@@ -193,5 +205,5 @@ MonoBehaviour:
   eventReceiver: {fileID: 0}
   callWhenFinished: 
   from: {x: 1, y: 1, z: 1}
-  to: {x: 0, y: 0, z: 0}
+  to: {x: 1.25, y: 1.25, z: 1}
   updateTable: 0

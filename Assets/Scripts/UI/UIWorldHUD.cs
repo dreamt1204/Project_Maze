@@ -10,27 +10,44 @@ public enum WorldHUDType
 
 public class UIWorldHUD : MonoBehaviour
 {
-	bool finishedInit;
+    bool spawned;
 
     public GameObject hudPrefab;
     public int widgetWidth = 100;
 	public int widgetHeight = 100;
 
     protected GameObject hudObj;
+    UIWidget widget;
+    UISprite sprite;
+    UILabel label;
     protected UITweener[] tweeners;
 
 	void Start()
 	{
-		if (finishedInit)
-			return;
+        if (spawned)
+            return;
 
-		Init();
-	}
+        SpawnHUD();
+    }
 
-	public virtual void Init()
-	{
-		finishedInit = true;
-	}
+    public void SpawnHUD()
+    {
+        hudObj = Instantiate(hudPrefab.gameObject);
+        hudObj.name = gameObject.name + "_WorldHUD";
+        tweeners = hudObj.GetComponents<UITweener>();
+
+        widget = hudObj.GetComponent<UIWidget>();
+        widget.width = widgetWidth;
+        widget.height = widgetHeight;
+
+        label = hudObj.GetComponent<UILabel>();
+        sprite = hudObj.GetComponent<UISprite>();
+
+        if (hudObj.GetComponent<UIDestroyAfterTweener>())
+            widget.alpha = 0;
+
+        spawned = true;
+    }
 
 	void Update()
 	{
@@ -39,7 +56,10 @@ public class UIWorldHUD : MonoBehaviour
 
 	void UpdateHUDPos()
 	{
-		Vector3 worldPos;
+        if (hudObj == null)
+            return;
+
+        Vector3 worldPos;
 		worldPos = Camera.main.WorldToViewportPoint(transform.position);
 		worldPos = UICamera.mainCamera.ViewportToWorldPoint(worldPos);
 		worldPos = new Vector3(worldPos.x, worldPos.y, 0);
@@ -47,7 +67,7 @@ public class UIWorldHUD : MonoBehaviour
         hudObj.transform.localPosition = (parent != null) ? parent.InverseTransformPoint(worldPos) : worldPos;
 	}
 
-    public void PlayTweens(int tweenGroup)
+    public void PlayTweeners(int tweenGroup)
     {
         foreach (UITweener tween in tweeners)
         {
@@ -57,5 +77,38 @@ public class UIWorldHUD : MonoBehaviour
                 tween.PlayForward();
             }
         }
+
+        if (hudObj.GetComponent<UIDestroyAfterTweener>())
+            SpawnHUD();
+    }
+
+    //---------------------------------------
+    //      Sprite
+    //---------------------------------------
+    public void UpdateSprite(string spriteName)
+    {
+        Utilities.TryCatchError((sprite == null), "This world HUD doesn't have UISprite component.");
+        sprite.spriteName = spriteName;
+    }
+
+    public void UpdateSpriteAlpha(float alpha)
+    {
+        Utilities.TryCatchError((sprite == null), "This world HUD doesn't have UISprite component.");
+        sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, alpha);
+    }
+
+    //---------------------------------------
+    //      Label
+    //---------------------------------------
+    public void UpdateLabel(string text)
+    {
+        Utilities.TryCatchError((label == null), "This world HUD doesn't have UILabel component.");
+        label.text = text;
+    }
+
+    public void UpdateLabelColor(Color newColor)
+    {
+        Utilities.TryCatchError((label == null), "This world HUD doesn't have UILabel component.");
+        label.color = newColor;
     }
 }

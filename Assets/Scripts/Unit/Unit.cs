@@ -57,7 +57,7 @@ public class Unit : MonoBehaviour {
     protected bool playWalkingAnim = false;
 
     // HUD
-    UIWorldLabel DamageValueHUD;
+    UIWorldHUD DamageValueHUD;
 
     //---------------------------------------
     //      Properties
@@ -122,7 +122,8 @@ public class Unit : MonoBehaviour {
         CurrentTile = spawnTile;
         InitBody();
 
-        DamageValueHUD = transform.Find("DamageValueHUD").GetComponent<UIWorldLabel>();
+        if (transform.Find("DamageValueHUD") != null)
+            DamageValueHUD = transform.Find("DamageValueHUD").GetComponent<UIWorldHUD>();
 
         finishedInit = true;
     }
@@ -400,19 +401,19 @@ public class Unit : MonoBehaviour {
 	public virtual void RecieveDamage(float amount)
 	{
 		Health = (Health - amount);
-
+        
         DamageValueHUD.UpdateLabel("-" + amount.ToString());
         DamageValueHUD.UpdateLabelColor(new Color(1, 1, 1, 1));
-        DamageValueHUD.PlayTweens(0);
+        DamageValueHUD.PlayTweeners(0);
     }
 
 	public virtual void RestoreHealth(float amount)
 	{
 		Health = (Health + amount);
-
+        
         DamageValueHUD.UpdateLabel("+" + amount.ToString());
         DamageValueHUD.UpdateLabelColor(new Color(0, 1, 0.3f, 1));
-        DamageValueHUD.PlayTweens(0);
+        DamageValueHUD.PlayTweeners(0);
     }
 
 	public virtual void ApplyDamageToTarget(Unit target, float amount)
