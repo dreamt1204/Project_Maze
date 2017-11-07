@@ -251,6 +251,13 @@ public class Unit : MonoBehaviour {
                 AddSkinEntries(skeletonData.FindSkin(data.part.partSkinName), newBody);
         }
 
+        // Add Slime skin if this unit is Player Character
+        if (this is PlayerCharacter)
+        {
+            PlayerCharacter thisPlayer = this as PlayerCharacter;
+            AddSkinEntries(skeletonData.FindSkin(thisPlayer.slime.slimeSkinName), newBody);
+        }
+
         // Now that your custom generated skin is complete, assign it to the skeleton...
         var skeleton = skeletonAnim.skeleton;
         skeleton.SetSkin(newBody);

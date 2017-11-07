@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4406221264556356}
   - component: {fileID: 114472983391352266}
   m_Layer: 0
-  m_Name: SlimeSplit
+  m_Name: Default SlimeSplit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -121,3 +121,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f47e4aa9cae64b7d8990c3aa0575c37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  splittingSlimeDamage: 1
+  eattingSlimeRecover: 1

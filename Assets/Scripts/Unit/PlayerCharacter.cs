@@ -8,13 +8,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum SlimeStateType
-{
-    None,
-    Splitting,
-    Eatting
-}
-
 public class PlayerCharacter : Unit {
     //=======================================
     //      Variables
@@ -28,8 +21,7 @@ public class PlayerCharacter : Unit {
 
     public List<BodyPartData> defaultBodyParts;
 
-	public SlimeSplit slimeSplit;
-    [HideInInspector] private SlimeStateType slimeState;
+    public Slime slime;
 
     //---------------------------------------
     //      Properties
@@ -57,7 +49,7 @@ public class PlayerCharacter : Unit {
         set
         {
             base.CurrentTile = value;
-            TryUpdateSlimeSplit();
+            slime.TryUpdateSlimeSplit();
         }
     }
 
@@ -72,19 +64,6 @@ public class PlayerCharacter : Unit {
 			base.CurrentAction = value;
 		}
 	}
-
-    public SlimeStateType SlimeState
-    {
-        get
-        {
-            return slimeState;
-        }
-        set
-        {
-            slimeState = value;
-            TryUpdateSlimeSplit();
-        }
-    }
 
     //=======================================
     //      Functions
@@ -101,7 +80,6 @@ public class PlayerCharacter : Unit {
         playerCamera.transform.parent = transform;
 
         // Init PlayerCharacter BodyParts
-        InitBodyPartData("Slime");
         InitBodyPartData("Head");
         InitBodyPartData("Body");
         InitBodyPartData("Legs");
@@ -110,9 +88,11 @@ public class PlayerCharacter : Unit {
         PlayerAbilities = new Dictionary<string, PlayerAbility>();
         foreach (BodyPartData data in BodyParts)
         {
-            if (data.partType != "Slime")
-                PlayerAbilities.Add(data.partType, null);
+            PlayerAbilities.Add(data.partType, null);
         }
+
+        // Init Slime
+        slime.Init(this);
 
         base.Init(spawnTile);
     }
@@ -152,9 +132,6 @@ public class PlayerCharacter : Unit {
 
     public override void BodyPartUpdatedEvent(string partType)
     {
-        if (partType == "Slime")
-            return;
-
         BodyPart part = GetBodyPartWithType(partType);
 
         // If the part doesn't exist, clear part ability
@@ -204,46 +181,5 @@ public class PlayerCharacter : Unit {
 			uiManager.ActivateCompass(tile.item.compassDuration);
 			tile.DestroyTileItem();
 		}
-	}
-
-    //---------------------------------------
-    //      Slime Split/Eat Ability
-    //---------------------------------------
-    public void TryUpdateSlimeSplit()
-    {
-        if (SlimeState == SlimeStateType.None)
-            return;
-
-        if (SlimeState == SlimeStateType.Splitting)
-        {
-			if (CurrentTile.slimeSplit != null)
-                return;
-
-			if ((Health - slimeSplit.splittingSlimeDamage) <= 0)
-                return;
-
-            GenerateSlimeSplit();
-        }
-		else if (SlimeState == SlimeStateType.Eatting)
-		{
-			if (CurrentTile.slimeSplit == null)
-				return;
-
-			EatSlimeSplit();
-		}
-    }
-
-    public void GenerateSlimeSplit()
-    {
-        RecieveDamage(slimeSplit.splittingSlimeDamage);
-
-		CurrentTile.SpawnTileSlimeSplit(slimeSplit.gameObject);
-    }
-
-	public void EatSlimeSplit()
-	{
-		RestoreHealth(CurrentTile.slimeSplit.eattingSlimeRecover);
-
-		CurrentTile.DestroyTileSlimeSplit();
 	}
 }

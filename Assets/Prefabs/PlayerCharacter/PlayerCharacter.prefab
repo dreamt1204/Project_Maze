@@ -346,9 +346,6 @@ MonoBehaviour:
   moveSpeed: 100
   ownerType: 0
   BodyParts:
-  - partType: Slime
-    mustHave: 1
-    part: {fileID: 0}
   - partType: Head
     mustHave: 1
     part: {fileID: 0}
@@ -363,9 +360,6 @@ MonoBehaviour:
   hasObjective: 0
   compassEnabled: 0
   defaultBodyParts:
-  - partType: Slime
-    mustHave: 1
-    part: {fileID: 114260147025472264, guid: a436ab84b46077c4ca3fe75e8292a257, type: 2}
   - partType: Head
     mustHave: 1
     part: {fileID: 114073297278147484, guid: 09bc4c818db395e498e1d7bb52ecdca4, type: 2}
@@ -375,8 +369,7 @@ MonoBehaviour:
   - partType: Legs
     mustHave: 1
     part: {fileID: 114599257883934778, guid: 8c2697ea0006179419da654ff324a5f7, type: 2}
-  slimeSplit: {fileID: 114472983391352266, guid: 4d5f6b42e8ee17346bf61a5ccaee5a83,
-    type: 2}
+  slime: {fileID: 114410046176375602, guid: e804c664303e4c648b8dc39cda7eb17d, type: 2}
 --- !u!114 &114704303382516210
 MonoBehaviour:
   m_ObjectHideFlags: 1

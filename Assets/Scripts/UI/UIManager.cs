@@ -32,10 +32,6 @@ public class UIManager : MonoBehaviour
 
 	private UIProgressBar healthBar;
 
-    [HideInInspector] public UIWidget slimeWidget;
-    [HideInInspector] public UISprite slimeDragButtonSprite;
-    [HideInInspector] public UIWidget slimeStateSelectWidget;
-
     [HideInInspector] public UIWidget compassWidget;
 	[HideInInspector] public UISprite compassSprite;
 
@@ -70,11 +66,6 @@ public class UIManager : MonoBehaviour
         joyStickArea = GameObject.Find("Widget_JoyStickArea").GetComponent<UIWidget>();
 
 		healthBar = GameObject.Find("HealthBar").GetComponent<UIProgressBar>();
-
-        slimeWidget = GameObject.Find("Widget_Slime").GetComponent<UIWidget>();
-        slimeDragButtonSprite = GameObject.Find("Sprite_Slime").GetComponent<UISprite>();
-        slimeStateSelectWidget = GameObject.Find("Widget_SlimeStateSelect").GetComponent<UIWidget>();
-        slimeStateSelectWidget.alpha = 0;
 
         compassWidget = GameObject.Find("Widget_Compass").GetComponent<UIWidget>();
 		compassWidget.alpha = 0;
@@ -212,19 +203,6 @@ public class UIManager : MonoBehaviour
 	{
 		healthBar.value = value;
 	}
-
-    //---------------------------------------
-    //      Slime Drag Button
-    //---------------------------------------
-    public void UpdateSlimeDragButtonSprite(SlimeStateType state)
-    {
-        if (state == SlimeStateType.None)
-            slimeDragButtonSprite.spriteName = "Slime";
-        else if (state == SlimeStateType.Splitting)
-            slimeDragButtonSprite.spriteName = "Slime_Split";
-        else if(state == SlimeStateType.Eatting)
-            slimeDragButtonSprite.spriteName = "Slime_Eat";
-    }
 
 	//---------------------------------------
 	//      Update Compass
