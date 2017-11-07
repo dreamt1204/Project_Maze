@@ -116,18 +116,18 @@ MonoBehaviour:
   mColor: {r: 1, g: 1, b: 1, a: 1}
   mPivot: 4
   mWidth: 200
-  mHeight: 40
+  mHeight: 30
   mDepth: 12
   mMat: {fileID: 0}
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0
-  aspectRatio: 5
+  aspectRatio: 6.6666665
   keepCrispWhenShrunk: 1
   mTrueTypeFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
   mFont: {fileID: 0}
   mText: 10
-  mFontSize: 40
+  mFontSize: 30
   mFontStyle: 0
   mAlignment: 2
   mEncoding: 1
@@ -205,5 +205,5 @@ MonoBehaviour:
   eventReceiver: {fileID: 0}
   callWhenFinished: 
   from: {x: 1, y: 1, z: 1}
-  to: {x: 1.25, y: 1.25, z: 1}
+  to: {x: 0.75, y: 0.75, z: 1}
   updateTable: 0
