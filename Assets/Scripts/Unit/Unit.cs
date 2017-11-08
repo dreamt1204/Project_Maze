@@ -93,7 +93,7 @@ public class Unit : MonoBehaviour {
         set
         {
             currentTile = value;
-			currentTile.TileAction ();
+			currentTile.TileAction();
 			UnitTileAction (currentTile);
         }
     }
@@ -255,7 +255,7 @@ public class Unit : MonoBehaviour {
         if (this is PlayerCharacter)
         {
             PlayerCharacter thisPlayer = this as PlayerCharacter;
-            AddSkinEntries(skeletonData.FindSkin(thisPlayer.slime.slimeData.slimeSkinName), newBody);
+            AddSkinEntries(skeletonData.FindSkin(thisPlayer.slime.slimeSkinName), newBody);
         }
 
         // Now that your custom generated skin is complete, assign it to the skeleton...

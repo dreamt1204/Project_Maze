@@ -65,6 +65,5 @@ MonoBehaviour:
   - {fileID: 114316107835354738, guid: ce22412cae20025458e488e243a6b760, type: 2}
   - {fileID: 114328909136846850, guid: fbc31bf91877dcf4f9c5be130530b7f4, type: 2}
   - {fileID: 114192243277182530, guid: d8227cf042c825d41a03248a8d61eed6, type: 2}
-  - {fileID: 114276151289404670, guid: 6ee4bcdd2e5a5ba4fbd0e31306d27704, type: 2}
   Monsters:
   - {fileID: 114376943140014626, guid: 18d1df3a946e38a48932007fbb9161e9, type: 2}

@@ -13,22 +13,28 @@ public enum ItemType
 {
 	StartPoint,
 	Objective,
-    HealthPack,
     BodyPart,
-	Compass
+    SlimeElement,
+    HealthPack,
+    Compass
 }
 
-public class TileItem : MonoBehaviour {
+public class TileItem : MonoBehaviour
+{
 	//=======================================
 	//      Variables
 	//=======================================
-	public string itemName;
 	public ItemType itemType;
-    public float healAmount;
-    public BodyPart bodyPart;
-	public float compassDuration;
 
-	//=======================================
-	//      Functions
-	//=======================================
+    [Header("Body Part")]
+    public BodyPart bodyPart;
+
+    [Header("Slime Element")]
+    public Slime slime;
+
+    [Header("Health Pack")]
+    public float healAmount;
+
+    [Header("Compass")]
+    public float compassDuration;
 }

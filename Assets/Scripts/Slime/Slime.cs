@@ -2,81 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum SlimeStateType
+public enum SlimeType
 {
-    Eatting,
-    Splitting
+    DefaultSlime,
+    TestSlime
 }
 
-public class Slime : MonoBehaviour {
+public class Slime : MonoBehaviour
+{
     //=======================================
     //      Variables
     //=======================================
-    PlayerCharacter myPlayer;
-    SlimeStateType slimeState_m;
-	[Range(1, 5)] public int slimeLevel;
-	public SlimeData slimeData;
+    public SlimeType slimeType;
+    public string slimeSkinName;
+    public SlimeSplit slimeSplit;
+    public SlimeAbility Ability1;
+    public SlimeAbility Ability2;
 
-    //---------------------------------------
-    //      Properties
-    //---------------------------------------
-    public SlimeStateType slimeState
-    {
-        get
-        {
-            return slimeState_m;
-        }
-        set
-        {
-            slimeState_m = value;
-            TryUpdateSlimeSplit();
-        }
-    }
+    public float[] experienceData = new float[] { 3, 5, 10, 15, 20 };
 
     //=======================================
     //      Functions
     //=======================================
-	public void UpdateSlimeData(PlayerCharacter player, SlimeData data)
-    {
-		myPlayer = player;
-		slimeData = data;
-    }
-
-    //---------------------------------------
-    //      Slime Split/Eat Ability
-    //---------------------------------------
-    public void TryUpdateSlimeSplit()
-    {
-        if (slimeState == SlimeStateType.Splitting)
-        {
-            if (myPlayer.CurrentTile.slimeSplit != null)
-                return;
-
-			if ((myPlayer.Health - slimeData.slimeSplit.splittingSlimeDamage) <= 0)
-                return;
-
-            GenerateSlimeSplit();
-        }
-        else if (slimeState == SlimeStateType.Eatting)
-        {
-            if (myPlayer.CurrentTile.slimeSplit == null)
-                return;
-
-            EatSlimeSplit();
-        }
-    }
-
-    public void GenerateSlimeSplit()
-    {
-		myPlayer.RecieveDamage(slimeData.slimeSplit.splittingSlimeDamage);
-
-		myPlayer.CurrentTile.SpawnTileSlimeSplit(slimeData.slimeSplit.gameObject);
-    }
-
-    public void EatSlimeSplit()
-    {
-        myPlayer.RestoreHealth(myPlayer.CurrentTile.slimeSplit.eattingSlimeRecover);
-
-        myPlayer.CurrentTile.DestroyTileSlimeSplit();
-    }
 }

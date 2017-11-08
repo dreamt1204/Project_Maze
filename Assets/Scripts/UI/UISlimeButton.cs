@@ -9,8 +9,6 @@ public class UISlimeButton : MonoBehaviour
     //=======================================
     UISprite slimeSprite;
 
-    public Slime slime;
-
     //=======================================
     //      Functions
     //=======================================
@@ -27,14 +25,16 @@ public class UISlimeButton : MonoBehaviour
 
     void ToggleSlimeState()
     {
-		if (slime.slimeState == SlimeStateType.Eatting)
+        PlayerCharacter player = LevelManager.instance.playerCharacter;
+
+        if (player.slimeState == SlimeStateType.Eatting)
         {
-			slime.slimeState = SlimeStateType.Splitting;
+            player.slimeState = SlimeStateType.Splitting;
             slimeSprite.spriteName = "Slime_Split";
         }  
-		else if (slime.slimeState == SlimeStateType.Splitting)
+		else if (player.slimeState == SlimeStateType.Splitting)
         {
-			slime.slimeState = SlimeStateType.Eatting;
+            player.slimeState = SlimeStateType.Eatting;
             slimeSprite.spriteName = "Slime_Eat";
         }
     }

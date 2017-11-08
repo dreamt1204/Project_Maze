@@ -369,9 +369,7 @@ MonoBehaviour:
   - partType: Legs
     mustHave: 1
     part: {fileID: 114599257883934778, guid: 8c2697ea0006179419da654ff324a5f7, type: 2}
-  slime: {fileID: 0}
-  slimeData: {fileID: 114561514660387654, guid: 1f2746b7c1b74409b9d55e7e233930b4,
-    type: 2}
+  slime: {fileID: 114289914768308856, guid: 1f2746b7c1b74409b9d55e7e233930b4, type: 2}
 --- !u!114 &114704303382516210
 MonoBehaviour:
   m_ObjectHideFlags: 1

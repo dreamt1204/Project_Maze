@@ -8,6 +8,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum SlimeStateType
+{
+    Eatting,
+    Splitting
+}
+
 public class PlayerCharacter : Unit {
     //=======================================
     //      Variables
@@ -21,8 +27,9 @@ public class PlayerCharacter : Unit {
 
     public List<BodyPartData> defaultBodyParts;
 
-	[HideInInspector] public Slime slime;
-    public SlimeData slimeData;
+    public Slime slime;
+    SlimeStateType slimeState_m;
+    public Dictionary<SlimeType, PlayerSlimeData> slimeData = new Dictionary<SlimeType, PlayerSlimeData>();
 
     //---------------------------------------
     //      Properties
@@ -50,7 +57,7 @@ public class PlayerCharacter : Unit {
         set
         {
             base.CurrentTile = value;
-            slime.TryUpdateSlimeSplit();
+            UpdateCurrentTileSlimeSplit();
         }
     }
 
@@ -65,6 +72,19 @@ public class PlayerCharacter : Unit {
 			base.CurrentAction = value;
 		}
 	}
+
+    public SlimeStateType slimeState
+    {
+        get
+        {
+            return slimeState_m;
+        }
+        set
+        {
+            slimeState_m = value;
+            UpdateCurrentTileSlimeSplit();
+        }
+    }
 
     //=======================================
     //      Functions
@@ -93,10 +113,8 @@ public class PlayerCharacter : Unit {
         }
 
         // Init Slime
-		slime = gameObject.AddComponent<Slime>();
-		GameObject.Find("SlimeButton").GetComponent<UISlimeButton>().slime = slime;
-		Utilities.TryCatchError((slimeData == null), "Player Character doesn't have start Slime Data.");
-		slime.UpdateSlimeData(this, slimeData);
+        Utilities.TryCatchError((slime == null), "Player Character doesn't have start Slime.");
+        slimeData.Add(slime.slimeType, new PlayerSlimeData(slime, 1));
 
         base.Init(spawnTile);
     }
@@ -170,20 +188,71 @@ public class PlayerCharacter : Unit {
 		{
 			level.CheckLevelPassedCondition();
 		}
-        else if (tile.item.itemType == ItemType.HealthPack)
-        {
-            RestoreHealth(tile.item.healAmount);
-            tile.DestroyTileItem();
-        }
         else if (tile.item.itemType == ItemType.BodyPart)
 		{
 			UpdateBodyPart(tile.item.bodyPart);
 			tile.DestroyTileItem();
 		}
-		else if (tile.item.itemType == ItemType.Compass)
+        else if (tile.item.itemType == ItemType.SlimeElement)
+        {
+            AddSlimeExperience(tile.item.slime);
+            tile.DestroyTileItem();
+        }
+        else if (tile.item.itemType == ItemType.HealthPack)
+        {
+            RestoreHealth(tile.item.healAmount);
+            tile.DestroyTileItem();
+        }
+        else if (tile.item.itemType == ItemType.Compass)
 		{
 			uiManager.ActivateCompass(tile.item.compassDuration);
 			tile.DestroyTileItem();
 		}
 	}
+
+    //---------------------------------------
+    //      Slime
+    //---------------------------------------
+    public void AddSlimeExperience(Slime addingSlime)
+    {
+        if (!slimeData.ContainsKey(addingSlime.slimeType))
+            slimeData.Add(addingSlime.slimeType, new PlayerSlimeData(addingSlime));
+
+        slimeData[addingSlime.slimeType].slimeExp += 1;
+    }
+
+    public void UpdateCurrentTileSlimeSplit()
+    {
+        if (slimeState == SlimeStateType.Splitting)
+        {
+            if (CurrentTile.slimeSplit != null)
+                return;
+
+            if ((Health - slime.slimeSplit.splittingSlimeDamage) <= 0)
+                return;
+
+            GenerateSlimeSplit();
+        }
+        else if (slimeState == SlimeStateType.Eatting)
+        {
+            if (CurrentTile.slimeSplit == null)
+                return;
+
+            EatSlimeSplit();
+        }
+    }
+
+    public void GenerateSlimeSplit()
+    {
+        RecieveDamage(slime.slimeSplit.splittingSlimeDamage);
+
+        CurrentTile.SpawnTileSlimeSplit(slime.slimeSplit.gameObject);
+    }
+
+    public void EatSlimeSplit()
+    {
+        RestoreHealth(CurrentTile.slimeSplit.eattingSlimeRecover);
+
+       CurrentTile.DestroyTileSlimeSplit();
+    }
 }
