@@ -9,7 +9,7 @@ public class UISlimeButton : MonoBehaviour
     //=======================================
     UISprite slimeSprite;
 
-    public Slime currentSlime;
+    public Slime slime;
 
     //=======================================
     //      Functions
@@ -27,14 +27,14 @@ public class UISlimeButton : MonoBehaviour
 
     void ToggleSlimeState()
     {
-        if (currentSlime.slimeState == SlimeStateType.Eatting)
+		if (slime.slimeState == SlimeStateType.Eatting)
         {
-            currentSlime.slimeState = SlimeStateType.Splitting;
+			slime.slimeState = SlimeStateType.Splitting;
             slimeSprite.spriteName = "Slime_Split";
         }  
-        else if (currentSlime.slimeState == SlimeStateType.Splitting)
+		else if (slime.slimeState == SlimeStateType.Splitting)
         {
-            currentSlime.slimeState = SlimeStateType.Eatting;
+			slime.slimeState = SlimeStateType.Eatting;
             slimeSprite.spriteName = "Slime_Eat";
         }
     }

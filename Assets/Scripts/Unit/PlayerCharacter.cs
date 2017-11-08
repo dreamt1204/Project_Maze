@@ -21,7 +21,8 @@ public class PlayerCharacter : Unit {
 
     public List<BodyPartData> defaultBodyParts;
 
-    public Slime slime;
+	[HideInInspector] public Slime slime;
+    public SlimeData slimeData;
 
     //---------------------------------------
     //      Properties
@@ -92,7 +93,10 @@ public class PlayerCharacter : Unit {
         }
 
         // Init Slime
-        slime.Init(this);
+		slime = gameObject.AddComponent<Slime>();
+		GameObject.Find("SlimeButton").GetComponent<UISlimeButton>().slime = slime;
+		Utilities.TryCatchError((slimeData == null), "Player Character doesn't have start Slime Data.");
+		slime.UpdateSlimeData(this, slimeData);
 
         base.Init(spawnTile);
     }

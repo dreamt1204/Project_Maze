@@ -14,9 +14,8 @@ public class Slime : MonoBehaviour {
     //=======================================
     PlayerCharacter myPlayer;
     SlimeStateType slimeState_m;
-
-    public string slimeSkinName;
-    public SlimeSplit slimeSplit;
+	[Range(1, 5)] public int slimeLevel;
+	public SlimeData slimeData;
 
     //---------------------------------------
     //      Properties
@@ -37,22 +36,11 @@ public class Slime : MonoBehaviour {
     //=======================================
     //      Functions
     //=======================================
-    // Use this for initialization
-    void Start () {
-		
-	}
-
-    public void Init(PlayerCharacter player)
+	public void UpdateSlimeData(PlayerCharacter player, SlimeData data)
     {
-        myPlayer = player;
-
-        GameObject.Find("SlimeButton").GetComponent<UISlimeButton>().currentSlime = this;
+		myPlayer = player;
+		slimeData = data;
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
     //---------------------------------------
     //      Slime Split/Eat Ability
@@ -64,7 +52,7 @@ public class Slime : MonoBehaviour {
             if (myPlayer.CurrentTile.slimeSplit != null)
                 return;
 
-            if ((myPlayer.Health - slimeSplit.splittingSlimeDamage) <= 0)
+			if ((myPlayer.Health - slimeData.slimeSplit.splittingSlimeDamage) <= 0)
                 return;
 
             GenerateSlimeSplit();
@@ -80,9 +68,9 @@ public class Slime : MonoBehaviour {
 
     public void GenerateSlimeSplit()
     {
-        myPlayer.RecieveDamage(slimeSplit.splittingSlimeDamage);
+		myPlayer.RecieveDamage(slimeData.slimeSplit.splittingSlimeDamage);
 
-        myPlayer.CurrentTile.SpawnTileSlimeSplit(slimeSplit.gameObject);
+		myPlayer.CurrentTile.SpawnTileSlimeSplit(slimeData.slimeSplit.gameObject);
     }
 
     public void EatSlimeSplit()
