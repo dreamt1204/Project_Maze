@@ -128,23 +128,23 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2
-      time: 0
+      time: 0.5
       value: 0
       inSlope: 0
-      outSlope: 1
-      tangentMode: 0
+      outSlope: 2
+      tangentMode: 65
     - serializedVersion: 2
       time: 1
       value: 1
-      inSlope: 1
-      outSlope: 0
-      tangentMode: 0
+      inSlope: 2
+      outSlope: 1
+      tangentMode: 69
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
   ignoreTimeScale: 1
   delay: 0
-  duration: 1
+  duration: 2
   steeperCurves: 0
   tweenGroup: 0
   useFixedUpdate: 0
@@ -182,23 +182,23 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2
-      time: 0
+      time: 0.5
       value: 0
       inSlope: 0
-      outSlope: 1
-      tangentMode: 0
+      outSlope: 2
+      tangentMode: 65
     - serializedVersion: 2
       time: 1
       value: 1
-      inSlope: 1
-      outSlope: 0
-      tangentMode: 0
+      inSlope: 2
+      outSlope: 1
+      tangentMode: 5
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
   ignoreTimeScale: 1
   delay: 0
-  duration: 1
+  duration: 2
   steeperCurves: 0
   tweenGroup: 0
   useFixedUpdate: 0

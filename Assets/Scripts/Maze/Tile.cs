@@ -123,16 +123,6 @@ public class Tile : MonoBehaviour {
     }
 
     //---------------------------------------
-    //      Tile action
-    //---------------------------------------
-    // Apply tile action when stepped on
-	// Note: This is only for modifing tile. For unit, check UnitTileAction.
-    public void TileAction()
-	{
-        
-    }
-
-    //---------------------------------------
     //      Tile highlight
     //---------------------------------------
     // Highlight the tile if its state is Selectable.

@@ -66,8 +66,21 @@ MonoBehaviour:
     paddingRight: 0
     paddingTop: 6
     paddingBottom: 6
+  - name: Icon_SwapSlime
+    x: 860
+    y: 682
+    width: 115
+    height: 108
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 8
+    paddingRight: 5
+    paddingTop: 8
+    paddingBottom: 12
   - name: Slime_Eat
-    x: 430
+    x: 0
     y: 701
     width: 429
     height: 323
@@ -80,8 +93,8 @@ MonoBehaviour:
     paddingTop: 95
     paddingBottom: 94
   - name: Slime_Split
-    x: 0
-    y: 279
+    x: 430
+    y: 603
     width: 429
     height: 421
     borderLeft: 0
@@ -94,7 +107,7 @@ MonoBehaviour:
     paddingBottom: 59
   - name: SlimeIcon
     x: 0
-    y: 701
+    y: 377
     width: 429
     height: 323
     borderLeft: 0

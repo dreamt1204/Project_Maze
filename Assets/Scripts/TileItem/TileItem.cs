@@ -47,6 +47,22 @@ public class TileItem : MonoBehaviour
             UpdateSlimeElementIcon();
     }
 
+    public void EnableSlimeSwapButton(bool enabled)
+    {
+        UIWorldHUD hud = GetComponentInChildren<UIWorldHUD>();
+        if (!hud.spawned)
+            hud.SpawnHUD();
+
+        if (enabled)
+        {
+            hud.hudObj.SetActive(true);
+        }
+        else
+        {
+            hud.hudObj.SetActive(false);
+        }
+    }
+
     void UpdateSlimeElementIcon()
     {
         UIWorldHUD hud = GetComponentInChildren<UIWorldHUD>();

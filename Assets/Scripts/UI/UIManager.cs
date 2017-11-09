@@ -122,7 +122,7 @@ public class UIManager : MonoBehaviour
     //---------------------------------------
 	void UpdateJoyStick()
 	{
-        if (LevelManager.instance.playerCharacter.IsPlayerControlDisabled())
+        if ((LevelManager.instance.playerCharacter == null) || (LevelManager.instance.playerCharacter.IsPlayerControlDisabled()))
         {
             joyStick.EnableJoyStick(false);
             return;

@@ -92,9 +92,15 @@ public class Unit : MonoBehaviour {
         }
         set
         {
-            currentTile = value;
-			currentTile.TileAction();
-			UnitTileAction (currentTile);
+            if (currentTile != value)
+            {
+                Tile previousTile = currentTile;
+                currentTile = value;
+                UnitTileAction(currentTile);
+
+                if (previousTile != null)
+                    UnitTileLeftAction(previousTile);
+            }
         }
     }
     public virtual ActionType CurrentAction
@@ -318,6 +324,11 @@ public class Unit : MonoBehaviour {
 	{
 		// Apply effect when unit steps on this tile
 	}
+
+    public virtual void UnitTileLeftAction(Tile tile)
+    {
+        // Apply effect when unit steps on this tile
+    }
 
     //---------------------------------------
     //      Movement

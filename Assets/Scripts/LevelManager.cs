@@ -114,15 +114,17 @@ public class LevelManager : MonoBehaviour {
 		FailLevel ();
 	}
 
-	public void CheckLevelPassedCondition()
+	public bool CheckLevelPassedCondition()
 	{
 		if (!finishedInitLevel)
-			return;
+			return false;
 
 		if (!playerCharacter.hasObjective)
-			return;
+			return false;
 
 		PassLevel ();
+
+        return true;
 	}
 
 	void PassLevel()

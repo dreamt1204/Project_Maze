@@ -238,8 +238,11 @@ public class PlayerCharacter : Unit {
 		}
 		else if (tile.item.itemType == ItemType.StartPoint)
 		{
-			level.CheckLevelPassedCondition();
-		}
+            if (level.CheckLevelPassedCondition())
+                return;
+
+            tile.item.EnableSlimeSwapButton(true);
+        }
         else if (tile.item.itemType == ItemType.BodyPart)
 		{
 			UpdateBodyPart(tile.item.bodyPart);
@@ -261,6 +264,20 @@ public class PlayerCharacter : Unit {
 			tile.DestroyTileItem();
 		}
 	}
+
+    public override void UnitTileLeftAction(Tile tile)
+    {
+        if (tile == null)
+            return;
+
+        if (tile.item == null)
+            return;
+
+        if (tile.item.itemType == ItemType.StartPoint)
+        {
+            tile.item.EnableSlimeSwapButton(false);
+        }
+    }
 
     //---------------------------------------
     //      Slime

@@ -10,13 +10,13 @@ public enum WorldHUDType
 
 public class UIWorldHUD : MonoBehaviour
 {
-    bool spawned;
+    public bool spawned;
 
     public GameObject hudPrefab;
     public int widgetWidth = 100;
 	public int widgetHeight = 100;
 
-    public GameObject hudObj;
+    [HideInInspector] public GameObject hudObj;
     UIWidget widget;
     UISprite sprite;
     public string startSprite;
