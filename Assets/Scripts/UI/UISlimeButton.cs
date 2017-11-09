@@ -8,6 +8,7 @@ public class UISlimeButton : MonoBehaviour
     //      Variables
     //=======================================
     UISprite slimeSprite;
+    UISprite slimeStateSprite;
 
     //=======================================
     //      Functions
@@ -16,10 +17,27 @@ public class UISlimeButton : MonoBehaviour
     void Start ()
     {
         slimeSprite = transform.parent.Find("Sprite_Slime").GetComponent<UISprite>();
+        slimeStateSprite = transform.parent.Find("Sprite_SlimeState").GetComponent<UISprite>();
+
+        PlayerCharacter.OnSlimeSwapped += UpdateSlimeSprite;
     }
-	
+
+    //---------------------------------------
+    //      Slime Sprite
+    //---------------------------------------
+    void UpdateSlimeSprite(PlayerCharacter player, Slime newSlime)
+    {
+        slimeSprite.spriteName = player.GetSlime().slimeSprite;
+    }
+
+    //---------------------------------------
+    //      Slime State
+    //---------------------------------------
     void OnClick()
     {
+        if (LevelManager.instance.playerCharacter.IsPlayerControlDisabled())
+            return;
+
         ToggleSlimeState();
     }
 
@@ -30,12 +48,12 @@ public class UISlimeButton : MonoBehaviour
         if (player.slimeState == SlimeStateType.Eatting)
         {
             player.slimeState = SlimeStateType.Splitting;
-            slimeSprite.spriteName = "Slime_Split";
+            slimeStateSprite.spriteName = "Slime_Split";
         }  
 		else if (player.slimeState == SlimeStateType.Splitting)
         {
             player.slimeState = SlimeStateType.Eatting;
-            slimeSprite.spriteName = "Slime_Eat";
+            slimeStateSprite.spriteName = "Slime_Eat";
         }
     }
 }

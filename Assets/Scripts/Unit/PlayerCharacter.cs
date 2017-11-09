@@ -21,15 +21,26 @@ public class PlayerCharacter : Unit {
 	[HideInInspector] private UIManager uiManager;
 
     [HideInInspector] public Camera playerCamera;
-	[HideInInspector] public bool hasObjective = false;
+    bool controlDisabled = false;
+    [HideInInspector] public bool hasObjective = false;
 	[HideInInspector] public bool compassEnabled = false;
     [HideInInspector] public Dictionary<string, PlayerAbility> PlayerAbilities;
 
     public List<BodyPartData> defaultBodyParts;
 
-    public Slime slime;
+    [Header("Slime")]
+    public Slime startSlime;
+    Slime slime;
+    [HideInInspector] public Slime slimeToSwapped;
     SlimeStateType slimeState_m;
     public Dictionary<SlimeType, PlayerSlimeData> slimeData = new Dictionary<SlimeType, PlayerSlimeData>();
+    UIWorldHUD slimeExperienceHUD;
+
+    //---------------------------------------
+    //      Delegates / Events
+    //---------------------------------------
+    public delegate void SlimeSwapped(PlayerCharacter player, Slime newSlime);
+    public static event SlimeSwapped OnSlimeSwapped;
 
     //---------------------------------------
     //      Properties
@@ -94,6 +105,9 @@ public class PlayerCharacter : Unit {
 	{
 		uiManager = UIManager.instance;
 
+        // UI Delefate / Event
+        UIManager.OnReplyed += WaitingForReply;
+
         // Init Camera
         playerCamera = GameObject.Find("PlayerCamera").GetComponent<Camera>();
         Vector3 camPos = playerCamera.transform.position;
@@ -113,8 +127,13 @@ public class PlayerCharacter : Unit {
         }
 
         // Init Slime
-        Utilities.TryCatchError((slime == null), "Player Character doesn't have start Slime.");
-        slimeData.Add(slime.slimeType, new PlayerSlimeData(slime, 1));
+        Utilities.TryCatchError((startSlime == null), "Player Character doesn't have start Slime.");
+        slimeData.Add(startSlime.slimeType, new PlayerSlimeData(startSlime, 1));
+        skeletonAnim = GetComponentInChildren<Spine.Unity.SkeletonAnimation>();
+        InitSlime(startSlime);
+
+        if (transform.Find("SlimeExperienceHUD") != null)
+            slimeExperienceHUD = transform.Find("SlimeExperienceHUD").GetComponent<UIWorldHUD>();
 
         base.Init(spawnTile);
     }
@@ -139,6 +158,39 @@ public class PlayerCharacter : Unit {
 			StopKeepWalkingAnim ();
 		}
 	}
+
+    //---------------------------------------
+    //      Reply event
+    //---------------------------------------
+    public void WaitingForReply(string question, bool reply)
+    {
+        if (question == "SwapSlime")
+        {
+            if (reply)
+                SwapSlime(slimeToSwapped);
+
+            slimeToSwapped = null;
+            uiManager.ShowSwitchToNewSlimeWidget(this, false);
+        }
+    }
+
+    //---------------------------------------
+    //      Control
+    //---------------------------------------
+    public bool IsPlayerControlDisabled()
+    {
+        return controlDisabled;
+    }
+
+    public void DisablePlayerControl()
+    {
+        controlDisabled = true;
+    }
+
+    public void EnablePlayerControl()
+    {
+        controlDisabled = false;
+    }
 
     //---------------------------------------
     //      Body Part
@@ -218,7 +270,40 @@ public class PlayerCharacter : Unit {
         if (!slimeData.ContainsKey(addingSlime.slimeType))
             slimeData.Add(addingSlime.slimeType, new PlayerSlimeData(addingSlime));
 
-        slimeData[addingSlime.slimeType].slimeExp += 1;
+        PlayerSlimeData data = slimeData[addingSlime.slimeType];
+        data.slimeExp += 1;
+
+        float digit_1 = data.slimeExp - data.CalculateSlimeExperience(data.slimeLevel);
+        float digit_2 = data.slime.experienceData[data.slimeLevel];
+        if (digit_1 == 0)
+            digit_1 = digit_2 = data.slime.experienceData[data.slimeLevel - 1];
+
+        slimeExperienceHUD.UpdateLabel("(" + digit_1 + "/" + digit_2 + ")");
+        slimeExperienceHUD.PlayTweeners(0);
+
+        if (data.unlocked)
+        {
+            slimeToSwapped = addingSlime;
+            uiManager.ShowSwitchToNewSlimeWidget(this, true);
+        }
+    }
+
+    public Slime GetSlime()
+    {
+        return slime;
+    }
+
+    public void InitSlime(Slime newSlime)
+    {
+        slime = newSlime;
+        OnSlimeSwapped(this, newSlime);
+    }
+
+    public void SwapSlime(Slime newSlime)
+    {
+        slime = newSlime;
+        OnSlimeSwapped(this, newSlime);
+        UpdateBody();
     }
 
     public void UpdateCurrentTileSlimeSplit()

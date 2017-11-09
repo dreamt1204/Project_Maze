@@ -16,10 +16,12 @@ public class UIWorldHUD : MonoBehaviour
     public int widgetWidth = 100;
 	public int widgetHeight = 100;
 
-    protected GameObject hudObj;
+    public GameObject hudObj;
     UIWidget widget;
     UISprite sprite;
+    public string startSprite;
     UILabel label;
+    public string startLabel;
     protected UITweener[] tweeners;
 
 	void Start()
@@ -41,7 +43,12 @@ public class UIWorldHUD : MonoBehaviour
         widget.height = widgetHeight;
 
         label = hudObj.GetComponent<UILabel>();
+        if (startLabel != "")
+            UpdateLabel(startLabel);
+
         sprite = hudObj.GetComponent<UISprite>();
+        if (startSprite != "")
+            UpdateSprite(startSprite);
 
         if (hudObj.GetComponent<UIDestroyAfterTweener>())
             widget.alpha = 0;

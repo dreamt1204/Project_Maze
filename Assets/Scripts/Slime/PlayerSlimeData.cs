@@ -65,7 +65,7 @@ public class PlayerSlimeData
     //=======================================
     //      Functions
     //=======================================
-    int CalculateSlimeLevel(float exp)
+    public int CalculateSlimeLevel(float exp)
     {
         int lv = 0;
 
@@ -83,7 +83,7 @@ public class PlayerSlimeData
         return lv;
     }
 
-    float CalculateSlimeExperience(int lv)
+    public float CalculateSlimeExperience(int lv)
     {
         float exp = 0;
 

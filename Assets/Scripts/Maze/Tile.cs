@@ -117,6 +117,7 @@ public class Tile : MonoBehaviour {
         if (item == null)
             return;
 
+        item.DestroyWorldHUD();
         Destroy(item.gameObject);
         item = null;
     }

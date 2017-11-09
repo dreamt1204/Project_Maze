@@ -37,4 +37,26 @@ public class TileItem : MonoBehaviour
 
     [Header("Compass")]
     public float compassDuration;
+
+    //=======================================
+    //      Variables
+    //=======================================
+    void Start()
+    {
+        if (itemType == ItemType.SlimeElement)
+            UpdateSlimeElementIcon();
+    }
+
+    void UpdateSlimeElementIcon()
+    {
+        UIWorldHUD hud = GetComponentInChildren<UIWorldHUD>();
+        hud.startSprite = slime.slimeSprite;
+    }
+
+    public void DestroyWorldHUD()
+    {
+        UIWorldHUD hud = GetComponentInChildren<UIWorldHUD>();
+        if ((hud != null) && (hud.hudObj))
+            Destroy(hud.hudObj);
+    }
 }

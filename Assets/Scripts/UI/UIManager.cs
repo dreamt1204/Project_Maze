@@ -22,19 +22,26 @@ public class UIManager : MonoBehaviour
     //=======================================
     public static UIManager instance = null;
 
-    private UILabel timerLabel;
+    UILabel timerLabel;
 
-    private Camera cam;
-    private UIWidget joyStickArea;
-	[HideInInspector] public  UIJoyStick joyStick;
+    Camera cam;
+    UIWidget joyStickArea;
+	[HideInInspector] public UIJoyStick joyStick;
 	[HideInInspector] public bool joyStickEnabled;
 	[HideInInspector] public Dictionary<string, abilityButton> abilityButtons;
 
-	private UIProgressBar healthBar;
+	UIProgressBar healthBar;
 
     [HideInInspector] public UIWidget compassWidget;
 	[HideInInspector] public UISprite compassSprite;
 
+    UIWidget switchToNewSlimeWidget;
+
+    //---------------------------------------
+    //      Delegates / Events
+    //---------------------------------------
+    public delegate void ReplyAction(string question, bool reply);
+    public static event ReplyAction OnReplyed;
 
     //=======================================
     //      Struct
@@ -67,6 +74,10 @@ public class UIManager : MonoBehaviour
 
 		healthBar = GameObject.Find("HealthBar").GetComponent<UIProgressBar>();
 
+        switchToNewSlimeWidget = GameObject.Find("Widget_SwitchToNewSlime").GetComponent<UIWidget>();
+        switchToNewSlimeWidget.alpha = 0;
+        switchToNewSlimeWidget.gameObject.SetActive(false);
+
         compassWidget = GameObject.Find("Widget_Compass").GetComponent<UIWidget>();
 		compassWidget.alpha = 0;
 		compassSprite = GameObject.Find("Sprite_Compass").GetComponent<UISprite>();
@@ -86,7 +97,7 @@ public class UIManager : MonoBehaviour
     //---------------------------------------
     //      Timer
     //---------------------------------------
-	void UpdateTimer()
+    void UpdateTimer()
 	{
 		timerLabel.text = GetTimerText(LevelManager.instance.timer);
 	}
@@ -111,7 +122,13 @@ public class UIManager : MonoBehaviour
     //---------------------------------------
 	void UpdateJoyStick()
 	{
-		if (Input.GetMouseButtonDown(0))
+        if (LevelManager.instance.playerCharacter.IsPlayerControlDisabled())
+        {
+            joyStick.EnableJoyStick(false);
+            return;
+        }
+
+        if (Input.GetMouseButtonDown(0))
 		{
 			joyStickEnabled = true;
 			TryUpdateJoyStickPos();
@@ -197,17 +214,51 @@ public class UIManager : MonoBehaviour
     }
 
 	//---------------------------------------
-	//      Slime Health
+	//      Slime
 	//---------------------------------------
 	public void UpdateHealthBar(float value)
 	{
 		healthBar.value = value;
 	}
 
-	//---------------------------------------
-	//      Update Compass
-	//---------------------------------------
-	public void ActivateCompass(float duration)
+    public void ShowSwitchToNewSlimeWidget(PlayerCharacter player, bool enabled)
+    {
+        if (enabled)
+        {
+            UISprite previousSprite = switchToNewSlimeWidget.transform.Find("Sprite_PreviousSlime").GetComponent<UISprite>();
+            UISprite newSprite = switchToNewSlimeWidget.transform.Find("Sprite_NewSlime").GetComponent<UISprite>();
+            UILabel label = switchToNewSlimeWidget.transform.Find("Label_SwitchQuestion").GetComponent<UILabel>();
+            
+            previousSprite.spriteName = player.GetSlime().slimeSprite;
+            newSprite.spriteName = player.slimeToSwapped.slimeSprite;
+            label.text = "Do You want to switch to " + player.slimeToSwapped.slimeName + "?";
+
+            switchToNewSlimeWidget.alpha = 1;
+            LevelManager.instance.playerCharacter.DisablePlayerControl();
+        }
+        else
+        {
+            switchToNewSlimeWidget.alpha = 0;
+            LevelManager.instance.playerCharacter.EnablePlayerControl();
+        }
+
+        switchToNewSlimeWidget.gameObject.SetActive(enabled);
+    }
+
+    public void SwitchToNewSlimeWidget_Yes()
+    {
+        OnReplyed("SwapSlime", true);
+    }
+
+    public void SwitchToNewSlimeWidget_No()
+    {
+        OnReplyed("SwapSlime", false);
+    }
+
+    //---------------------------------------
+    //      Update Compass
+    //---------------------------------------
+    public void ActivateCompass(float duration)
 	{
 		StartCoroutine ("UpdateCompass", duration);
 	}

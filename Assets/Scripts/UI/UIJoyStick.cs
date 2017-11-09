@@ -113,6 +113,9 @@ public class UIJoyStick : MonoBehaviour
     }
     void OnPress(bool pressed)
     {
+        if (LevelManager.instance.playerCharacter.IsPlayerControlDisabled())
+            return;
+
         if (enabled && NGUITools.GetActive(gameObject) && target != null)
         {
             mPressed = pressed;
@@ -163,6 +166,9 @@ public class UIJoyStick : MonoBehaviour
 
     void OnDrag(Vector2 delta)
     {
+        if (LevelManager.instance.playerCharacter.IsPlayerControlDisabled())
+            return;
+
         if (enabled && NGUITools.GetActive(gameObject) && target != null)
         {
             UICamera.currentTouch.clickNotification = UICamera.ClickNotification.BasedOnDelta;
@@ -239,6 +245,9 @@ public class UIJoyStick : MonoBehaviour
 
     void OnScroll(float delta)
     {
+        if (LevelManager.instance.playerCharacter.IsPlayerControlDisabled())
+            return;
+
         if (enabled && NGUITools.GetActive(gameObject))
         {
             if (Mathf.Sign(mScroll) != Mathf.Sign(delta)) mScroll = 0f;
