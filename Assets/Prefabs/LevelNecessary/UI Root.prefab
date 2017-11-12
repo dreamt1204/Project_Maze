@@ -251,7 +251,7 @@ GameObject:
   - component: {fileID: 4340773941820298}
   - component: {fileID: 114559040084414794}
   m_Layer: 8
-  m_Name: Widget_SlimeSwapMenu
+  m_Name: Widget_SlimeInventroy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1255,7 +1255,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1330729304694840}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -227, y: -523, z: 0}
+  m_LocalPosition: {x: -20456, y: -47665, z: 0}
   m_LocalScale: {x: 0.9984, y: 0.9984, z: 0.9984}
   m_Children:
   - {fileID: 4344286937739744}
@@ -1420,7 +1420,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1794371258585108}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 47, z: 0}
+  m_LocalPosition: {x: -28, y: -30193, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4998344387971206}
@@ -1493,7 +1493,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1595609353950552}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: -28, y: -30239, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4203819833433726}
@@ -1539,7 +1539,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1997639298676446}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 121, z: 0}
+  m_LocalPosition: {x: -28, y: -30119, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4239219605768076}
@@ -1812,7 +1812,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1233626122801526}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 551, z: 0}
+  m_LocalPosition: {x: -28, y: -12786, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4638404316247198}
@@ -1921,7 +1921,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1786760011772768}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 65, y: 65, z: 0}
+  m_LocalPosition: {x: 10165, y: 10165, z: 0}
   m_LocalScale: {x: 0.999915, y: 0.999915, z: 0.999915}
   m_Children:
   - {fileID: 4453951706408810}
@@ -2006,7 +2006,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1121174083194808}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -70, z: 0}
+  m_LocalPosition: {x: 0, y: -20271, z: 0}
   m_LocalScale: {x: 1.0016026, y: 1.0016026, z: 1.0016026}
   m_Children: []
   m_Father: {fileID: 4137429860130042}
@@ -3018,8 +3018,8 @@ MonoBehaviour:
   updateAnchors: 1
   mColor: {r: 1, g: 0, b: 0, a: 0}
   mPivot: 4
-  mWidth: 720
-  mHeight: 930
+  mWidth: 81521
+  mHeight: 34735
   mDepth: 0
   mMat: {fileID: 0}
   autoResizeBoxCollider: 0
@@ -3194,7 +3194,7 @@ MonoBehaviour:
   updateAnchors: 1
   mColor: {r: 1, g: 1, b: 1, a: 1}
   mPivot: 4
-  mWidth: 722
+  mWidth: 81523
   mHeight: 180
   mDepth: 2
   mMat: {fileID: 0}
@@ -3286,8 +3286,8 @@ MonoBehaviour:
   updateAnchors: 1
   mColor: {r: 1, g: 1, b: 1, a: 1}
   mPivot: 4
-  mWidth: 170
-  mHeight: 170
+  mWidth: 40571
+  mHeight: 40571
   mDepth: 3
   mMat: {fileID: 0}
   autoResizeBoxCollider: 0
@@ -3741,8 +3741,8 @@ MonoBehaviour:
   updateAnchors: 1
   mColor: {r: 1, g: 1, b: 1, a: 1}
   mPivot: 4
-  mWidth: 60
-  mHeight: 60
+  mWidth: 20261
+  mHeight: 20261
   mDepth: 7
   mMat: {fileID: 0}
   autoResizeBoxCollider: 0
@@ -4681,7 +4681,7 @@ MonoBehaviour:
     relative: 1
     absolute: 0
   updateAnchors: 1
-  mColor: {r: 1, g: 1, b: 1, a: 1}
+  mColor: {r: 1, g: 1, b: 1, a: 0}
   mPivot: 4
   mWidth: 100
   mHeight: 100
@@ -5020,8 +5020,8 @@ MonoBehaviour:
   updateAnchors: 1
   mColor: {r: 0.654902, g: 0.654902, b: 0.654902, a: 1}
   mPivot: 4
-  mWidth: 170
-  mHeight: 170
+  mWidth: 40571
+  mHeight: 40571
   mDepth: 4
   mMat: {fileID: 0}
   autoResizeBoxCollider: 0
@@ -5112,8 +5112,8 @@ MonoBehaviour:
   updateAnchors: 1
   mColor: {r: 1, g: 1, b: 1, a: 1}
   mPivot: 4
-  mWidth: 100
-  mHeight: 100
+  mWidth: 40501
+  mHeight: 40501
   mDepth: 5
   mMat: {fileID: 0}
   autoResizeBoxCollider: 0
@@ -5603,7 +5603,7 @@ MonoBehaviour:
   anchorOffset: 0
   softBorderPadding: 1
   renderQueue: 0
-  startingRenderQueue: 3010
+  startingRenderQueue: 3007
   mClipTexture: {fileID: 0}
   mAlpha: 1
   mClipping: 3
@@ -5747,7 +5747,7 @@ MonoBehaviour:
   updateAnchors: 1
   mColor: {r: 0.6780933, g: 1, b: 0.49264705, a: 1}
   mPivot: 4
-  mWidth: 140
+  mWidth: 40541
   mHeight: 16
   mDepth: 5
   mMat: {fileID: 0}

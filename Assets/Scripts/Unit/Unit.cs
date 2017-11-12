@@ -57,7 +57,7 @@ public class Unit : MonoBehaviour {
     protected bool playWalkingAnim = false;
 
     // HUD
-    UIWorldHUD DamageValueHUD;
+    UIWorldHUDManager DamageValueHUD;
 
     //---------------------------------------
     //      Properties
@@ -129,7 +129,7 @@ public class Unit : MonoBehaviour {
         InitBody();
 
         if (transform.Find("DamageValueHUD") != null)
-            DamageValueHUD = transform.Find("DamageValueHUD").GetComponent<UIWorldHUD>();
+            DamageValueHUD = transform.Find("DamageValueHUD").GetComponent<UIWorldHUDManager>();
 
         finishedInit = true;
     }

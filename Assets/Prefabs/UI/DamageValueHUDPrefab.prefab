@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 114712669876918708}
   - component: {fileID: 114513587174930104}
   - component: {fileID: 114766776591215158}
-  - component: {fileID: 114734228556591874}
+  - component: {fileID: 114618163908714486}
   m_Layer: 8
   m_Name: DamageValueHUDPrefab
   m_TagString: Untagged
@@ -85,6 +85,20 @@ MonoBehaviour:
   callWhenFinished: 
   from: 1
   to: 0
+--- !u!114 &114618163908714486
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1645641764915264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbb70a93e8aac0a4eaf130df4c5fc7a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tweeners: []
+  hiddenInBeginning: 1
+  destroyAfterTweener: 1
 --- !u!114 &114712669876918708
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -153,17 +167,6 @@ MonoBehaviour:
   mMaxLineHeight: 0
   mLineWidth: 0
   mMultiline: 1
---- !u!114 &114734228556591874
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1645641764915264}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5926a5768cc6b324a8d80438b431f137, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114766776591215158
 MonoBehaviour:
   m_ObjectHideFlags: 1

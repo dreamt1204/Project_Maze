@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4366048932678502}
   - component: {fileID: 114000537423612974}
+  - component: {fileID: 114218493461022896}
   m_Layer: 8
   m_Name: SlimeElementIconPrefab
   m_TagString: Untagged
@@ -94,3 +95,15 @@ MonoBehaviour:
   mAtlas: {fileID: 114588430131481706, guid: b1a0463066ff46d40812e06a264cabac, type: 2}
   mSpriteName: TestSlime
   mFillCenter: 1
+--- !u!114 &114218493461022896
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1432269728993758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbb70a93e8aac0a4eaf130df4c5fc7a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destroyAfterTweener: 0

@@ -37,6 +37,8 @@ GameObject:
   - component: {fileID: 4649232147861762}
   - component: {fileID: 114793180156526652}
   - component: {fileID: 65072951337913746}
+  - component: {fileID: 114080022547757840}
+  - component: {fileID: 114814362817945730}
   m_Layer: 8
   m_Name: SlimeInventoryButtonPrefab
   m_TagString: Untagged
@@ -63,7 +65,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1536783064543312}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -83,6 +85,35 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 80, y: 80, z: 0}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114080022547757840
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1536783064543312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fdca5042b1d12a4890ec1bd4f04290d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tweenTarget: {fileID: 1536783064543312}
+  hover: {r: 0.654902, g: 0.654902, b: 0.654902, a: 1}
+  pressed: {r: 0.654902, g: 0.654902, b: 0.654902, a: 1}
+  disabledColor: {r: 0.654902, g: 0.654902, b: 0.654902, a: 1}
+  duration: 0.2
+  dragHighlight: 0
+  hoverSprite: 
+  pressedSprite: 
+  disabledSprite: 
+  hoverSprite2D: {fileID: 0}
+  pressedSprite2D: {fileID: 0}
+  disabledSprite2D: {fileID: 0}
+  pixelSnap: 0
+  onClick:
+  - mTarget: {fileID: 114814362817945730}
+    mMethodName: OpenSlimeIventory
+    mParameters: []
+    oneShot: 0
 --- !u!114 &114275008956271370
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -191,3 +222,15 @@ MonoBehaviour:
   mAtlas: {fileID: 114305812388705888, guid: e7c264a69e91524488de5d039c99530f, type: 2}
   mSpriteName: Rectangle-Rounded
   mFillCenter: 1
+--- !u!114 &114814362817945730
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1536783064543312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a34e479b5c63292449b657328487cd24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destroyAfterTweener: 0

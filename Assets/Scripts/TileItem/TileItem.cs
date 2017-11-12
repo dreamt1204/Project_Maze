@@ -15,6 +15,7 @@ public enum ItemType
 	Objective,
     BodyPart,
     SlimeElement,
+    SlimeInventory,
     HealthPack,
     Compass
 }
@@ -45,34 +46,29 @@ public class TileItem : MonoBehaviour
     {
         if (itemType == ItemType.SlimeElement)
             UpdateSlimeElementIcon();
+        else if (itemType == ItemType.SlimeInventory)
+            EnableSlimeSwapButton(false);
     }
 
     public void EnableSlimeSwapButton(bool enabled)
     {
-        UIWorldHUD hud = GetComponentInChildren<UIWorldHUD>();
-        if (!hud.spawned)
-            hud.SpawnHUD();
+        UIWorldHUDManager worldHUDManager = GetComponentInChildren<UIWorldHUDManager>();
+        if (worldHUDManager.hud == null)
+            worldHUDManager.SpawnHUD();
 
-        if (enabled)
-        {
-            hud.hudObj.SetActive(true);
-        }
-        else
-        {
-            hud.hudObj.SetActive(false);
-        }
+        worldHUDManager.hud.gameObject.SetActive(enabled);
     }
 
     void UpdateSlimeElementIcon()
     {
-        UIWorldHUD hud = GetComponentInChildren<UIWorldHUD>();
+        UIWorldHUDManager hud = GetComponentInChildren<UIWorldHUDManager>();
         hud.startSprite = slime.slimeSprite;
     }
 
     public void DestroyWorldHUD()
     {
-        UIWorldHUD hud = GetComponentInChildren<UIWorldHUD>();
-        if ((hud != null) && (hud.hudObj))
-            Destroy(hud.hudObj);
+        UIWorldHUDManager worldHUDManager = GetComponentInChildren<UIWorldHUDManager>();
+        if ((worldHUDManager != null) && (worldHUDManager.hud.gameObject != null))
+            Destroy(worldHUDManager.hud.gameObject);
     }
 }

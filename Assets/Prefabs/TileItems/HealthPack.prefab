@@ -187,7 +187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b91592f66ff714eef80dad81fe51ca86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemType: 4
+  itemType: 5
   bodyPart: {fileID: 0}
   slime: {fileID: 0}
   healAmount: 20

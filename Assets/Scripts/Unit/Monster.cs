@@ -19,7 +19,7 @@ public class Monster : Unit {
     // Detection
 	DetectState detectState_m = DetectState.Idle;
 	[HideInInspector] public Unit alertedTarget;
-    UIWorldHUD detectStateIcon;
+    UIWorldHUDManager detectStateIcon;
 
 	[Header("Detection")]
 	public int detectRange = 3;
@@ -90,7 +90,7 @@ public class Monster : Unit {
 
     void InitDetectStateIcon()
     {
-        detectStateIcon = transform.Find("DetectStateHUD").GetComponent<UIWorldHUD>();
+        detectStateIcon = transform.Find("DetectStateHUD").GetComponent<UIWorldHUDManager>();
         detectStateIcon.SpawnHUD();
         UpdateDetectStateIcon(detectState);
     }

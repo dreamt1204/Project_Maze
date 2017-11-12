@@ -35,7 +35,10 @@ public class UIManager : MonoBehaviour
     [HideInInspector] public UIWidget compassWidget;
 	[HideInInspector] public UISprite compassSprite;
 
-    UIWidget switchToNewSlimeWidget;
+    UIWidget Widget_SwitchToNewSlime;
+    UIWidget Widget_SlimeInventroy;
+    UIGrid SlimeInventroyGrid;
+    public GameObject slimeScrollItem;
 
     //---------------------------------------
     //      Delegates / Events
@@ -74,9 +77,15 @@ public class UIManager : MonoBehaviour
 
 		healthBar = GameObject.Find("HealthBar").GetComponent<UIProgressBar>();
 
-        switchToNewSlimeWidget = GameObject.Find("Widget_SwitchToNewSlime").GetComponent<UIWidget>();
-        switchToNewSlimeWidget.alpha = 0;
-        switchToNewSlimeWidget.gameObject.SetActive(false);
+        Widget_SwitchToNewSlime = GameObject.Find("Widget_SwitchToNewSlime").GetComponent<UIWidget>();
+        Widget_SwitchToNewSlime.alpha = 0;
+        Widget_SwitchToNewSlime.gameObject.SetActive(false);
+
+        Widget_SlimeInventroy = GameObject.Find("Widget_SlimeInventroy").GetComponent<UIWidget>();
+        SlimeInventroyGrid = Widget_SlimeInventroy.transform.GetComponentInChildren<UIGrid>();
+        Widget_SlimeInventroy.transform.GetComponentInChildren<UICenterOnChild>().onCenter += OnSelectedSlimeInInventory;
+        Widget_SlimeInventroy.alpha = 0;
+        Widget_SlimeInventroy.gameObject.SetActive(false);
 
         compassWidget = GameObject.Find("Widget_Compass").GetComponent<UIWidget>();
 		compassWidget.alpha = 0;
@@ -141,6 +150,9 @@ public class UIManager : MonoBehaviour
 
     void TryUpdateJoyStickPos()
     {
+        if (HoveredOnWorldHUD())
+            return;
+        
         // Check if player clicks/taps in the joystick area
         Vector3 clickPos = cam.ScreenToWorldPoint(Input.mousePosition);
         Vector3[] corners = joyStickArea.worldCorners;
@@ -152,6 +164,17 @@ public class UIManager : MonoBehaviour
         joyStick.transform.parent.transform.position = clickPos;
         joyStick.EnableJoyStick(true);
         cam.GetComponent<UICamera>().ProcessMouse();
+    }
+
+    bool HoveredOnWorldHUD()
+    {
+        if (UICamera.hoveredObject == null)
+            return false;
+        
+        if (UICamera.hoveredObject.GetComponent<UISlimeInventroyButton>() == null)
+            return false;
+
+        return true;
     }
 
     //---------------------------------------
@@ -225,24 +248,24 @@ public class UIManager : MonoBehaviour
     {
         if (enabled)
         {
-            UISprite previousSprite = switchToNewSlimeWidget.transform.Find("Sprite_PreviousSlime").GetComponent<UISprite>();
-            UISprite newSprite = switchToNewSlimeWidget.transform.Find("Sprite_NewSlime").GetComponent<UISprite>();
-            UILabel label = switchToNewSlimeWidget.transform.Find("Label_SwitchQuestion").GetComponent<UILabel>();
+            UISprite previousSprite = Widget_SwitchToNewSlime.transform.Find("Sprite_PreviousSlime").GetComponent<UISprite>();
+            UISprite newSprite = Widget_SwitchToNewSlime.transform.Find("Sprite_NewSlime").GetComponent<UISprite>();
+            UILabel label = Widget_SwitchToNewSlime.transform.Find("Label_SwitchQuestion").GetComponent<UILabel>();
             
             previousSprite.spriteName = player.GetSlime().slimeSprite;
             newSprite.spriteName = player.slimeToSwapped.slimeSprite;
             label.text = "Do You want to switch to " + player.slimeToSwapped.slimeName + "?";
 
-            switchToNewSlimeWidget.alpha = 1;
+            Widget_SwitchToNewSlime.alpha = 1;
             LevelManager.instance.playerCharacter.DisablePlayerControl();
         }
         else
         {
-            switchToNewSlimeWidget.alpha = 0;
+            Widget_SwitchToNewSlime.alpha = 0;
             LevelManager.instance.playerCharacter.EnablePlayerControl();
         }
 
-        switchToNewSlimeWidget.gameObject.SetActive(enabled);
+        Widget_SwitchToNewSlime.gameObject.SetActive(enabled);
     }
 
     public void SwitchToNewSlimeWidget_Yes()
@@ -253,6 +276,103 @@ public class UIManager : MonoBehaviour
     public void SwitchToNewSlimeWidget_No()
     {
         OnReplyed("SwapSlime", false);
+    }
+
+    public void OpenSlimeInventory()
+    {
+        ShowSlimeInventoryWidget(true);
+    }
+
+    public void ShowSlimeInventoryWidget(bool enabled)
+    {
+        UIWidget widget = Widget_SlimeInventroy;
+
+        if (enabled)
+        {
+            widget.alpha = 1;
+            LevelManager.instance.playerCharacter.DisablePlayerControl();
+        }
+        else
+        {
+            widget.alpha = 0;
+            LevelManager.instance.playerCharacter.EnablePlayerControl();
+        }
+
+        widget.gameObject.SetActive(enabled);
+    }
+
+    public void ConfirmSwappingSlimeFromInventroy()
+    {
+        OnReplyed("SwapSlimeFromInventroy", true);
+    }
+
+    public void UpdateSlimeInventroy(PlayerCharacter player, SlimeType updatedSlimeType)
+    {
+        PlayerSlimeData slimeData = player.slimeData[updatedSlimeType];
+        
+        if (GetSlimeScrollItem(updatedSlimeType) == null)
+        {
+            GameObject obj = SlimeInventroyGrid.gameObject.AddChild(slimeScrollItem);
+            SlimeInventroyGrid.Reposition();
+            obj.GetComponent<UISlimeScrollItem>().slimeType = updatedSlimeType;
+        }
+
+        UISprite sprite = GetSlimeScrollItem(updatedSlimeType).GetComponentInChildren<UISprite>();
+        sprite.spriteName = slimeData.slime.slimeSprite;
+
+        if (!slimeData.unlocked)
+            sprite.alpha = 0.25f;
+        else
+            sprite.alpha = 1f;
+    }
+
+    void OnSelectedSlimeInInventory(GameObject selectedObj)
+    {
+        PlayerSlimeData slimeData = LevelManager.instance.playerCharacter.slimeData[GetSlimeScrollItemSlimeType(selectedObj)];
+
+        // Slime name
+        UILabel Label_SlimeName = Widget_SlimeInventroy.transform.Find("Label_SlimeName").GetComponent<UILabel>();
+        Label_SlimeName.text = slimeData.slime.slimeName;
+
+        // Level Info
+        UILabel Label_LevelInfo = Widget_SlimeInventroy.transform.Find("Label_LevelInfo").GetComponent<UILabel>();
+
+        float digit_1 = slimeData.slimeExp - slimeData.CalculateSlimeExperience(slimeData.slimeLevel);
+        float digit_2 = slimeData.slime.experienceData[slimeData.slimeLevel];
+
+        Label_LevelInfo.text = "Lv: " + slimeData.slimeLevel + "   Exp: " + digit_1 + "/" + digit_2;
+
+        // Description
+        UILabel Label_Description = Widget_SlimeInventroy.transform.Find("Label_Description").GetComponent<UILabel>();
+        if (slimeData.unlocked)
+            Label_Description.text = slimeData.slime.slimeDescription;
+        else
+            Label_Description.text = "Gather more Slime Elements of this type of Slime to unlock it!!";
+
+        // Enable/Disable Confirm button
+        GameObject confirmButtonObj = Widget_SlimeInventroy.transform.Find("Sprite_Yes").gameObject;
+        confirmButtonObj.SetActive(slimeData.unlocked);
+
+        if (slimeData.unlocked)
+            LevelManager.instance.playerCharacter.slimeToSwapped = slimeData.slime;
+    }
+
+    public SlimeType GetSlimeScrollItemSlimeType(GameObject obj)
+    {
+        return obj.GetComponent<UISlimeScrollItem>().slimeType;
+    }
+
+    public GameObject GetSlimeScrollItem(SlimeType thisType)
+    {
+        List<Transform> transList = SlimeInventroyGrid.GetChildList();
+
+        foreach (Transform trans in transList)
+        {
+            if (GetSlimeScrollItemSlimeType(trans.gameObject) == thisType)
+                return trans.gameObject;
+        }
+
+        return null;
     }
 
     //---------------------------------------

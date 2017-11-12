@@ -34,7 +34,7 @@ public class PlayerCharacter : Unit {
     [HideInInspector] public Slime slimeToSwapped;
     SlimeStateType slimeState_m;
     public Dictionary<SlimeType, PlayerSlimeData> slimeData = new Dictionary<SlimeType, PlayerSlimeData>();
-    UIWorldHUD slimeExperienceHUD;
+    UIWorldHUDManager slimeExperienceHUD;
 
     //---------------------------------------
     //      Delegates / Events
@@ -129,11 +129,12 @@ public class PlayerCharacter : Unit {
         // Init Slime
         Utilities.TryCatchError((startSlime == null), "Player Character doesn't have start Slime.");
         slimeData.Add(startSlime.slimeType, new PlayerSlimeData(startSlime, 1));
+        uiManager.UpdateSlimeInventroy(this, startSlime.slimeType);
         skeletonAnim = GetComponentInChildren<Spine.Unity.SkeletonAnimation>();
         InitSlime(startSlime);
 
         if (transform.Find("SlimeExperienceHUD") != null)
-            slimeExperienceHUD = transform.Find("SlimeExperienceHUD").GetComponent<UIWorldHUD>();
+            slimeExperienceHUD = transform.Find("SlimeExperienceHUD").GetComponent<UIWorldHUDManager>();
 
         base.Init(spawnTile);
     }
@@ -171,6 +172,14 @@ public class PlayerCharacter : Unit {
 
             slimeToSwapped = null;
             uiManager.ShowSwitchToNewSlimeWidget(this, false);
+        }
+        else if (question == "SwapSlimeFromInventroy")
+        {
+            if (reply)
+                SwapSlime(slimeToSwapped);
+
+            slimeToSwapped = null;
+            uiManager.ShowSlimeInventoryWidget(false);
         }
     }
 
@@ -243,6 +252,10 @@ public class PlayerCharacter : Unit {
 
             tile.item.EnableSlimeSwapButton(true);
         }
+        else if (tile.item.itemType == ItemType.SlimeInventory)
+        {
+            tile.item.EnableSlimeSwapButton(true);
+        }
         else if (tile.item.itemType == ItemType.BodyPart)
 		{
 			UpdateBodyPart(tile.item.bodyPart);
@@ -273,7 +286,7 @@ public class PlayerCharacter : Unit {
         if (tile.item == null)
             return;
 
-        if (tile.item.itemType == ItemType.StartPoint)
+        if ((tile.item.itemType == ItemType.StartPoint) || (tile.item.itemType == ItemType.SlimeInventory))
         {
             tile.item.EnableSlimeSwapButton(false);
         }
@@ -289,6 +302,8 @@ public class PlayerCharacter : Unit {
 
         PlayerSlimeData data = slimeData[addingSlime.slimeType];
         data.slimeExp += 1;
+
+        uiManager.UpdateSlimeInventroy(this, addingSlime.slimeType);
 
         float digit_1 = data.slimeExp - data.CalculateSlimeExperience(data.slimeLevel);
         float digit_2 = data.slime.experienceData[data.slimeLevel];

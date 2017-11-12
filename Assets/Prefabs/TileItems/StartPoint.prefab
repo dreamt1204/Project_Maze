@@ -234,8 +234,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hudPrefab: {fileID: 1536783064543312, guid: 7d361554a9a4c024ab0d1c17d79f5f97, type: 2}
-  widgetWidth: 100
-  widgetHeight: 100
-  hudObj: {fileID: 0}
+  widgetWidth: 80
+  widgetHeight: 80
+  hud: {fileID: 0}
   startSprite: 
   startLabel: 

@@ -52,8 +52,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slimeType: 1
-  slimeName: Test Slime
   slimeSprite: TestSlime
+  slimeName: Test Slime
+  slimeDescription: TEST!!!! This is a test slime :)
   slimeSkinName: Slime_red
   slimeSplit: {fileID: 114472983391352266, guid: 4d5f6b42e8ee17346bf61a5ccaee5a83,
     type: 2}
