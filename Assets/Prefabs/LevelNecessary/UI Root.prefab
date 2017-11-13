@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 65051800976785168}
   - component: {fileID: 114724408226623008}
   m_Layer: 8
-  m_Name: Sprite_ability_Body
+  m_Name: Sprite_SlimeAbility_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -241,22 +241,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1251580655524160
-GameObject:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 4311969671832162}
-  - component: {fileID: 114192580996843164}
-  m_Layer: 8
-  m_Name: Sprite_bg2
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &1273678679207524
 GameObject:
   m_ObjectHideFlags: 0
@@ -353,7 +337,7 @@ GameObject:
   - component: {fileID: 4568306428863722}
   - component: {fileID: 114430232370696620}
   m_Layer: 8
-  m_Name: Sprite_ability_button
+  m_Name: Sprite_ability_icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -387,7 +371,7 @@ GameObject:
   - component: {fileID: 65734266898235582}
   - component: {fileID: 114146200443239402}
   m_Layer: 8
-  m_Name: Sprite_ability_Legs
+  m_Name: Sprite_SlimeAbility_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -467,7 +451,7 @@ GameObject:
   - component: {fileID: 4601673004384178}
   - component: {fileID: 114663207462927898}
   m_Layer: 8
-  m_Name: Widget_Legs
+  m_Name: Widget_SlimeAbility_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -566,6 +550,22 @@ GameObject:
   - component: {fileID: 65769138524643992}
   m_Layer: 8
   m_Name: Sprite_Yes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1567235133063782
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4521965776430332}
+  - component: {fileID: 114913580957688412}
+  m_Layer: 8
+  m_Name: Sprite_bg2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -743,7 +743,7 @@ GameObject:
   - component: {fileID: 4596087654787840}
   - component: {fileID: 114024708765822164}
   m_Layer: 8
-  m_Name: Sprite_ability_button
+  m_Name: Sprite_ability_icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -840,7 +840,7 @@ GameObject:
   - component: {fileID: 4096529050032476}
   - component: {fileID: 114888776276983124}
   m_Layer: 8
-  m_Name: Sprite_ability_button
+  m_Name: Sprite_ability_icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -872,7 +872,23 @@ GameObject:
   - component: {fileID: 4140766548264962}
   - component: {fileID: 114286731657584016}
   m_Layer: 8
-  m_Name: Widget_Body
+  m_Name: Widget_SlimeAbility_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1857367692494002
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4841781797799538}
+  - component: {fileID: 114580706476822364}
+  m_Layer: 8
+  m_Name: Label_bg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -956,7 +972,7 @@ GameObject:
   - component: {fileID: 4705953717618150}
   - component: {fileID: 114650008565264508}
   m_Layer: 8
-  m_Name: Sprite_bg2
+  m_Name: Sprite_icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -973,6 +989,22 @@ GameObject:
   - component: {fileID: 114237634806358064}
   m_Layer: 8
   m_Name: Sprite_bg
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1963126627906958
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4582864775641978}
+  - component: {fileID: 114293073187765492}
+  m_Layer: 8
+  m_Name: Label_bg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1154,14 +1186,15 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1838515019576038}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 110, y: -540, z: 0}
+  m_LocalPosition: {x: -60, y: -540, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4629850016366766}
-  - {fileID: 4836346029710156}
+  - {fileID: 4521965776430332}
   - {fileID: 4525446461516004}
+  - {fileID: 4582864775641978}
   m_Father: {fileID: 4998344387971206}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4156313716917368
 Transform:
@@ -1294,19 +1327,6 @@ Transform:
   m_Father: {fileID: 4998344387971206}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4311969671832162
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1251580655524160}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4601673004384178}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4315717151257410
 Transform:
   m_ObjectHideFlags: 1
@@ -1422,14 +1442,14 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1165136028210944}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -35, y: -540, z: 0}
+  m_LocalPosition: {x: 250, y: -530, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4111262971932492}
   - {fileID: 4705953717618150}
   - {fileID: 4614284408689394}
   m_Father: {fileID: 4998344387971206}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4429650450932462
 Transform:
@@ -1497,6 +1517,19 @@ Transform:
   m_Father: {fileID: 4343765893331466}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4521965776430332
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1567235133063782}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4140766548264962}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4525446461516004
 Transform:
   m_ObjectHideFlags: 1
@@ -1562,6 +1595,19 @@ Transform:
   m_Father: {fileID: 4593242089260010}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4582864775641978
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1963126627906958}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 35, y: -35, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4140766548264962}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4593242089260010
 Transform:
   m_ObjectHideFlags: 1
@@ -1596,14 +1642,15 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1509668924598574}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 255, y: -541, z: 0}
+  m_LocalPosition: {x: 75, y: -540, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4593242089260010}
-  - {fileID: 4311969671832162}
+  - {fileID: 4836346029710156}
   - {fileID: 4852800137977248}
+  - {fileID: 4841781797799538}
   m_Father: {fileID: 4998344387971206}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4614284408689394
 Transform:
@@ -1698,7 +1745,7 @@ Transform:
   m_GameObject: {fileID: 1936027028160862}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.99991494, y: 0.99991494, z: 0.99991494}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4401411121878870}
   m_RootOrder: 1
@@ -1766,8 +1813,21 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 4140766548264962}
+  m_Father: {fileID: 4601673004384178}
   m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4841781797799538
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1857367692494002}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 35, y: -35, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4601673004384178}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4848071807656024
 Transform:
@@ -1851,9 +1911,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4137429860130042}
-  - {fileID: 4401411121878870}
   - {fileID: 4140766548264962}
   - {fileID: 4601673004384178}
+  - {fileID: 4401411121878870}
   - {fileID: 4650900690296976}
   - {fileID: 4912592596829208}
   - {fileID: 4297120767566086}
@@ -1987,7 +2047,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 120, y: 120, z: 0}
+  m_Size: {x: 150, y: 150, z: 0}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &65849445906919504
 BoxCollider:
@@ -2097,14 +2157,14 @@ MonoBehaviour:
   updateAnchors: 1
   mColor: {r: 1, g: 0.36764705, b: 0.36764705, a: 1}
   mPivot: 4
-  mWidth: 120
+  mWidth: 100
   mHeight: 120
   mDepth: 3
   mMat: {fileID: 0}
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0
-  aspectRatio: 1
+  aspectRatio: 0.8333333
   mType: 0
   mFillDirection: 4
   mFillAmount: 1
@@ -2502,13 +2562,13 @@ MonoBehaviour:
   updateAnchors: 1
   mColor: {r: 0.24264705, g: 0.24264705, b: 0.24264705, a: 0.15686275}
   mPivot: 4
-  mWidth: 120
-  mHeight: 120
+  mWidth: 150
+  mHeight: 150
   mDepth: 0
   mMat: {fileID: 0}
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
-  keepAspectRatio: 0
+  keepAspectRatio: 1
   aspectRatio: 1
   mType: 1
   mFillDirection: 4
@@ -2771,60 +2831,6 @@ MonoBehaviour:
   mMaxLineHeight: 0
   mLineWidth: 0
   mMultiline: 1
---- !u!114 &114192580996843164
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1251580655524160}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b3dc54f924693f41b5cbecb267e647a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leftAnchor:
-    target: {fileID: 4601673004384178}
-    relative: 0
-    absolute: 33
-  rightAnchor:
-    target: {fileID: 4601673004384178}
-    relative: 1
-    absolute: -32
-  bottomAnchor:
-    target: {fileID: 4601673004384178}
-    relative: 0
-    absolute: 25
-  topAnchor:
-    target: {fileID: 4601673004384178}
-    relative: 1
-    absolute: -25
-  updateAnchors: 1
-  mColor: {r: 0.39705884, g: 0.39705884, b: 0.39705884, a: 0.15686275}
-  mPivot: 4
-  mWidth: 55
-  mHeight: 70
-  mDepth: 1
-  mMat: {fileID: 0}
-  autoResizeBoxCollider: 0
-  hideIfOffScreen: 0
-  keepAspectRatio: 0
-  aspectRatio: 0.78571427
-  mType: 1
-  mFillDirection: 4
-  mFillAmount: 1
-  mInvert: 0
-  mFlip: 0
-  mApplyGradient: 0
-  mGradientTop: {r: 1, g: 1, b: 1, a: 1}
-  mGradientBottom: {r: 0.60294116, g: 0.60294116, b: 0.60294116, a: 1}
-  centerType: 1
-  leftType: 1
-  rightType: 1
-  bottomType: 1
-  topType: 1
-  mAtlas: {fileID: 114305812388705888, guid: e7c264a69e91524488de5d039c99530f, type: 2}
-  mSpriteName: Legs-Icon
-  mFillCenter: 1
 --- !u!114 &114202739138038776
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2875,33 +2881,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   leftAnchor:
-    target: {fileID: 4140766548264962}
+    target: {fileID: 0}
     relative: 0
     absolute: 25
   rightAnchor:
-    target: {fileID: 4140766548264962}
+    target: {fileID: 0}
     relative: 1
     absolute: -25
   bottomAnchor:
-    target: {fileID: 4140766548264962}
+    target: {fileID: 0}
     relative: 0
     absolute: 25
   topAnchor:
-    target: {fileID: 4140766548264962}
+    target: {fileID: 0}
     relative: 1
     absolute: -25
   updateAnchors: 1
   mColor: {r: 0.39705884, g: 0.39705884, b: 0.39705884, a: 0.15686275}
   mPivot: 4
-  mWidth: 70
-  mHeight: 70
+  mWidth: 100
+  mHeight: 100
   mDepth: 1
   mMat: {fileID: 0}
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0
   aspectRatio: 1
-  mType: 1
+  mType: 0
   mFillDirection: 4
   mFillAmount: 1
   mInvert: 0
@@ -2914,8 +2920,8 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 114305812388705888, guid: e7c264a69e91524488de5d039c99530f, type: 2}
-  mSpriteName: Torso-Icon
+  mAtlas: {fileID: 114588430131481706, guid: b1a0463066ff46d40812e06a264cabac, type: 2}
+  mSpriteName: SlimeIcon
   mFillCenter: 1
 --- !u!114 &114234586029935656
 MonoBehaviour:
@@ -3169,6 +3175,74 @@ MonoBehaviour:
   mAtlas: {fileID: 114588430131481706, guid: b1a0463066ff46d40812e06a264cabac, type: 2}
   mSpriteName: Slime
   mFillCenter: 1
+--- !u!114 &114293073187765492
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1963126627906958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9d0b5f3bbe925a408bd595c79d0bf63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftAnchor:
+    target: {fileID: 0}
+    relative: 0
+    absolute: 0
+  rightAnchor:
+    target: {fileID: 0}
+    relative: 1
+    absolute: 0
+  bottomAnchor:
+    target: {fileID: 0}
+    relative: 0
+    absolute: 0
+  topAnchor:
+    target: {fileID: 0}
+    relative: 1
+    absolute: 0
+  updateAnchors: 1
+  mColor: {r: 1, g: 1, b: 1, a: 0.166}
+  mPivot: 4
+  mWidth: 50
+  mHeight: 50
+  mDepth: 2
+  mMat: {fileID: 0}
+  autoResizeBoxCollider: 0
+  hideIfOffScreen: 0
+  keepAspectRatio: 0
+  aspectRatio: 1
+  keepCrispWhenShrunk: 1
+  mTrueTypeFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  mFont: {fileID: 0}
+  mText: 1
+  mFontSize: 50
+  mFontStyle: 0
+  mAlignment: 2
+  mEncoding: 1
+  mMaxLineCount: 0
+  mEffectStyle: 0
+  mEffectColor: {r: 0, g: 0, b: 0, a: 1}
+  mSymbols: 1
+  mEffectDistance: {x: 1, y: 1}
+  mOverflow: 0
+  mApplyGradient: 1
+  mGradientTop: {r: 1, g: 1, b: 1, a: 1}
+  mGradientBottom: {r: 0.7, g: 0.7, b: 0.7, a: 1}
+  mSpacingX: 0
+  mSpacingY: 0
+  mUseFloatSpacing: 0
+  mFloatSpacingX: 0
+  mFloatSpacingY: 0
+  mOverflowEllipsis: 0
+  mOverflowWidth: 0
+  mModifier: 0
+  mShrinkToFit: 0
+  mMaxLineWidth: 0
+  mMaxLineHeight: 0
+  mLineWidth: 0
+  mMultiline: 1
 --- !u!114 &114306792121166932
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3613,13 +3687,13 @@ MonoBehaviour:
   updateAnchors: 1
   mColor: {r: 0.6544118, g: 0.6544118, b: 0.6544118, a: 1}
   mPivot: 4
-  mWidth: 120
-  mHeight: 120
+  mWidth: 150
+  mHeight: 150
   mDepth: 2
   mMat: {fileID: 0}
   autoResizeBoxCollider: 1
   hideIfOffScreen: 0
-  keepAspectRatio: 0
+  keepAspectRatio: 1
   aspectRatio: 1
   mType: 0
   mFillDirection: 4
@@ -3688,8 +3762,8 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 114061017621333486, guid: d9a052a57ab84904b9ef1e6b261a8d6d, type: 2}
-  mSpriteName: Icon_Legs_default
+  mAtlas: {fileID: 114588430131481706, guid: b1a0463066ff46d40812e06a264cabac, type: 2}
+  mSpriteName: SlimeIcon
   mFillCenter: 1
 --- !u!114 &114446049136689812
 MonoBehaviour:
@@ -4069,8 +4143,8 @@ MonoBehaviour:
   updateAnchors: 1
   mColor: {r: 1, g: 1, b: 1, a: 1}
   mPivot: 4
-  mWidth: 120
-  mHeight: 120
+  mWidth: 150
+  mHeight: 150
   mDepth: 1
   mMat: {fileID: 0}
   autoResizeBoxCollider: 0
@@ -4369,6 +4443,74 @@ MonoBehaviour:
   mAtlas: {fileID: 114588430131481706, guid: b1a0463066ff46d40812e06a264cabac, type: 2}
   mSpriteName: Slime
   mFillCenter: 1
+--- !u!114 &114580706476822364
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1857367692494002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9d0b5f3bbe925a408bd595c79d0bf63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftAnchor:
+    target: {fileID: 0}
+    relative: 0
+    absolute: 0
+  rightAnchor:
+    target: {fileID: 0}
+    relative: 1
+    absolute: 0
+  bottomAnchor:
+    target: {fileID: 0}
+    relative: 0
+    absolute: 0
+  topAnchor:
+    target: {fileID: 0}
+    relative: 1
+    absolute: 0
+  updateAnchors: 1
+  mColor: {r: 1, g: 1, b: 1, a: 0.166}
+  mPivot: 4
+  mWidth: 50
+  mHeight: 50
+  mDepth: 2
+  mMat: {fileID: 0}
+  autoResizeBoxCollider: 0
+  hideIfOffScreen: 0
+  keepAspectRatio: 0
+  aspectRatio: 1
+  keepCrispWhenShrunk: 1
+  mTrueTypeFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  mFont: {fileID: 0}
+  mText: 2
+  mFontSize: 50
+  mFontStyle: 0
+  mAlignment: 2
+  mEncoding: 1
+  mMaxLineCount: 0
+  mEffectStyle: 0
+  mEffectColor: {r: 0, g: 0, b: 0, a: 1}
+  mSymbols: 1
+  mEffectDistance: {x: 1, y: 1}
+  mOverflow: 0
+  mApplyGradient: 1
+  mGradientTop: {r: 1, g: 1, b: 1, a: 1}
+  mGradientBottom: {r: 0.7, g: 0.7, b: 0.7, a: 1}
+  mSpacingX: 0
+  mSpacingY: 0
+  mUseFloatSpacing: 0
+  mFloatSpacingX: 0
+  mFloatSpacingY: 0
+  mOverflowEllipsis: 0
+  mOverflowWidth: 0
+  mModifier: 0
+  mShrinkToFit: 0
+  mMaxLineWidth: 0
+  mMaxLineHeight: 0
+  mLineWidth: 0
+  mMultiline: 1
 --- !u!114 &114582564711800616
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4520,31 +4662,31 @@ MonoBehaviour:
   leftAnchor:
     target: {fileID: 4401411121878870}
     relative: 0
-    absolute: 35
+    absolute: 30
   rightAnchor:
     target: {fileID: 4401411121878870}
     relative: 1
-    absolute: -35
+    absolute: -30
   bottomAnchor:
     target: {fileID: 4401411121878870}
     relative: 0
-    absolute: 25
+    absolute: 20
   topAnchor:
     target: {fileID: 4401411121878870}
     relative: 1
-    absolute: -25
+    absolute: -20
   updateAnchors: 1
   mColor: {r: 0.39705884, g: 0.39705884, b: 0.39705884, a: 0.15686275}
   mPivot: 4
-  mWidth: 50
-  mHeight: 70
+  mWidth: 90
+  mHeight: 110
   mDepth: 1
   mMat: {fileID: 0}
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0
-  aspectRatio: 0.71428573
-  mType: 1
+  aspectRatio: 0.8181818
+  mType: 0
   mFillDirection: 4
   mFillAmount: 1
   mInvert: 0
@@ -5110,8 +5252,8 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 114061017621333486, guid: d9a052a57ab84904b9ef1e6b261a8d6d, type: 2}
-  mSpriteName: Icon_Body_default
+  mAtlas: {fileID: 114588430131481706, guid: b1a0463066ff46d40812e06a264cabac, type: 2}
+  mSpriteName: SlimeIcon
   mFillCenter: 1
 --- !u!114 &114892973414824640
 MonoBehaviour:
@@ -5151,7 +5293,7 @@ MonoBehaviour:
   anchorOffset: 0
   softBorderPadding: 1
   renderQueue: 0
-  startingRenderQueue: 3007
+  startingRenderQueue: 3013
   mClipTexture: {fileID: 0}
   mAlpha: 1
   mClipping: 3
@@ -5264,6 +5406,60 @@ MonoBehaviour:
   topType: 1
   mAtlas: {fileID: 114305812388705888, guid: e7c264a69e91524488de5d039c99530f, type: 2}
   mSpriteName: Rectangle-Rounded
+  mFillCenter: 1
+--- !u!114 &114913580957688412
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1567235133063782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b3dc54f924693f41b5cbecb267e647a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftAnchor:
+    target: {fileID: 0}
+    relative: 0
+    absolute: 25
+  rightAnchor:
+    target: {fileID: 0}
+    relative: 1
+    absolute: -25
+  bottomAnchor:
+    target: {fileID: 0}
+    relative: 0
+    absolute: 25
+  topAnchor:
+    target: {fileID: 0}
+    relative: 1
+    absolute: -25
+  updateAnchors: 1
+  mColor: {r: 0.39705884, g: 0.39705884, b: 0.39705884, a: 0.15686275}
+  mPivot: 4
+  mWidth: 100
+  mHeight: 100
+  mDepth: 1
+  mMat: {fileID: 0}
+  autoResizeBoxCollider: 0
+  hideIfOffScreen: 0
+  keepAspectRatio: 0
+  aspectRatio: 1
+  mType: 0
+  mFillDirection: 4
+  mFillAmount: 1
+  mInvert: 0
+  mFlip: 0
+  mApplyGradient: 0
+  mGradientTop: {r: 1, g: 1, b: 1, a: 1}
+  mGradientBottom: {r: 0.60294116, g: 0.60294116, b: 0.60294116, a: 1}
+  centerType: 1
+  leftType: 1
+  rightType: 1
+  bottomType: 1
+  topType: 1
+  mAtlas: {fileID: 114588430131481706, guid: b1a0463066ff46d40812e06a264cabac, type: 2}
+  mSpriteName: SlimeIcon
   mFillCenter: 1
 --- !u!114 &114916043305094700
 MonoBehaviour:

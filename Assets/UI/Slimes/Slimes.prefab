@@ -55,7 +55,7 @@ MonoBehaviour:
   mSprites:
   - name: DefaultSlime
     x: 860
-    y: 791
+    y: 799
     width: 128
     height: 116
     borderLeft: 0
@@ -68,7 +68,7 @@ MonoBehaviour:
     paddingBottom: 6
   - name: Icon_SwapSlime
     x: 860
-    y: 682
+    y: 916
     width: 115
     height: 108
     borderLeft: 0
@@ -80,7 +80,7 @@ MonoBehaviour:
     paddingTop: 8
     paddingBottom: 12
   - name: Slime_Eat
-    x: 0
+    x: 430
     y: 701
     width: 429
     height: 323
@@ -93,8 +93,8 @@ MonoBehaviour:
     paddingTop: 95
     paddingBottom: 94
   - name: Slime_Split
-    x: 430
-    y: 603
+    x: 0
+    y: 279
     width: 429
     height: 421
     borderLeft: 0
@@ -107,7 +107,7 @@ MonoBehaviour:
     paddingBottom: 59
   - name: SlimeIcon
     x: 0
-    y: 377
+    y: 701
     width: 429
     height: 323
     borderLeft: 0
@@ -120,7 +120,7 @@ MonoBehaviour:
     paddingBottom: 94
   - name: TestSlime
     x: 860
-    y: 908
+    y: 682
     width: 128
     height: 116
     borderLeft: 0

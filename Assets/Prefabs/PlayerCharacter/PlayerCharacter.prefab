@@ -375,7 +375,7 @@ MonoBehaviour:
   hudPrefab: {fileID: 1645641764915264, guid: aa6ee3a54df374c4f91b5e1f89396748, type: 2}
   widgetWidth: 200
   widgetHeight: 30
-  hudObj: {fileID: 0}
+  hud: {fileID: 0}
   startSprite: 
   startLabel: 
 --- !u!114 &114480426306365440
@@ -396,12 +396,6 @@ MonoBehaviour:
   - partType: Head
     mustHave: 1
     part: {fileID: 0}
-  - partType: Body
-    mustHave: 1
-    part: {fileID: 0}
-  - partType: Legs
-    mustHave: 1
-    part: {fileID: 0}
   skeletonAnim: {fileID: 0}
   playerCamera: {fileID: 0}
   hasObjective: 0
@@ -410,14 +404,9 @@ MonoBehaviour:
   - partType: Head
     mustHave: 1
     part: {fileID: 114073297278147484, guid: 09bc4c818db395e498e1d7bb52ecdca4, type: 2}
-  - partType: Body
-    mustHave: 1
-    part: {fileID: 114792185279499764, guid: 717684956fc9c854e8621f2da8c70631, type: 2}
-  - partType: Legs
-    mustHave: 1
-    part: {fileID: 114599257883934778, guid: 8c2697ea0006179419da654ff324a5f7, type: 2}
   startSlime: {fileID: 114289914768308856, guid: 1f2746b7c1b74409b9d55e7e233930b4,
     type: 2}
+  startLevel: 1
   slimeToSwapped: {fileID: 0}
 --- !u!114 &114704303382516210
 MonoBehaviour:
@@ -433,7 +422,7 @@ MonoBehaviour:
   hudPrefab: {fileID: 1365638971459056, guid: 3ddb0e6314e8b154a9d8c56188f1a5e9, type: 2}
   widgetWidth: 200
   widgetHeight: 30
-  hudObj: {fileID: 0}
+  hud: {fileID: 0}
   startSprite: 
   startLabel: 
 --- !u!114 &114852796941320154

@@ -796,7 +796,7 @@ public class MazeGenerator : MonoBehaviour
 
         for (int i = 0; i < numElements; i++)
         {
-            TileItem item = tiles[i].SpawnTileItem(spawningElement.gameObject);
+            tiles[i].SpawnTileItem(spawningElement.gameObject);
             TilesWithItem.Add(tiles[i]);
         }
     }
@@ -841,7 +841,6 @@ public class MazeGenerator : MonoBehaviour
     {
         foreach (Transform child in level.customMazeObject.transform)
         {
-            TileItem item = child.gameObject.GetComponent<TileItem>();
             TileItemSpawner tileItemSpawner = child.gameObject.GetComponent<TileItemSpawner>();
             MonsterSpawner monsterSpawner = child.gameObject.GetComponent<MonsterSpawner>();
 

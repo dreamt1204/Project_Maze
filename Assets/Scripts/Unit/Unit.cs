@@ -257,10 +257,14 @@ public class Unit : MonoBehaviour {
                 AddSkinEntries(skeletonData.FindSkin(data.part.partSkinName), newBody);
         }
 
-        // Add Slime skin if this unit is Player Character
+        // Add default body skin & Slime skin if this unit is Player Character
         if (this is PlayerCharacter)
         {
             PlayerCharacter thisPlayer = this as PlayerCharacter;
+
+            AddSkinEntries(skeletonData.FindSkin("Body_default"), newBody);
+            AddSkinEntries(skeletonData.FindSkin("Legs_default"), newBody);
+
             AddSkinEntries(skeletonData.FindSkin(thisPlayer.GetSlime().slimeSkinName), newBody);
         }
 

@@ -96,9 +96,7 @@ public class UIManager : MonoBehaviour
 		compassSprite = GameObject.Find("Sprite_Compass").GetComponent<UISprite>();
         
         abilityButtons = new Dictionary<string, abilityButton>();
-        InitNewButton("Head");
-        InitNewButton("Body");
-        InitNewButton("Legs");
+        InitAbilityButtons();
     }
 
 	void Update ()
@@ -184,17 +182,29 @@ public class UIManager : MonoBehaviour
     //---------------------------------------
     //      Ability Buttons
     //---------------------------------------
-    void InitNewButton(string partType)
+    void InitAbilityButtons()
     {
-        abilityButton newButton = new abilityButton();
-        newButton.buttonObj = GameObject.Find("Sprite_ability_" + partType);
-        newButton.mainSprite = newButton.buttonObj.GetComponent<UISprite>();
-        newButton.iconSprite = newButton.buttonObj.transform.Find("Sprite_ability_button").GetComponent<UISprite>();
+        // Slime Ability Buttons
+        for (int i = 1; i <= 2; i++)
+        {
+            InitNewButton("Sprite_SlimeAbility_" + i, "SlimeAbility_" + i);
+        }
 
-        abilityButtons.Add(partType, newButton);
+        // Head Ability Button
+        InitNewButton("Sprite_HeadAbility", "HeadAbility");
     }
 
-	void UpdateabilityButtonsIconSate(abilityButton button, AbilityButtonState newState)
+    void InitNewButton(string buttonName, string buttonType)
+    {
+        abilityButton newButton = new abilityButton();
+        newButton.buttonObj = GameObject.Find(buttonName);
+        newButton.mainSprite = newButton.buttonObj.GetComponent<UISprite>();
+        newButton.iconSprite = newButton.buttonObj.transform.Find("Sprite_ability_icon").GetComponent<UISprite>();
+
+        abilityButtons.Add(buttonType, newButton);
+    }
+
+    void UpdateabilityButtonsIconSate(abilityButton button, AbilityButtonState newState)
 	{
 		abilityButton newButton = new abilityButton();
 		newButton = button;
@@ -202,26 +212,18 @@ public class UIManager : MonoBehaviour
 		button = newButton;
 	}
 
-    public void UpdateAbilityIcon(string partType)
+    public void UpdateAbilityIcon(string abilityButtonType)
     {
-        abilityButtons[partType].buttonObj.SetActive(true);
-        UpdateabilityButtonsIconSate (abilityButtons [partType], AbilityButtonState.Enabled);
+        abilityButtons[abilityButtonType].buttonObj.SetActive(true);
+        UpdateabilityButtonsIconSate (abilityButtons [abilityButtonType], AbilityButtonState.Enabled);
 
-		string newSprite = LevelManager.instance.playerCharacter.PlayerAbilities[partType].spriteName;
-        if ((newSprite != null) && (AtlasHasSprite(abilityButtons[partType].iconSprite.atlas, newSprite)))
-        {
-			abilityButtons[partType].iconSprite.spriteName = LevelManager.instance.playerCharacter.PlayerAbilities[partType].spriteName;
-        }
-        else
-        {
-            abilityButtons[partType].iconSprite.spriteName = "Icon_" + partType + "_default";
-        }  
+        abilityButtons[abilityButtonType].iconSprite.spriteName = LevelManager.instance.playerCharacter.PlayerAbilities[abilityButtonType].spriteName;
     }
 
-    public void ClearAbilityIcon(string partType)
+    public void ClearAbilityIcon(string abilityButtonType)
     {
-		UpdateabilityButtonsIconSate (abilityButtons [partType], AbilityButtonState.Disable);
-		abilityButtons[partType].buttonObj.SetActive(false);
+		UpdateabilityButtonsIconSate (abilityButtons [abilityButtonType], AbilityButtonState.Disable);
+		abilityButtons[abilityButtonType].buttonObj.SetActive(false);
     }
 
     bool AtlasHasSprite(UIAtlas atlas, string newSprite)
@@ -340,9 +342,19 @@ public class UIManager : MonoBehaviour
 
         // Level Info
         UILabel Label_LevelInfo = Widget_SlimeInventroy.transform.Find("Label_LevelInfo").GetComponent<UILabel>();
+        string digit_1;
+        string digit_2;
 
-        float digit_1 = slimeData.slimeExp - slimeData.CalculateSlimeExperience(slimeData.slimeLevel);
-        float digit_2 = slimeData.slime.experienceData[slimeData.slimeLevel];
+        if (slimeData.slimeLevel >= slimeData.slime.levelData.Length)
+        {
+            digit_1 = "--";
+            digit_2 = "--";
+        }
+        else
+        {
+            digit_1 = "" + (slimeData.slimeExp - slimeData.CalculateSlimeExperience(slimeData.slimeLevel));
+            digit_2 = "" + (slimeData.slime.levelData[slimeData.slimeLevel].requiredExp);
+        }
 
         Label_LevelInfo.text = "Lv: " + slimeData.slimeLevel + "   Exp: " + digit_1 + "/" + digit_2;
 

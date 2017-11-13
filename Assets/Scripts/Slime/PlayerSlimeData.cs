@@ -13,6 +13,9 @@ public class PlayerSlimeData
     int slimeLevel_m;
     float slimeExp_m;
 
+    public bool ability_1_unlocked;
+    public bool ability_2_unlocked;
+
     public PlayerSlimeData(Slime newSlime)
     {
         slime = newSlime;
@@ -69,15 +72,18 @@ public class PlayerSlimeData
     {
         int lv = 0;
 
-        for (int i = 0; i < slime.experienceData.Length; i++)
+        for (int i = 0; i < slime.levelData.Length; i++)
         {
-            if (exp < slime.experienceData[i])
+            if (exp < slime.levelData[i].requiredExp)
             {
                 lv = i;
                 break;
             }
 
-            exp -= slime.experienceData[i];
+            if (i == (slime.levelData.Length - 1))
+                lv = slime.levelData.Length;
+            else
+                exp -= slime.levelData[i].requiredExp;
         }
 
         return lv;
@@ -89,9 +95,14 @@ public class PlayerSlimeData
 
         for (int i = 0; i < lv; i++)
         {
-            exp += slime.experienceData[i];
+            exp += slime.levelData[i].requiredExp;
         }
 
         return exp;
+    }
+
+    public float GetExperienceLeft()
+    {
+        return (slimeExp - CalculateSlimeExperience(slimeLevel));
     }
 }

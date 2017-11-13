@@ -30,6 +30,7 @@ public class PlayerCharacter : Unit {
 
     [Header("Slime")]
     public Slime startSlime;
+    [Range(1, 5)] public int startLevel;
     Slime slime;
     [HideInInspector] public Slime slimeToSwapped;
     SlimeStateType slimeState_m;
@@ -128,7 +129,7 @@ public class PlayerCharacter : Unit {
 
         // Init Slime
         Utilities.TryCatchError((startSlime == null), "Player Character doesn't have start Slime.");
-        slimeData.Add(startSlime.slimeType, new PlayerSlimeData(startSlime, 1));
+        slimeData.Add(startSlime.slimeType, new PlayerSlimeData(startSlime, startLevel));
         uiManager.UpdateSlimeInventroy(this, startSlime.slimeType);
         skeletonAnim = GetComponentInChildren<Spine.Unity.SkeletonAnimation>();
         InitSlime(startSlime);
@@ -215,20 +216,23 @@ public class PlayerCharacter : Unit {
 
     public override void BodyPartUpdatedEvent(string partType)
     {
+        if (partType != "Head")
+            return;
+
         BodyPart part = GetBodyPartWithType(partType);
 
         // If the part doesn't exist, clear part ability
         if ((part == null) || (part.playerAbility == null))
         {
-            PlayerAbilities[partType] = null;
-            UIManager.instance.ClearAbilityIcon(partType);
+            PlayerAbilities[partType + "Ability"] = null;
+            UIManager.instance.ClearAbilityIcon(partType + "Ability");
         }
         // Update PlayerAbilities while body part gets updated
         else
         {
-            PlayerAbilities[partType] = part.playerAbility;
-			part.playerAbility.Init ();
-            UIManager.instance.UpdateAbilityIcon(partType);
+            PlayerAbilities[partType + "Ability"] = part.playerAbility;
+			part.playerAbility.Init();
+            UIManager.instance.UpdateAbilityIcon(partType + "Ability");
         }
     }
 
@@ -305,19 +309,48 @@ public class PlayerCharacter : Unit {
 
         uiManager.UpdateSlimeInventroy(this, addingSlime.slimeType);
 
-        float digit_1 = data.slimeExp - data.CalculateSlimeExperience(data.slimeLevel);
-        float digit_2 = data.slime.experienceData[data.slimeLevel];
-        if (digit_1 == 0)
-            digit_1 = digit_2 = data.slime.experienceData[data.slimeLevel - 1];
-
-        slimeExperienceHUD.UpdateLabel("(" + digit_1 + "/" + digit_2 + ")");
+        slimeExperienceHUD.UpdateLabel(GetSlimeAddingExperienceLabel(data));
         slimeExperienceHUD.PlayTweeners(0);
 
-        if (data.unlocked)
+        if ((data.GetExperienceLeft() == 0) && (data.slimeLevel >= 1))
         {
-            slimeToSwapped = addingSlime;
-            uiManager.ShowSwitchToNewSlimeWidget(this, true);
+            SlimeLevelUp(addingSlime);
+
+            if ((data.slimeLevel == 1) && (slime != addingSlime))
+            {
+                slimeToSwapped = addingSlime;
+                uiManager.ShowSwitchToNewSlimeWidget(this, true);
+            }
         }
+    }
+
+    string GetSlimeAddingExperienceLabel(PlayerSlimeData data)
+    {
+        string label;
+
+        if (data.slimeLevel >= data.slime.levelData.Length)
+        {
+            label = "Max Level";
+        }
+        else
+        {
+            float digit_1 = data.GetExperienceLeft();
+            float digit_2 = data.slime.levelData[data.slimeLevel].requiredExp;
+
+            if (digit_1 == 0)
+            {
+                if (data.slimeLevel == 1)
+                    label = "Slime Unlocked";
+                else
+                    label = "Lv" + (data.slimeLevel - 1) + " -> Lv" + data.slimeLevel;
+            }
+            else
+            {
+                label = "(" + digit_1 + "/" + digit_2 + ")";
+            }
+        }
+
+        return label;
     }
 
     public Slime GetSlime()
@@ -330,6 +363,7 @@ public class PlayerCharacter : Unit {
         slime = newSlime;
         uiManager.slimeButtons.Init();
         OnSlimeSwapped(this, newSlime);
+        UpdatSlimeAbilities(newSlime);
     }
 
     public void SwapSlime(Slime newSlime)
@@ -337,6 +371,24 @@ public class PlayerCharacter : Unit {
         slime = newSlime;
         OnSlimeSwapped(this, newSlime);
         UpdateBody();
+        UpdatSlimeAbilities(newSlime);
+    }
+
+    public void SlimeLevelUp(Slime levelingSlime)
+    {
+        PlayerSlimeData data = slimeData[levelingSlime.slimeType];
+        SlimeLevelData lvData = data.slime.levelData[data.slimeLevel - 1];
+
+        if (lvData.unlockAbility1)
+        {
+            data.ability_1_unlocked = true;
+            UpdatSlimeAbilities(levelingSlime);
+        }
+        if (lvData.unlockAbility2)
+        {
+            data.ability_2_unlocked = true;
+            UpdatSlimeAbilities(levelingSlime);
+        }
     }
 
     public void UpdateCurrentTileSlimeSplit()
@@ -372,5 +424,28 @@ public class PlayerCharacter : Unit {
         RestoreHealth(CurrentTile.slimeSplit.eattingSlimeRecover);
 
        CurrentTile.DestroyTileSlimeSplit();
+    }
+
+    public void UpdatSlimeAbilities(Slime updatedSlime)
+    {
+        for (int i = 1; i <= 2; i++)
+        {
+            bool abilityUnlocked = (i == 1) ? (slimeData[updatedSlime.slimeType].ability_1_unlocked) : (i == 2) ? (slimeData[updatedSlime.slimeType].ability_2_unlocked) : false;
+
+            PlayerAbility ability = (i == 1) ? slime.Ability1 : (i == 2) ? slime.Ability2 : null;
+            string abilityButtonType = "SlimeAbility_" + i;
+
+            if ((!abilityUnlocked) || (ability == null))
+            {
+                PlayerAbilities[abilityButtonType] = null;
+                UIManager.instance.ClearAbilityIcon(abilityButtonType);
+            }
+            else
+            {
+                PlayerAbilities[abilityButtonType] = ability;
+                PlayerAbilities[abilityButtonType].Init();
+                UIManager.instance.UpdateAbilityIcon(abilityButtonType);
+            }
+        }
     }
 }

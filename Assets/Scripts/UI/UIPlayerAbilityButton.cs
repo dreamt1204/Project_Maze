@@ -14,7 +14,7 @@ public class UIPlayerAbilityButton : UIDragDropItem {
 
     protected override void OnDragDropStart()
     {
-        partType = gameObject.name.Substring (gameObject.name.LastIndexOf ("_") + 1);
+        partType = gameObject.name.Substring (gameObject.name.IndexOf ("_") + 1);
 
         level.playerCharacter.PlayerAbilities [partType].DisplayRangeTiles ();
 
