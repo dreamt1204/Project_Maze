@@ -147,7 +147,7 @@ public class PlayerCharacter : Unit {
         base.Update ();
 
 		// Update movement based on UIJoyStick
-		if (uiManager.joyStickEnabled)
+		if ((!IsPlayerControlDisabled()) && (uiManager.joyStickEnabled))
 		{
 			if (uiManager.joyStick.joyStickDir != -1)
 			{
@@ -328,6 +328,7 @@ public class PlayerCharacter : Unit {
     public void InitSlime(Slime newSlime)
     {
         slime = newSlime;
+        uiManager.slimeButtons.Init();
         OnSlimeSwapped(this, newSlime);
     }
 

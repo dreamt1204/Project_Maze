@@ -13,8 +13,7 @@ public class UISlimeButton : MonoBehaviour
     //=======================================
     //      Functions
     //=======================================
-    // Use this for initialization
-    void Start ()
+    public void Init()
     {
         slimeSprite = transform.parent.Find("Sprite_Slime").GetComponent<UISprite>();
         slimeStateSprite = transform.parent.Find("Sprite_SlimeState").GetComponent<UISprite>();

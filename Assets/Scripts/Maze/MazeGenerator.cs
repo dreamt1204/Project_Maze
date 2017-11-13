@@ -20,7 +20,6 @@ public class MazeGenerator : MonoBehaviour
 
     // Custom maze object variables
     List<GameObject> customTileObjList = new List<GameObject>();
-    Dictionary<ItemType, List<TileItem>> customTileItems = new Dictionary<ItemType, List<TileItem>>();
     List<TileItemSpawner> customTileItemSpawners = new List<TileItemSpawner>();
     public List<MonsterSpawner> customMonsterSpawnerList = new List<MonsterSpawner>();
 
@@ -691,10 +690,10 @@ public class MazeGenerator : MonoBehaviour
 		{
 			GenerateCustomTileItems (maze);
 
-			if (!customTileItems.ContainsKey(ItemType.StartPoint))
+			if (level.tileStart == null)
 				GenerateStartPoint_Random(maze);
 
-			if (!customTileItems.ContainsKey(ItemType.Objective))
+			if (level.tileObjective == null)
 				GenerateObjective_Random(maze);
 		}
 		else
@@ -702,7 +701,8 @@ public class MazeGenerator : MonoBehaviour
 			GenerateStartPoint_Random(maze);
 			GenerateObjective_Random(maze);
 			GenerateHealthPack_Random(maze);
-			GenerateBodyPartChest_Random(maze);
+            GenerateSlimeElement_Random(maze);
+            GenerateBodyPartChest_Random(maze);
 			GenerateCompass_Random(maze);
 		}
     }
@@ -710,25 +710,10 @@ public class MazeGenerator : MonoBehaviour
     #region Custom Maze Items
     void GenerateCustomTileItems(Maze maze)
     {
-        // Custom Tile Item
-        foreach (KeyValuePair<ItemType, List<TileItem>> items in customTileItems)
-        {
-            foreach (TileItem item in customTileItems[items.Key])
-            {
-                Tile tile = GetObjLocatedTile(maze, item.gameObject);
-                tile.SpawnTileItem(item.gameObject);
-
-                TilesWithItem.Add(tile);
-
-                // Custom item setup
-                CustomTileItemSetup(items.Key, item, tile);
-            }
-        }
-
         // Custom Tile Item from spawner
         foreach (TileItemSpawner spawner in customTileItemSpawners)
         {
-            TileItem item = spawner.GetRandomTileItem();
+            TileItem item = spawner.GetTileItem();
 
             Tile tile = GetObjLocatedTile(maze, spawner.gameObject);
             tile.SpawnTileItem(item.gameObject);
@@ -754,8 +739,7 @@ public class MazeGenerator : MonoBehaviour
         {
             if (item.bodyPart == null)
             {
-                tile.DestroyTileItem();
-                TilesWithItem.Remove(tile);
+                item.bodyPart = level.mazeSetting.bodyParts[Random.Range(0, level.mazeSetting.bodyParts.Count)];
             }
         }
     }
@@ -795,6 +779,24 @@ public class MazeGenerator : MonoBehaviour
 		for (int i = 0; i < numPacks; i++)
         {
             tiles[i].SpawnTileItem(level.HealthPackPrefab);
+            TilesWithItem.Add(tiles[i]);
+        }
+    }
+
+    void GenerateSlimeElement_Random(Maze maze)
+    {
+        // Calculate the number of items needed to spawn for this maze
+        int numElements = Formula.CalculateSlimeElementNum(level.mazeDifficulty);
+
+        List<Tile> tileList = MazeUTL.UpdateTileListWithDesiredWallLayout(maze.mazeTileList, WallLayout.C);
+        List<Tile> tiles = GetItemSpawnRandomTiles(numElements, Formula.CalculateItemLeastDistance(LevelManager.instance.mazeDifficulty), new List<Tile>(), tileList, TilesWithItem);
+        Utilities.TryCatchError((tiles.Count < numElements), "Can't find enough tiles to spawn Body Part Chests. Please check the range condition.");
+
+        TileItem spawningElement = level.mazeSetting.SlimeElements[Random.Range(0, level.mazeSetting.SlimeElements.Count)];
+
+        for (int i = 0; i < numElements; i++)
+        {
+            TileItem item = tiles[i].SpawnTileItem(spawningElement.gameObject);
             TilesWithItem.Add(tiles[i]);
         }
     }
@@ -851,14 +853,7 @@ public class MazeGenerator : MonoBehaviour
                     customTileObjList.Add(layout.gameObject);
                 }
             }
-            // Add object to customTileItems list based on script attached
-            else if (item != null)
-            {
-                if (!customTileItems.ContainsKey(item.itemType))
-                    customTileItems.Add(item.itemType, new List<TileItem>());
-
-                customTileItems[item.itemType].Add(item);
-            }
+            // Add spawner to list if the spawner script is attached
             else if (tileItemSpawner != null)
             {
                 customTileItemSpawners.Add(tileItemSpawner);

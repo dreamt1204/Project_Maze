@@ -28,7 +28,9 @@ public class UIManager : MonoBehaviour
     UIWidget joyStickArea;
 	[HideInInspector] public UIJoyStick joyStick;
 	[HideInInspector] public bool joyStickEnabled;
-	[HideInInspector] public Dictionary<string, abilityButton> abilityButtons;
+
+    [HideInInspector] public UISlimeButton slimeButtons;
+    [HideInInspector] public Dictionary<string, abilityButton> abilityButtons;
 
 	UIProgressBar healthBar;
 
@@ -75,7 +77,9 @@ public class UIManager : MonoBehaviour
         joyStick = GameObject.Find("JoyStick").GetComponent<UIJoyStick>();
         joyStickArea = GameObject.Find("Widget_JoyStickArea").GetComponent<UIWidget>();
 
-		healthBar = GameObject.Find("HealthBar").GetComponent<UIProgressBar>();
+        slimeButtons = GameObject.Find("SlimeButton").GetComponent<UISlimeButton>();
+    
+        healthBar = GameObject.Find("HealthBar").GetComponent<UIProgressBar>();
 
         Widget_SwitchToNewSlime = GameObject.Find("Widget_SwitchToNewSlime").GetComponent<UIWidget>();
         Widget_SwitchToNewSlime.alpha = 0;

@@ -61,9 +61,9 @@ MonoBehaviour:
   - {fileID: 1132896773378542, guid: 3f9a4401f0d980945914a7569320df4b, type: 2}
   TileLayoutC:
   - {fileID: 1279900473387186, guid: ffd2d3ce27b1c3b4080d80e55026a741, type: 2}
+  SlimeElements:
+  - {fileID: 114186557904494526, guid: 05ec69d8437a10c41bef153acb92c3c3, type: 2}
   bodyParts:
   - {fileID: 114316107835354738, guid: ce22412cae20025458e488e243a6b760, type: 2}
-  - {fileID: 114328909136846850, guid: fbc31bf91877dcf4f9c5be130530b7f4, type: 2}
-  - {fileID: 114192243277182530, guid: d8227cf042c825d41a03248a8d61eed6, type: 2}
   Monsters:
   - {fileID: 114376943140014626, guid: 18d1df3a946e38a48932007fbb9161e9, type: 2}

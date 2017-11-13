@@ -7,13 +7,23 @@ public class TileItemSpawner : MonoBehaviour
     //=======================================
     //      Variables
     //=======================================
+    public ItemType itemType;
+    public List<TileItem> itemList;
 
     //=======================================
     //      Functions
     //=======================================
-    public virtual TileItem GetRandomTileItem()
+    public TileItem GetTileItem()
     {
-        // Override me
-        return null;
+        TileItem tileItem;
+
+        tileItem = GetRandomTileItem();
+
+        return tileItem;
+    }
+
+    TileItem GetRandomTileItem()
+    {
+        return itemList[Random.Range(0, itemList.Count)];
     }
 }

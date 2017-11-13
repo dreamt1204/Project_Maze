@@ -36,9 +36,14 @@ public static class Formula
 		return 16;
     }
 
+    public static int CalculateSlimeElementNum(int mazeDifficulty)
+    {
+        return 3;
+    }
+
     public static int CalculateBodyPartChestNum(int mazeDifficulty)
     {
-        return 4;
+        return 1;
     }
 
 	public static int CalculateCompassNum(int mazeDifficulty)
