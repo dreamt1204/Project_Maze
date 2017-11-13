@@ -404,7 +404,7 @@ MonoBehaviour:
   - partType: Head
     mustHave: 1
     part: {fileID: 114073297278147484, guid: 09bc4c818db395e498e1d7bb52ecdca4, type: 2}
-  startSlime: {fileID: 114289914768308856, guid: 1f2746b7c1b74409b9d55e7e233930b4,
+  startSlime: {fileID: 114600671608534906, guid: d710042bdecdc1d45bb169b75eea7705,
     type: 2}
   startLevel: 1
   slimeToSwapped: {fileID: 0}

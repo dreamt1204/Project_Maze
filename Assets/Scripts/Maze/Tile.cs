@@ -176,5 +176,6 @@ public class Tile : MonoBehaviour {
 	public void DestroyTileSlimeSplit()
 	{
 		Destroy (slimeSplit.gameObject);
-	}
+        slimeSplit = null;
+    }
 }

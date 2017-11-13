@@ -152,7 +152,7 @@ public class PlayerCharacter : Unit {
 		{
 			if (uiManager.joyStick.joyStickDir != -1)
 			{
-				TryMoveToDirTile(uiManager.joyStick.joyStickDir);
+                TryMoveToDirTile(uiManager.joyStick.joyStickDir);
 			}  
 		}
 		else
@@ -241,16 +241,23 @@ public class PlayerCharacter : Unit {
     //---------------------------------------
     public override void UnitTileAction(Tile tile)
 	{
-		if (tile.item == null)
-			return;
+        PlayerTileItemAction(tile);
 
-		if (tile.item.itemType == ItemType.Objective)
-		{
-			level.playerCharacter.hasObjective = true;
-			tile.DestroyTileItem();
-		}
-		else if (tile.item.itemType == ItemType.StartPoint)
-		{
+        base.UnitTileAction(tile);
+    }
+
+    void PlayerTileItemAction(Tile tile)
+    {
+        if (tile.item == null)
+            return;
+
+        if (tile.item.itemType == ItemType.Objective)
+        {
+            level.playerCharacter.hasObjective = true;
+            tile.DestroyTileItem();
+        }
+        else if (tile.item.itemType == ItemType.StartPoint)
+        {
             if (level.CheckLevelPassedCondition())
                 return;
 
@@ -261,10 +268,10 @@ public class PlayerCharacter : Unit {
             tile.item.EnableSlimeSwapButton(true);
         }
         else if (tile.item.itemType == ItemType.BodyPart)
-		{
-			UpdateBodyPart(tile.item.bodyPart);
-			tile.DestroyTileItem();
-		}
+        {
+            UpdateBodyPart(tile.item.bodyPart);
+            tile.DestroyTileItem();
+        }
         else if (tile.item.itemType == ItemType.SlimeElement)
         {
             AddSlimeExperience(tile.item.slime);
@@ -276,11 +283,11 @@ public class PlayerCharacter : Unit {
             tile.DestroyTileItem();
         }
         else if (tile.item.itemType == ItemType.Compass)
-		{
-			uiManager.ActivateCompass(tile.item.compassDuration);
-			tile.DestroyTileItem();
-		}
-	}
+        {
+            uiManager.ActivateCompass(tile.item.compassDuration);
+            tile.DestroyTileItem();
+        }
+    }
 
     public override void UnitTileLeftAction(Tile tile)
     {
@@ -423,7 +430,7 @@ public class PlayerCharacter : Unit {
     {
         RestoreHealth(CurrentTile.slimeSplit.eattingSlimeRecover);
 
-       CurrentTile.DestroyTileSlimeSplit();
+        CurrentTile.DestroyTileSlimeSplit();
     }
 
     public void UpdatSlimeAbilities(Slime updatedSlime)

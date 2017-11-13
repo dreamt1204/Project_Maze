@@ -16,6 +16,7 @@ public enum ActionType
 {
     None,
     Walking,
+    Skating
 }
 
 public class Unit : MonoBehaviour {
@@ -38,9 +39,10 @@ public class Unit : MonoBehaviour {
 
 	// Tile
 	protected Tile currentTile;
+    protected Tile previousTile;
 
-	// Action
-	protected ActionType currentAction;
+    // Action
+    protected ActionType currentAction;
 
 	// Body Part
 	[Header("Body Part")]
@@ -94,7 +96,7 @@ public class Unit : MonoBehaviour {
         {
             if (currentTile != value)
             {
-                Tile previousTile = currentTile;
+                previousTile = currentTile;
                 currentTile = value;
                 UnitTileAction(currentTile);
 
@@ -324,9 +326,14 @@ public class Unit : MonoBehaviour {
     //---------------------------------------
     //      Tile Action
     //---------------------------------------
+    // Apply effect when unit steps on this tile
     public virtual void UnitTileAction(Tile tile)
 	{
-		// Apply effect when unit steps on this tile
+        if (tile.slimeSplit is IceSlimeSplit)
+        {
+            int dir = MazeUTL.GetNeighborTileDir(previousTile, tile);
+            StartSkate(dir);
+        }
 	}
 
     public virtual void UnitTileLeftAction(Tile tile)
@@ -342,7 +349,7 @@ public class Unit : MonoBehaviour {
         if (!isAvailable())
             return;
 
-		if (targetTile == CurrentTile)
+        if (targetTile == CurrentTile)
 			return;
 
 		if ((targetTile == null) || (MazeUTL.WallBetweenNeighborTiles(currentTile, targetTile)))
@@ -417,10 +424,81 @@ public class Unit : MonoBehaviour {
 			CurrentTile = targetTile;
 	}
 
-	//---------------------------------------
-	//      Action
-	//---------------------------------------
-	public virtual void RecieveDamage(float amount)
+    //---------------------------------------
+    //      Skate
+    //---------------------------------------
+    public void StartSkate(int dir)
+    {
+        if (MazeUTL.WallOnDir(CurrentTile, dir))
+            return;
+        if (currentAction == ActionType.Skating)
+            return;
+        if (this is PlayerCharacter)
+        {
+            PlayerCharacter thisPlayer = this as PlayerCharacter;
+            if (thisPlayer.slimeState == SlimeStateType.Eatting)
+                return;
+        }
+
+        StartCoroutine("SkateCoroutine", dir);
+    }
+    
+    IEnumerator SkateCoroutine(int dir)
+    {
+        // Diable Unit Control
+        if (this is PlayerCharacter)
+        {
+            PlayerCharacter thisPlayer = this as PlayerCharacter;
+            thisPlayer.DisablePlayerControl();
+        }
+
+        while (currentAction == ActionType.Walking)
+        {
+            yield return null;
+        }
+
+        currentAction = ActionType.Skating;
+        StopWalkingAnim();
+
+        bool shouldStop = false;
+
+        while ((!MazeUTL.WallOnDir(CurrentTile, dir)) && (!shouldStop))
+        {
+            Tile targetTile = MazeUTL.GetDirNeighborTile(CurrentTile, dir);
+            if (!(targetTile.slimeSplit is IceSlimeSplit))
+                shouldStop = true;
+
+            Vector3 targetPos = targetTile.transform.position;
+            while (Vector3.Distance(transform.position, targetPos) > 0.25f)
+            {
+                transform.Translate((targetPos - transform.position).normalized * Time.deltaTime * 180 * movementMultiplier);
+
+                TryUpdateCurrentTile(targetTile);
+
+                yield return null;
+            }
+            transform.position = targetPos;
+
+            if (CurrentTile != targetTile)
+                CurrentTile = targetTile;
+
+            yield return null;
+        }
+
+        // Diable Unit Control
+        if (this is PlayerCharacter)
+        {
+            PlayerCharacter thisPlayer = this as PlayerCharacter;
+            thisPlayer.EnablePlayerControl();
+        }
+
+        currentAction = ActionType.None;
+    }
+
+    //---------------------------------------
+    //      Action
+    //---------------------------------------
+    public virtual void RecieveDamage(float amount)
 	{
 		Health = (Health - amount);
         

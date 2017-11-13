@@ -56,7 +56,7 @@ MonoBehaviour:
   slimeName: Test Slime
   slimeDescription: TEST!!!! This is a test slime :)
   slimeSkinName: Slime_red
-  slimeSplit: {fileID: 114472983391352266, guid: 4d5f6b42e8ee17346bf61a5ccaee5a83,
+  slimeSplit: {fileID: 114431790902414548, guid: 5f68d9cbddbd5f643956389f942c1577,
     type: 2}
   Ability1: {fileID: 114000562487671760, guid: 9c65fc88cfacb044994bc4a56bdfa87b, type: 2}
   Ability2: {fileID: 114000562487671760, guid: 9c65fc88cfacb044994bc4a56bdfa87b, type: 2}
