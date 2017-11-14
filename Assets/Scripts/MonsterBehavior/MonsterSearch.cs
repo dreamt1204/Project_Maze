@@ -22,7 +22,7 @@ public class MonsterSearch : MonsterBehaviour
         Tile previousTile = owner.CurrentTile;
 
         // Smart search till the first intersection or being alerted
-        List<Tile> path = MazeUTL.GetShortestPath(owner.CurrentTile, owner.alertedTarget.CurrentTile, (owner.searchRange));
+        List<Tile> path = MazeUTL.GetShortestPath(owner.CurrentTile, owner.alertedTarget.CurrentTile, owner.searchRange);
         for (int i = 0; i < path.Count; i++)
         {
             previousTile = owner.CurrentTile;
@@ -33,9 +33,6 @@ public class MonsterSearch : MonsterBehaviour
             } while (owner.CurrentAction == ActionType.Walking);
 
             if ((owner.detectState == DetectState.Alerted))
-                break;
-
-            if (MazeUTL.GetNeighborTilesWithoutWall(owner.CurrentTile).Count >= 3)
                 break;
         }
 
