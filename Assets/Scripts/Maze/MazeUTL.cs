@@ -101,61 +101,61 @@ public static class MazeUTL {
         return (CheckTargetInRange(org, target, range) && CheckTargetInDetectRegion(org, target));
     }
 
-	//---------------------------------------
-	//      Region functions
-	//---------------------------------------
-	public static string GetTileAddress(int X, int Z)
-	{
-		return X + "," + Z + "/";
-	}
+    //---------------------------------------
+    //      Region functions
+    //---------------------------------------
+    public static string GetTileAddress(int X, int Z)
+    {
+        return X + "," + Z + "/";
+    }
 
-	public static bool CheckTargetInDetectRegion(Tile org, Tile target)
-	{
-		return (GetSharedDetectRegion(org, target) != null);
-	}
+    public static bool CheckTargetInDetectRegion(Tile org, Tile target)
+    {
+        return (GetSharedDetectRegion(org, target) != null);
+    }
 
-	public static bool CheckRegionHasAddress(string region, string targetAddress)
-	{
-		string[] addressList = region.Split('/');
-		foreach (string address in addressList)
-		{
-			if ((address + "/") == targetAddress)
-				return true;
-		}
+    public static bool CheckRegionHasAddress(string region, string targetAddress)
+    {
+        string[] addressList = region.Split('/');
+        foreach (string address in addressList)
+        {
+            if ((address + "/") == targetAddress)
+                return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public static string GetSharedDetectRegion(Tile org, Tile target)
-	{
-		string targetAddress = MazeUTL.GetTileAddress(target.X, target.Z);
-		foreach (string region in org.detectRegions)
-		{
-			if (CheckRegionHasAddress(region, targetAddress))
-				return region;
-		}
-		return null;
-	}
+    public static string GetSharedDetectRegion(Tile org, Tile target)
+    {
+        string targetAddress = MazeUTL.GetTileAddress(target.X, target.Z);
+        foreach (string region in org.detectRegions)
+        {
+            if (CheckRegionHasAddress(region, targetAddress))
+                return region;
+        }
+        return null;
+    }
 
-	public static List<Tile> GetTilesFromRegion(string region)
-	{
-		List<Tile> tileList = new List<Tile> ();
-		string[] addressList = region.Split('/');
+    public static List<Tile> GetTilesFromRegion(string region)
+    {
+        List<Tile> tileList = new List<Tile>();
+        string[] addressList = region.Split('/');
 
-		foreach (string address in addressList)
-		{
-			if (address == "")
-				continue;
+        foreach (string address in addressList)
+        {
+            if (address == "")
+                continue;
 
-			string[] XZ = address.Split(',');
-			int X = int.Parse(XZ[0]);
-			int Z = int.Parse(XZ[1]);
+            string[] XZ = address.Split(',');
+            int X = int.Parse(XZ[0]);
+            int Z = int.Parse(XZ[1]);
 
-			tileList.Add (LevelManager.instance.maze.mazeTile [X, Z]);
-		}
+            tileList.Add(LevelManager.instance.maze.mazeTile[X, Z]);
+        }
 
-		return tileList;
-	}
+        return tileList;
+    }
 
     //---------------------------------------
     //      Get direction functions
@@ -207,18 +207,34 @@ public static class MazeUTL {
         return GetMazeTile()[x, z];
     }
 
-	public static List<Tile> GetTilesRightOnRange(Tile org, List<Tile> tileList, int range)
-	{
-		List<Tile> newList = new List<Tile> ();
+    public static List<Tile> GetTilesRightOnRange(Tile org, List<Tile> tileList, int range)
+    {
+        List<Tile> newList = new List<Tile>();
 
-		foreach (Tile tile in tileList)
-		{
-			if (CheckTargetIsRightOnRange (org, tile, range))
-				newList.Add (tile);
-		}
+        foreach (Tile tile in tileList)
+        {
+            if (CheckTargetIsRightOnRange(org, tile, range))
+                newList.Add(tile);
+        }
 
-		return newList;
-	}
+        return newList;
+    }
+
+    public static Tile GetDeepestEmptyDeadEnd()
+    {
+        Tile tile;
+
+        SortedDictionary<int, List<Tile>> DeadEndList = LevelManager.instance.maze.DeadEndsWithItem;
+        List<int> levels = new List<int>(DeadEndList.Keys);
+
+        int index = levels.Count - 1;
+        tile = DeadEndList[index][Random.Range(0, DeadEndList[index].Count)];
+        DeadEndList[index].Remove(tile);
+        if (DeadEndList[index].Count <= 0)
+            DeadEndList.Remove(index);
+
+        return tile;
+    }
 
 
     //---------------------------------------

@@ -16,6 +16,8 @@ public class Maze  {
 	public int mazeLength;
 	public Tile[,] mazeTile;
     public List<Tile> mazeTileList;
+    public SortedDictionary<int, List<Tile>> DeadEnds = new SortedDictionary<int, List<Tile>>();
+    public SortedDictionary<int, List<Tile>> DeadEndsWithItem = new SortedDictionary<int, List<Tile>>();
 
     public List<string> detectRegions;
 

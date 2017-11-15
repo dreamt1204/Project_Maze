@@ -34,9 +34,10 @@ public class MazeGenerator : MonoBehaviour
     public void GenerateMaze()
     {
         Maze newMaze = BuildMaze();
+        level.maze = newMaze;
 
-		level.maze = newMaze;
-		GenerateDetectRegions(newMaze);
+        UpdateDeadEndList(newMaze);
+        GenerateDetectRegions(newMaze);
 		GenerateMazeItems(newMaze);
     }
 
@@ -503,6 +504,60 @@ public class MazeGenerator : MonoBehaviour
     #endregion
     #endregion
 
+    #region Update Dead End List
+    void UpdateDeadEndList(Maze maze)
+    {
+        for (int x = 0; x < maze.mazeWidth; x++)
+        {
+            for (int z = 0; z < maze.mazeWidth; z++)
+            {
+                Tile tile = maze.mazeTile[x, z];
+
+                if (tile.wallLayout != WallLayout.C)
+                    continue;
+
+                int deepLevel = GetDeadEndDeepLevel(maze, tile);
+                if (!maze.DeadEnds.ContainsKey(deepLevel))
+                {
+                    maze.DeadEnds.Add(deepLevel, new List<Tile>());
+                    maze.DeadEndsWithItem.Add(deepLevel, new List<Tile>());
+                }
+
+                maze.DeadEnds[deepLevel].Add(tile);
+                maze.DeadEndsWithItem[deepLevel].Add(tile);
+            }
+        }
+    }
+
+    int GetDeadEndDeepLevel(Maze maze, Tile currTile)
+    {
+        return GetDeadEndDeepLevel_Inner(maze, currTile, 0, -1);
+    }
+
+    int GetDeadEndDeepLevel_Inner(Maze maze, Tile currTile, int deepLevel, int comingDir)
+    {
+        List<int> openDirs = new List<int>();
+        for (int i = 0; i < 4; i++)
+        {
+            if (!MazeUTL.WallOnDir(currTile, i))
+                openDirs.Add(i);
+        }
+
+        if (comingDir != -1)
+            openDirs.Remove(comingDir);
+
+        if (openDirs.Count != 1)
+            return deepLevel;
+
+        deepLevel++;
+
+        int nextDir = openDirs[Random.Range(0, openDirs.Count)];
+        comingDir = (nextDir + 2) < 4 ? nextDir + 2 : nextDir - 2;
+        Tile nextTile = MazeUTL.GetDirNeighborTile(currTile, nextDir);
+        return GetDeadEndDeepLevel_Inner(maze, nextTile, deepLevel, comingDir);
+    }
+    #endregion
+
     #region Generate Detect Regions
     void GenerateDetectRegions(Maze maze)
     {
@@ -699,11 +754,11 @@ public class MazeGenerator : MonoBehaviour
 		else
 		{
 			GenerateStartPoint_Random(maze);
-			GenerateObjective_Random(maze);
-			GenerateHealthPack_Random(maze);
-            GenerateSlimeElement_Random(maze);
+            GenerateObjective_Random(maze);
             GenerateBodyPartChest_Random(maze);
-			GenerateCompass_Random(maze);
+            GenerateSlimeElement_Random(maze);
+            GenerateCompass_Random(maze);
+			GenerateHealthPack_Random(maze);
 		}
     }
 
@@ -755,9 +810,9 @@ public class MazeGenerator : MonoBehaviour
         TilesWithItem.Add(tile);
     }
 
-    void GenerateObjective_Random(Maze maze)
+    void GenerateObjective_Random_old(Maze maze)
     {
-        // Make sure the objective is at least half map aways from the start point. Also, make it spawn at C shape wall layout. 
+        // Make sure the objective is at least half map aways from the start point. Also, make it spawn at C shape wall layout.
         List<Tile> orgs = new List<Tile>();
         orgs.Add(level.tileStart);
         List<Tile> tileList = MazeUTL.UpdateTileListOutOfRange(maze.mazeTileList, orgs, Formula.CalculateObjectiveLeastDistance(LevelManager.instance.mazeDifficulty));
@@ -769,7 +824,16 @@ public class MazeGenerator : MonoBehaviour
         TilesWithItem.Add(tile);
     }
 
-    void GenerateHealthPack_Random(Maze maze)
+    void GenerateObjective_Random(Maze maze)
+    {
+        Tile tile = MazeUTL.GetDeepestEmptyDeadEnd();
+
+        tile.SpawnTileItem(level.objectivePrefab);
+        level.tileObjective = tile;
+        TilesWithItem.Add(tile);
+    }
+
+    void GenerateHealthPack_Random_old(Maze maze)
     {
         int numPacks = Formula.CalculateHealthPackNum(level.mazeDifficulty);
 
@@ -783,7 +847,19 @@ public class MazeGenerator : MonoBehaviour
         }
     }
 
-    void GenerateSlimeElement_Random(Maze maze)
+    void GenerateHealthPack_Random(Maze maze)
+    {
+        int numPacks = Formula.CalculateHealthPackNum(level.mazeDifficulty);
+
+        for (int i = 0; i < numPacks; i++)
+        {
+            Tile tile = MazeUTL.GetDeepestEmptyDeadEnd();
+            tile.SpawnTileItem(level.HealthPackPrefab);
+            TilesWithItem.Add(tile);
+        }
+    }
+
+    void GenerateSlimeElement_Random_old(Maze maze)
     {
         // Calculate the number of items needed to spawn for this maze
         int numElements = Formula.CalculateSlimeElementNum(level.mazeDifficulty);
@@ -801,7 +877,21 @@ public class MazeGenerator : MonoBehaviour
         }
     }
 
-    void GenerateBodyPartChest_Random(Maze maze)
+    void GenerateSlimeElement_Random(Maze maze)
+    {
+        // Calculate the number of items needed to spawn for this maze
+        int numElements = Formula.CalculateSlimeElementNum(level.mazeDifficulty);
+        TileItem spawningElement = level.mazeSetting.SlimeElements[Random.Range(0, level.mazeSetting.SlimeElements.Count)];
+
+        for (int i = 0; i < numElements; i++)
+        {
+            Tile tile = MazeUTL.GetDeepestEmptyDeadEnd();
+            tile.SpawnTileItem(spawningElement.gameObject);
+            TilesWithItem.Add(tile);
+        }
+    }
+
+    void GenerateBodyPartChest_Random_old(Maze maze)
     {
         // Calculate the number of items needed to spawn for this maze
 		int numChests = Formula.CalculateBodyPartChestNum(level.mazeDifficulty);
@@ -820,7 +910,23 @@ public class MazeGenerator : MonoBehaviour
         }
     }
 
-	void GenerateCompass_Random(Maze maze)
+    void GenerateBodyPartChest_Random(Maze maze)
+    {
+        // Calculate the number of items needed to spawn for this maze
+        int numChests = Formula.CalculateBodyPartChestNum(level.mazeDifficulty);
+        numChests = numChests < level.mazeSetting.bodyParts.Count ? numChests : level.mazeSetting.bodyParts.Count;
+        List<BodyPart> partList = GetBodyPartList(numChests);
+
+        for (int i = 0; i < numChests; i++)
+        {
+            Tile tile = MazeUTL.GetDeepestEmptyDeadEnd();
+            TileItem item = tile.SpawnTileItem(level.BodyPartChestPrefab);
+            TilesWithItem.Add(tile);
+            item.bodyPart = partList[i];
+        }
+    }
+
+    void GenerateCompass_Random_old(Maze maze)
 	{
 		int numCompass = Formula.CalculateCompassNum(level.mazeDifficulty);
 
@@ -834,6 +940,18 @@ public class MazeGenerator : MonoBehaviour
 			TilesWithItem.Add(tiles[i]);
 		}
 	}
+
+    void GenerateCompass_Random(Maze maze)
+    {
+        int numCompass = Formula.CalculateCompassNum(level.mazeDifficulty);
+
+        for (int i = 0; i < numCompass; i++)
+        {
+            Tile tile = MazeUTL.GetDeepestEmptyDeadEnd();
+            tile.SpawnTileItem(level.CompassPrefab);
+            TilesWithItem.Add(tile);
+        }
+    }
     #endregion
 
     #region Misc functions for generating maze
