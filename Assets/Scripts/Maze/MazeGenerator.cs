@@ -36,9 +36,9 @@ public class MazeGenerator : MonoBehaviour
         Maze newMaze = BuildMaze();
         level.maze = newMaze;
 
-        UpdateDeadEndList(newMaze);
-        GenerateDetectRegions(newMaze);
-		GenerateMazeItems(newMaze);
+        //UpdateDeadEndList(newMaze);
+        //GenerateDetectRegions(newMaze);
+		//GenerateMazeItems(newMaze);
     }
 
     #region Build Maze Layout
@@ -56,7 +56,7 @@ public class MazeGenerator : MonoBehaviour
     }
 
     // Generate random maze using Kruskal's algorithm
-    Maze GenerateMaze_Random()
+    Maze GenerateMaze_Random_old()
     {
 		if (!level.customMazeSize)
 		{
@@ -954,6 +954,8 @@ public class MazeGenerator : MonoBehaviour
     }
     #endregion
 
+    #endregion
+
     #region Misc functions for generating maze
     void InitCustomMazeObjList()
     {
@@ -996,16 +998,16 @@ public class MazeGenerator : MonoBehaviour
         Tile tile = MazeUTL.GetRandomTileFromList(tilesLeft);
         tileList.Add(tile);
 
-		List<Tile> newExclusiveTiles = new List<Tile>();
-		foreach(Tile t in exclusiveTiles)
-		{
-			newExclusiveTiles.Add(t);
-		}
-		newExclusiveTiles.Add(tile);
+        List<Tile> newExclusiveTiles = new List<Tile>();
+        foreach (Tile t in exclusiveTiles)
+        {
+            newExclusiveTiles.Add(t);
+        }
+        newExclusiveTiles.Add(tile);
 
         numItems--;
 
-		return GetItemSpawnRandomTiles(numItems, range, tileList, tilesLeft, newExclusiveTiles);
+        return GetItemSpawnRandomTiles(numItems, range, tileList, tilesLeft, newExclusiveTiles);
     }
 
     List<BodyPart> GetBodyPartList(int numItems)
@@ -1023,17 +1025,610 @@ public class MazeGenerator : MonoBehaviour
     }
     #endregion
 
-    #endregion
+    /// <summary>
+    /// ///////////////////////////////////////
+    /// </summary>
+
+    
+    const int roomDistance = 2;
+
+    // Generate random maze using Kruskal's algorithm
+    Maze GenerateMaze_Random()
+    {
+        // Init maze and maze size
+        if (!level.customMazeSize)
+        {
+            level.mazeWidth = Formula.CalculateMazeSideSize(level.mazeDifficulty);
+            level.mazeLength = Formula.CalculateMazeSideSize(level.mazeDifficulty);
+        }
+        Maze maze = new Maze(level.mazeWidth, level.mazeLength);
+
+        // Generate rooms
+        InitRoomData(maze);
+        AllocateRoom(maze.roomList, maze.allocatedRoomList, new List<AreaForRoom>() { GetStartMazeArea() });
+        foreach (Room room in maze.allocatedRoomList)
+        {
+            GenerateRoom(maze, room);
+        }
+
+        // Generate hallways
+        GenerateHallways(maze);
+
+        // Init tile list with coordinates
+        for (int i = 0; i < level.mazeWidth; i++)
+        {
+            for (int j = 0; j < level.mazeLength; j++)
+            {
+                maze.mazeTileList.Add(maze.mazeTile[i, j]);
+            }
+        }
+
+        return maze;
+    }
+
+    Maze GenerateRoom(Maze maze, Room room)
+    {
+        GameObject roomGroupObj = new GameObject() { name = "Room" + " (" + room.left + "," + room.bot + ")" };
+        roomGroupObj.transform.parent = maze.mazeGroupObj.transform;
+
+        foreach (Transform child in room.prefab.transform)
+        {
+            GameObject tilePrefab = child.gameObject;
+
+            // Gather tile data from preset tile object
+            int X = room.left + GetObjX(tilePrefab);
+            int Z = room.bot + GetObjZ(tilePrefab);
+
+            int rotCount = Mathf.FloorToInt(tilePrefab.transform.eulerAngles.y / 90);
+            rotCount = rotCount < 4 ? rotCount : (rotCount - 4);
+            WallLayout wallLayout = GetWallLayoutFromObj(tilePrefab);
+            bool[] wall = GetWallInfoFromObj(tilePrefab, rotCount);
+
+            // Spawn tile object
+            GameObject tileObj = GameObject.Instantiate(tilePrefab, new Vector3(X * 10, -0, Z * 10), Quaternion.Euler(0, 90 * rotCount, 0));
+            tileObj.name = "Tile [" + X + "]" + "[" + Z + "] " + "(" + wallLayout + ")";
+            Tile tile = tileObj.AddComponent<Tile>();
+
+            // Generate Tile class data
+            tile.X = X;
+            tile.Z = Z;
+            tile.wall = wall;
+            tile.wallLayout = wallLayout;
+            AssignWallFloorObjToTile(tile, wallLayout, rotCount);
+
+            // Group tile
+            tile.transform.parent = roomGroupObj.transform;
+            maze.mazeTile[X, Z] = tile;
+        }
+
+        return maze;
+    }
+
+    void test(List<AreaForRoom> areaList)
+    {
+        GameObject group = new GameObject();
+        group.name = "group";
+
+        foreach (AreaForRoom area in areaList)
+        {
+            GameObject obj = new GameObject();
+            obj.name = "Area (" + area.left + "," + area.bot + ")";
+            for (int i = area.left; i <= area.right; i++)
+            {
+                for (int j = area.bot; j <= area.top; j++)
+                {
+                    GameObject areaObj = Instantiate(level.mazeSetting.GetWallLayoutObj(WallLayout.O), new Vector3(i * 10f, 0f, j * 10f), Quaternion.Euler(0, 0, 0));
+                    areaObj.transform.parent = obj.transform;
+                }
+            }
+            obj.transform.parent = group.transform;
+        }
+    }
+
+    //---------------------------------------
+    //      Room
+    //---------------------------------------
+    void InitRoomData(Maze maze)
+    {
+        foreach (GameObject obj in level.mazeSetting.Rooms)
+        {
+            GameObject roomObj = obj.transform.Find("Room").gameObject;
+            Room newRoom = LoadRoomObject(roomObj);
+            maze.roomList.Add(newRoom);
+        }
+    }
+
+    Room LoadRoomObject(GameObject roomObj)
+    {
+        Room newRoom = new Room();
+
+        newRoom.prefab = roomObj;
+
+        // Init room size
+        int width = 0;
+        int length = 0;
+
+        foreach (Transform child in roomObj.transform)
+        {
+            GameObject tileObj = child.gameObject;
+            int X = GetObjX(tileObj);
+            int Z = GetObjZ(tileObj);
+
+            width = width < (X + 1) ? (X + 1) : width;
+            length = length < (Z + 1) ? (Z + 1) : length;
+        }
+
+        newRoom.width = width;
+        Utilities.TryCatchError(width > level.mazeWidth, "The width of room cannot be larger than the maze size.");
+        newRoom.length = length;
+        Utilities.TryCatchError(length > level.mazeLength, "The length of room cannot be larger than the maze size.");
+
+        return newRoom;
+    }
+
+    void AllocateRoom(List<Room> roomList, List<Room> allocatedRoomList, List<AreaForRoom> areaList)
+    {
+        List<Room> tmpRoomList = new List<Room>(roomList);
+        Room room = tmpRoomList[Random.Range(0, tmpRoomList.Count)];
+        AreaForRoom area;
+
+        // Find the area fits this room 
+        List<AreaForRoom> tmpAreaList = new List<AreaForRoom>(areaList);
+        
+        while (true)
+        {
+            if (tmpAreaList.Count <= 0)
+            {
+                return;
+            }
+            
+            area = tmpAreaList[Random.Range(0, tmpAreaList.Count)];
+            if (RoomFitsArea(room, area))
+                break;
+
+            tmpAreaList.Remove(area);
+        }
+
+        // Allocate the room in area
+        room.left = area.left + Random.Range(0, area.width - room.width);
+        room.bot = area.bot + Random.Range(0, area.length - room.length);
+        room.right = room.left + room.width - 1;
+        room.top = room.bot + room.length - 1;
+        allocatedRoomList.Add(room);
+
+        // Update areas
+        areaList = UpdateRoomAreaList(areaList, room);
+
+        // Update room list
+        tmpRoomList.Remove(room);
+        if (tmpRoomList.Count <= 0)
+            return;
+
+        // Allocate next room
+        AllocateRoom(tmpRoomList, allocatedRoomList, areaList);
+    }
+
+    bool RoomFitsArea(Room room, AreaForRoom area)
+    {
+        return ((room.width <= area.width) && (room.length <= area.length));
+    }
+
+    //---------------------------------------
+    //      Hallway
+    //---------------------------------------
+    void GenerateHallways(Maze maze)
+    {
+        // Generate areas for hallways
+        List<AreaForRoom> hallwayAreaList = new List<AreaForRoom>();
+        hallwayAreaList.Add(GetStartMazeArea());
+        hallwayAreaList = GetHallwayAreaList(maze.allocatedRoomList, hallwayAreaList);
+
+        // Generate Kruskal's algorithm maze for each area
+        foreach (AreaForRoom area in hallwayAreaList)
+        {
+            GenerateHallway(area);
+        }
+
+        // Connect rooms and hallways
+    }
+
+    List<AreaForRoom> GetHallwayAreaList(List<Room> roomList, List<AreaForRoom> areaList)
+    {
+        List<Room> tmpRoomList = new List<Room>(roomList);
+        Room room = tmpRoomList[Random.Range(0, tmpRoomList.Count)];
+
+        areaList = UpdateHallwayAreaList(areaList, room);
+
+        tmpRoomList.Remove(room);
+        if (tmpRoomList.Count <= 0)
+            return areaList;
+
+        areaList = GetHallwayAreaList(tmpRoomList, areaList);
+        return areaList;
+    }
+
+    void GenerateHallway(AreaForRoom area)
+    {
+        GameObject groupObj = new GameObject();
+        groupObj.name = "hallway";
+
+        MazeBlueprint hallwayBP = new MazeBlueprint(area.width, area.length);
+        /*
+        for (int i = 0; i < level.mazeWidth; i++)
+        {
+            for (int j = 0; j < level.mazeLength; j++)
+            {
+                Tile tile = GenerateTileWithBlueprint(i, j, hallwayBP);
+                int X = area.left + i;
+                int Z = area.bot + j;
+
+                tile.gameObject.name = "Tile [" + X + "]" + "[" + Z + "] " + "(" + tile.wallLayout + ")";
+                tile.X = X;
+                tile.Z = Z;
+            }
+        }*/
+    }
+
+    //---------------------------------------
+    //      Area
+    //---------------------------------------
+    struct AreaForRoom
+    {
+        public int left;
+        public int top;
+        public int right;
+        public int bot;
+        public int width;
+        public int length;
+    }
+
+    AreaForRoom GetStartMazeArea()
+    {
+        AreaForRoom area = new AreaForRoom();
+        area.left = 0;
+        area.top = level.mazeLength - 1;
+        area.right = level.mazeWidth - 1;
+        area.bot = 0;
+        area.width = level.mazeWidth;
+        area.length = level.mazeLength;
+
+        return area;
+    }
+
+    List<AreaForRoom> UpdateRoomAreaList(List<AreaForRoom> areaList, Room room)
+    {
+        List<AreaForRoom> newList = new List<AreaForRoom>();
+        int left = room.left - roomDistance;
+        int top = room.top + roomDistance;
+        int right = room.right + roomDistance;
+        int bot = room.bot - roomDistance;
+
+        foreach (AreaForRoom area in areaList)
+        {
+            UpdateAreaListFromArea(newList, area, left, top, right, bot);
+        }
+
+        return newList;
+    }
+
+    void UpdateAreaListFromArea(List<AreaForRoom> areaList, AreaForRoom area, int left, int top, int right, int bot)
+    {
+        bool interLeft = ((left >= area.left) && (left <= area.right));
+        bool interTop = ((top >= area.bot) && (top <= area.top));
+        bool interRight = ((right >= area.left) && (right <= area.right));
+        bool interBot = ((bot >= area.bot) && (bot <= area.top));
+        bool withinWidth = ((left <= area.left) && (right >= area.right));
+        bool withinLength = ((top >= area.top) && (bot <= area.bot));
+        bool intersect = false;
+
+        if ((interLeft) && (interTop || interBot || withinLength))
+        {
+            intersect = true;
+            AddLeftArea(areaList, area, left);
+        }
+        if ((interTop) && (interLeft || interRight || withinWidth))
+        {
+            intersect = true;
+            AddTopArea(areaList, area, top);
+        }
+        if ((interRight) && (interTop || interBot || withinLength))
+        {
+            intersect = true;
+            AddRightArea(areaList, area, right);
+        }
+        if ((interBot) && (interLeft || interRight || withinWidth))
+        {
+            intersect = true;
+            AddBotArea(areaList, area, bot);
+        }
+        if (withinWidth && withinLength)
+            intersect = true;
+        
+        if (!intersect)
+            areaList.Add(area);
+    }
+
+    void AddLeftArea(List<AreaForRoom> areaList, AreaForRoom area, int left)
+    {
+        AreaForRoom newArea;
+        newArea.left = area.left;
+        newArea.top = area.top;
+        newArea.right = left - 1;
+        newArea.bot = area.bot;
+        newArea.width = newArea.right - newArea.left + 1;
+        newArea.length = newArea.top - newArea.bot + 1;
+
+        if ((newArea.width > 0) && (newArea.length > 0))
+            areaList.Add(newArea);
+    }
+
+    void AddTopArea(List<AreaForRoom> areaList, AreaForRoom area, int top)
+    {
+        AreaForRoom newArea;
+        newArea.left = area.left;
+        newArea.top = area.top;
+        newArea.right = area.right;
+        newArea.bot = top + 1;
+        newArea.width = newArea.right - newArea.left + 1;
+        newArea.length = newArea.top - newArea.bot + 1;
+
+        if ((newArea.width > 0) && (newArea.length > 0))
+            areaList.Add(newArea);
+    }
+
+    void AddRightArea(List<AreaForRoom> areaList, AreaForRoom area, int right)
+    {
+        AreaForRoom newArea;
+        newArea.left = right + 1;
+        newArea.top = area.top;
+        newArea.right = area.right;
+        newArea.bot = area.bot;
+        newArea.width = newArea.right - newArea.left + 1;
+        newArea.length = newArea.top - newArea.bot + 1;
+
+        if ((newArea.width > 0) && (newArea.length > 0))
+            areaList.Add(newArea);
+    }
+
+    void AddBotArea(List<AreaForRoom> areaList, AreaForRoom area, int bot)
+    {
+        AreaForRoom newArea;
+        newArea.left = area.left;
+        newArea.top = bot - 1;
+        newArea.right = area.right;
+        newArea.bot = area.bot;
+        newArea.width = newArea.right - newArea.left + 1;
+        newArea.length = newArea.top - newArea.bot + 1;
+
+        if ((newArea.width > 0) && (newArea.length > 0))
+            areaList.Add(newArea);
+    }
+
+    List<AreaForRoom> UpdateHallwayAreaList(List<AreaForRoom> areaList, Room room)
+    {
+        List<AreaForRoom> newList = new List<AreaForRoom>();
+        int left = room.left;
+        int top = room.top;
+        int right = room.right;
+        int bot = room.bot;
+
+        foreach (AreaForRoom area in areaList)
+        {
+            UpdateAreaListFromAreaNoOverlap(newList, area, left, top, right, bot);
+        }
+
+        return newList;
+    }
+
+    void UpdateAreaListFromAreaNoOverlap(List<AreaForRoom> areaList, AreaForRoom area, int left, int top, int right, int bot)
+    {
+        bool interLeft = ((left >= area.left) && (left <= area.right));
+        bool interTop = ((top >= area.bot) && (top <= area.top));
+        bool interRight = ((right >= area.left) && (right <= area.right));
+        bool interBot = ((bot >= area.bot) && (bot <= area.top));
+        bool withinWidth = ((left <= area.left) && (right >= area.right));
+        bool withinLength = ((top >= area.top) && (bot <= area.bot));
+        bool intersect = false;
+        List<int> overlapArea = new List<int>();
+
+        if ((interLeft) && (interTop || interBot || withinLength))
+        {
+            intersect = true;
+            AddLeftAreaNoOverlap(areaList, area, left, top, right, bot, overlapArea);
+        }
+        if ((interTop) && (interLeft || interRight || withinWidth))
+        {
+            intersect = true;
+            AddTopAreaNoOverlap(areaList, area, left, top, right, bot, overlapArea);
+        }
+        if ((interRight) && (interTop || interBot || withinLength))
+        {
+            intersect = true;
+            AddRightAreaNoOverlap(areaList, area, left, top, right, bot, overlapArea);
+        }
+        if ((interBot) && (interLeft || interRight || withinWidth))
+        {
+            intersect = true;
+            AddBotAreaNoOverlap(areaList, area, left, top, right, bot, overlapArea);
+        }
+        if (withinWidth && withinLength)
+            intersect = true;
+
+        if (!intersect)
+            areaList.Add(area);
+    }
+
+    void AddLeftAreaNoOverlap(List<AreaForRoom> areaList, AreaForRoom area, int left, int top, int right, int bot, List<int> overlapArea)
+    {
+        AreaForRoom newArea;
+        newArea.left = area.left;
+        newArea.top = area.top;
+        newArea.right = left - 1;
+        newArea.bot = area.bot;
+
+        if (area.top <= top)
+        {
+            newArea.top = area.top;
+        }
+        else if (Random.Range(0, 2) > 0)
+        {
+            overlapArea.Add(7);
+        }
+        else
+        {
+            newArea.top = top;
+        }
+
+        if (area.bot >= bot)
+        {
+            newArea.bot = area.bot;
+        }
+        else if (Random.Range(0, 2) > 0)
+        {
+            overlapArea.Add(1);
+        }
+        else
+        {
+            newArea.bot = bot;
+        }
+
+        newArea.width = newArea.right - newArea.left + 1;
+        newArea.length = newArea.top - newArea.bot + 1;
+
+        if ((newArea.width > 0) && (newArea.length > 0))
+            areaList.Add(newArea);
+    }
+
+    void AddTopAreaNoOverlap(List<AreaForRoom> areaList, AreaForRoom area, int left, int top, int right, int bot, List<int> overlapArea)
+    {
+        AreaForRoom newArea;
+        newArea.left = area.left;
+        newArea.top = area.top;
+        newArea.right = area.right;
+        newArea.bot = top + 1;
+
+        if (area.left >= left)
+        {
+            newArea.left = area.left;
+        }
+        else if (overlapArea.Contains(7))
+        {
+            newArea.left = left;
+        }
+
+        if (area.right <= right)
+        {
+            newArea.right = area.right;
+        }
+        else if (Random.Range(0, 2) > 0)
+        {
+            overlapArea.Add(9);
+        }
+        else
+        {
+            newArea.right = right;
+        }
+
+        newArea.width = newArea.right - newArea.left + 1;
+        newArea.length = newArea.top - newArea.bot + 1;
+
+        if ((newArea.width > 0) && (newArea.length > 0))
+            areaList.Add(newArea);
+    }
+
+    void AddRightAreaNoOverlap(List<AreaForRoom> areaList, AreaForRoom area, int left, int top, int right, int bot, List<int> overlapArea)
+    {
+        AreaForRoom newArea;
+        newArea.left = right + 1;
+        newArea.top = area.top;
+        newArea.right = area.right;
+        newArea.bot = area.bot;
+
+        if (area.top <= top)
+        {
+            newArea.top = area.top;
+        }
+        else if (overlapArea.Contains(9))
+        {
+            newArea.top = top;
+        }
+
+        if (area.bot >= bot)
+        {
+            newArea.bot = area.bot;
+        }
+        else if (Random.Range(0, 2) > 0)
+        {
+            overlapArea.Add(3);
+        }
+        else
+        {
+            newArea.bot = bot;
+        }
+
+        newArea.width = newArea.right - newArea.left + 1;
+        newArea.length = newArea.top - newArea.bot + 1;
+
+        if ((newArea.width > 0) && (newArea.length > 0))
+            areaList.Add(newArea);
+    }
+
+    void AddBotAreaNoOverlap(List<AreaForRoom> areaList, AreaForRoom area, int left, int top, int right, int bot, List<int> overlapArea)
+    {
+        AreaForRoom newArea;
+        newArea.left = area.left;
+        newArea.top = bot - 1;
+        newArea.right = area.right;
+        newArea.bot = area.bot;
+
+        if (area.right <= right)
+        {
+            newArea.right = area.right;
+        }
+        else if (overlapArea.Contains(3))
+        {
+            newArea.right = right;
+        }
+
+        if (area.left >= left)
+        {
+            newArea.left = area.left;
+        }
+        else if (overlapArea.Contains(1))
+        {
+            newArea.left = left;
+        }
+
+        newArea.width = newArea.right - newArea.left + 1;
+        newArea.length = newArea.top - newArea.bot + 1;
+
+        if ((newArea.width > 0) && (newArea.length > 0))
+            areaList.Add(newArea);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     #region Misc.
     int GetObjX(GameObject obj)
     {
-        return Mathf.FloorToInt(obj.transform.position.x / 10);
+        return Mathf.RoundToInt(obj.transform.position.x / 10);
     }
 
     int GetObjZ(GameObject obj)
     {
-        return Mathf.FloorToInt(obj.transform.position.z / 10);
+        return Mathf.RoundToInt(obj.transform.position.z / 10);
     }
     #endregion
 }

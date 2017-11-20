@@ -14,8 +14,11 @@ public class Maze  {
 	//=======================================
 	public int mazeWidth;
 	public int mazeLength;
+    public GameObject mazeGroupObj;
 	public Tile[,] mazeTile;
     public List<Tile> mazeTileList;
+    public List<Room> roomList;
+    [HideInInspector] public List<Room> allocatedRoomList;
     public SortedDictionary<int, List<Tile>> DeadEnds = new SortedDictionary<int, List<Tile>>();
     public SortedDictionary<int, List<Tile>> DeadEndsWithItem = new SortedDictionary<int, List<Tile>>();
 
@@ -25,8 +28,28 @@ public class Maze  {
 	{
 		mazeWidth = width;
 		mazeLength = length;
-		mazeTile = new Tile[mazeWidth, mazeLength];
+        mazeGroupObj = new GameObject() { name = "Maze" };
+        mazeTile = new Tile[mazeWidth, mazeLength];
 		mazeTileList = new List<Tile>();
+        roomList = new List<Room>();
+        allocatedRoomList = new List<Room>();
         detectRegions = new List<string>();
     }
+}
+
+public class Room
+{
+    public GameObject prefab;
+
+    public bool allocated;
+
+    public int left;
+    public int top;
+    public int right;
+    public int bot;
+    public int width;
+    public int length;
+
+    public Tile[,] roomTile;
+    public List<Tile> roomTileList;
 }

@@ -51,23 +51,20 @@ public class MonsterReachAction : MonsterBehaviour
 
         if (!reached)
         {
-            if (!MazeUTL.CheckTargetInRangeAndDetectRegion(owner.CurrentTile, actionTarget.CurrentTile, actionRange))
+            List<Tile> path = MazeUTL.GetShortestPath(owner.CurrentTile, actionTarget.CurrentTile, owner.detectRange);
+            for (int i = 0; i < path.Count; i++)
             {
-                List<Tile> path = MazeUTL.GetShortestPath(owner.CurrentTile, actionTarget.CurrentTile, owner.detectRange);
-                for (int i = 0; i < path.Count; i++)
+                owner.TryMoveToTile(path[i]);
+                do
                 {
-                    owner.TryMoveToTile(path[i]);
-                    do
-                    {
-                        CheckReached();
-                        yield return new WaitForSeconds(0.01f);
-                    } while (owner.CurrentAction == ActionType.Walking);
+                    CheckReached();
+                    yield return new WaitForSeconds(0.01f);
+                } while (owner.CurrentAction == ActionType.Walking);
 
-                    if (reached)
-                        break;
-                }
-                owner.StopWalkingAnim();
+                if (reached)
+                    break;
             }
+            owner.StopWalkingAnim();
         }
 
         SetActionFinished ("TryReachActionRangeCoroutine", true);

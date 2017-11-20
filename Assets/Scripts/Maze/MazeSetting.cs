@@ -31,6 +31,9 @@ public class MazeSetting : MonoBehaviour {
     public GameObject[] TileLayoutL = new GameObject[1];
     public GameObject[] TileLayoutC = new GameObject[1];
 
+    [Header("Room Set")]
+    public GameObject[] Rooms = new GameObject[1];
+
     [Header("Item Set")]
     public List<TileItem> SlimeElements;
     public List<BodyPart> bodyParts;

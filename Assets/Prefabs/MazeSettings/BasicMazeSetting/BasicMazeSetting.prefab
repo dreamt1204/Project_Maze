@@ -61,6 +61,8 @@ MonoBehaviour:
   - {fileID: 1132896773378542, guid: 3f9a4401f0d980945914a7569320df4b, type: 2}
   TileLayoutC:
   - {fileID: 1279900473387186, guid: ffd2d3ce27b1c3b4080d80e55026a741, type: 2}
+  Rooms:
+  - {fileID: 1890429315382164, guid: c9f1841f253c90743a486e9d04c989e3, type: 2}
   SlimeElements:
   - {fileID: 114186557904494526, guid: 05ec69d8437a10c41bef153acb92c3c3, type: 2}
   bodyParts:
