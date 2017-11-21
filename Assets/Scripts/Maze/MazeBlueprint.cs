@@ -53,32 +53,49 @@ public class MazeBlueprint
     // Generate maze blueprint using kruskal's algorithm
     void GenerateBPLayout()
     {
-        while (true)
+        if (m_width == 1)
         {
-            int[] repl;
+            for (int i = 1; i < m_length; i++)
+            {
+                wall_h[0, i] = false;
+            }
+        }
+        else if (m_length == 1)
+        {
+            for (int i = 1; i < m_width; i++)
+            {
+                wall_v[i, 0] = false;
+            }
+        }
+        else
+        {
+            while (true)
+            {
+                int[] repl;
 
-            if (Random.Range(0, 2) >= 1)
-            {
-                int x = Random.Range(1, wall_v.GetLength(0) - 1);
-                int z = Random.Range(0, wall_v.GetLength(1));
-                if (cell[x, z] == cell[x - 1, z])
-                    continue;
-                repl = new int[] { cell[x, z], cell[x - 1, z] };
-                wall_v[x, z] = false;
+                if (Random.Range(0, 2) >= 1)
+                {
+                    int x = Random.Range(1, m_width);
+                    int z = Random.Range(0, m_length);
+                    if (cell[x, z] == cell[x - 1, z])
+                        continue;
+                    repl = new int[] { cell[x, z], cell[x - 1, z] };
+                    wall_v[x, z] = false;
+                }
+                else
+                {
+                    int x = Random.Range(0, m_width);
+                    int z = Random.Range(1, m_length);
+                    if (cell[x, z] == cell[x, z - 1])
+                        continue;
+                    repl = new int[] { cell[x, z], cell[x, z - 1] };
+                    wall_h[x, z] = false;
+                }
+                System.Array.Sort(repl);
+                ReplaceIDs(repl);
+                if (IDsAllZero(repl) == true)
+                    break;
             }
-            else
-            {
-                int x = Random.Range(0, wall_h.GetLength(0));
-                int z = Random.Range(1, wall_h.GetLength(1) - 1);
-                if (cell[x, z] == cell[x, z - 1])
-                    continue;
-                repl = new int[] { cell[x, z], cell[x, z - 1] };
-                wall_h[x, z] = false;
-            }
-            System.Array.Sort(repl);
-            ReplaceIDs(repl);
-            if (IDsAllZero(repl) == true)
-                break;
         }
 
         //AddSquares();
