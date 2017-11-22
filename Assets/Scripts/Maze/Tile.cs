@@ -22,6 +22,7 @@ public class Tile : MonoBehaviour {
     // Coordinate info
 	public int X;
     public int Z;
+    public string hallwayID = "";
 
     // Geo object
     public bool[] wall = new bool[4];

@@ -18,6 +18,7 @@ public class Maze  {
 	public Tile[,] mazeTile;
     public List<Tile> mazeTileList;
     public List<Room> roomList;
+    public Dictionary<string, List<Tile>> hallwayTileList = new Dictionary<string, List<Tile>>();
     [HideInInspector] public List<Room> allocatedRoomList;
     public SortedDictionary<int, List<Tile>> DeadEnds = new SortedDictionary<int, List<Tile>>();
     public SortedDictionary<int, List<Tile>> DeadEndsWithItem = new SortedDictionary<int, List<Tile>>();

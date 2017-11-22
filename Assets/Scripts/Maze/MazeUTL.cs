@@ -160,6 +160,12 @@ public static class MazeUTL {
     //---------------------------------------
     //      Get direction functions
     //---------------------------------------
+    // Get reverse dirction
+    public static int GetReverseDir(int dir)
+    {
+        return (dir + 2) > 3 ? (dir - 2) : (dir + 2);
+    }
+
     // Get direction of the target tile. 
     public static int GetNeighborTileDir(Tile org, Tile target)
     {
