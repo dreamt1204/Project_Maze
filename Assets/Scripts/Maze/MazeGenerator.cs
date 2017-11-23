@@ -935,7 +935,7 @@ public class MazeGenerator : MonoBehaviour
     void GenerateRooms(Maze maze)
     {
         InitRoomData(maze);
-        AllocateRoom(maze.roomList, maze.allocatedRoomList, new List<AreaForRoom>() { GetStartMazeArea() });
+        AllocateRoom(maze.roomList, maze.allocatedRoomList, new List<AreaForRoom>() { GetStartMazeArea(roomDistance) });
         foreach (Room room in maze.allocatedRoomList)
         {
             GenerateRoom(maze, room);
@@ -1029,7 +1029,7 @@ public class MazeGenerator : MonoBehaviour
 
     void GenerateRoom(Maze maze, Room room)
     {
-        GameObject roomGroupObj = new GameObject() { name = "Room" + " (" + room.left + "," + room.top + "," + room.right + "," + room.bot + ")" };
+        GameObject roomGroupObj = new GameObject() { name = "Room " + room.left + "," + room.top + "," + room.right + "," + room.bot };
         roomGroupObj.transform.parent = maze.mazeGroupObj.transform;
 
         foreach (Transform child in room.prefab.transform)
@@ -1056,6 +1056,7 @@ public class MazeGenerator : MonoBehaviour
             tile.wall = wall;
             tile.wallLayout = wallLayout;
             AssignWallFloorObjToTile(tile, wallLayout, rotCount);
+            tile.areaID = "Room "+ room.left + "," + room.top + "," + room.right + "," + room.bot;
 
             // Group tile
             tile.transform.parent = roomGroupObj.transform;
@@ -1070,7 +1071,7 @@ public class MazeGenerator : MonoBehaviour
     {
         // Generate areas for hallways
         List<AreaForRoom> hallwayAreaList = new List<AreaForRoom>();
-        hallwayAreaList.Add(GetStartMazeArea());
+        hallwayAreaList.Add(GetStartMazeArea(0));
         hallwayAreaList = GetHallwayAreaList(maze.allocatedRoomList, hallwayAreaList);
 
         // Generate Kruskal's algorithm maze for each area
@@ -1100,11 +1101,11 @@ public class MazeGenerator : MonoBehaviour
 
     void GenerateHallway(Maze maze, AreaForRoom area)
     {
-        if (!maze.hallwayTileList.ContainsKey(GetAreaID(area)))
-            maze.hallwayTileList.Add(GetAreaID(area), new List<Tile>());
+        if (!maze.hallwayTileList.ContainsKey(GetAreaID(area, AreaType.Hallway)))
+            maze.hallwayTileList.Add(GetAreaID(area, AreaType.Hallway), new List<Tile>());
 
         GameObject groupObj = new GameObject();
-        groupObj.name = "Hallway (" + GetAreaID(area) + ")";
+        groupObj.name = GetAreaID(area, AreaType.Hallway);
         groupObj.transform.parent = maze.mazeGroupObj.transform;
 
         MazeBlueprint hallwayBP = new MazeBlueprint(area.width, area.length);
@@ -1121,20 +1122,21 @@ public class MazeGenerator : MonoBehaviour
                 tile.gameObject.transform.position = new Vector3(X * 10, 0, Z * 10);
                 tile.X = X;
                 tile.Z = Z;
-                tile.hallwayID = GetAreaID(area);
+                tile.areaID = GetAreaID(area, AreaType.Hallway);
 
                 tile.gameObject.transform.parent = groupObj.transform;
                 maze.mazeTile[X, Z] = tile;
-                maze.hallwayTileList[GetAreaID(area)].Add(tile);
+                maze.hallwayTileList[GetAreaID(area, AreaType.Hallway)].Add(tile);
             }
         }
     }
 
     void ConnectHallways(Maze maze)
     {
-        foreach (string hallwayID in maze.hallwayTileList.Keys)
+        foreach (string areaID in maze.hallwayTileList.Keys)
         {
-            string[] edges= hallwayID.Split(',');
+            string sizeString = areaID.Substring(areaID.LastIndexOf(" ") + 1);
+            string[] edges= sizeString.Split(',');
             int left = int.Parse(edges[0]);
             int top = int.Parse(edges[1]);
             int right = int.Parse(edges[2]);
@@ -1144,7 +1146,7 @@ public class MazeGenerator : MonoBehaviour
             Dictionary<string, List<Tile>> NeedToConnectIDList = new Dictionary<string, List<Tile>>();
             Dictionary<string, int> NeedToConnectDirList = new Dictionary<string, int>();
 
-            foreach (Tile tile in maze.hallwayTileList[hallwayID])
+            foreach (Tile tile in maze.hallwayTileList[areaID])
             {
                 if ((tile.X == left) && ((tile.X - 1) >= 0))
                 {
@@ -1169,37 +1171,49 @@ public class MazeGenerator : MonoBehaviour
 
             foreach (string NeedToConnectID in NeedToConnectIDList.Keys)
             {
-                Tile tile = NeedToConnectIDList[NeedToConnectID][Random.Range(0, NeedToConnectIDList[NeedToConnectID].Count)];
-                int dir = NeedToConnectDirList[NeedToConnectID];
-                Tile reverseTile;
-                if (dir == 0)
-                    reverseTile = maze.mazeTile[tile.X, tile.Z + 1];
-                else if (dir == 1)
-                    reverseTile = maze.mazeTile[tile.X + 1, tile.Z];
-                else if (dir == 2)
-                    reverseTile = maze.mazeTile[tile.X, tile.Z - 1];
+                List<Tile> tileList = new List<Tile>();
+                if (NeedToConnectID.Contains("Room"))
+                    tileList = NeedToConnectIDList[NeedToConnectID];
                 else
-                    reverseTile = maze.mazeTile[tile.X - 1, tile.Z];
+                    tileList.Add(NeedToConnectIDList[NeedToConnectID][Random.Range(0, NeedToConnectIDList[NeedToConnectID].Count)]);
 
-                RemoveTileWall(tile, dir, maze, NeedToConnectIDList);
-                RemoveTileWall(reverseTile, MazeUTL.GetReverseDir(dir), maze, NeedToConnectIDList);
+                foreach (Tile tile in tileList)
+                {
+                    int dir = NeedToConnectDirList[NeedToConnectID];
+                    Tile reverseTile;
+                    if (dir == 0)
+                        reverseTile = maze.mazeTile[tile.X, tile.Z + 1];
+                    else if (dir == 1)
+                        reverseTile = maze.mazeTile[tile.X + 1, tile.Z];
+                    else if (dir == 2)
+                        reverseTile = maze.mazeTile[tile.X, tile.Z - 1];
+                    else
+                        reverseTile = maze.mazeTile[tile.X - 1, tile.Z];
+
+                    RemoveTileWall(tile, dir, maze, NeedToConnectIDList);
+                    if (MazeUTL.WallOnDir(reverseTile, MazeUTL.GetReverseDir(dir)))
+                        RemoveTileWall(reverseTile, MazeUTL.GetReverseDir(dir), maze, NeedToConnectIDList);
+                }                
             }
         }
     }
 
     void UpdateNeedToConnectList(Maze maze, Tile org, Tile target, List<string> ConnectedIDList, Dictionary<string, List<Tile>> NeedToConnectIDList, Dictionary<string, int> NeedToConnectDirList)
     {
-        string targetID = target.hallwayID;
-
-        if (targetID == "")
-            return;
+        string targetID = target.areaID;
 
         if (ConnectedIDList.Contains(targetID))
             return;
 
         int tryConnectDir = MazeUTL.GetNeighborTileDir(org, target);
 
-        if (!MazeUTL.WallOnDir(org, tryConnectDir))
+        if (targetID.Contains("Room"))
+        {
+            int reverseDir = MazeUTL.GetReverseDir(tryConnectDir);
+            if (MazeUTL.WallOnDir(target, reverseDir))
+                return;
+        }
+        else if (!MazeUTL.WallOnDir(org, tryConnectDir))
         {
             if (!ConnectedIDList.Contains(targetID))
                 ConnectedIDList.Add(targetID);
@@ -1270,9 +1284,9 @@ public class MazeGenerator : MonoBehaviour
         maze.mazeTile[X, Z] = newTile;
 
         // Replace instance of old Tile with new tile
-        int oldIndex = maze.hallwayTileList[oldTile.hallwayID].IndexOf(oldTile);
-        newTile.hallwayID = oldTile.hallwayID;
-        maze.hallwayTileList[oldTile.hallwayID][oldIndex] = newTile;
+        int oldIndex = maze.hallwayTileList[oldTile.areaID].IndexOf(oldTile);
+        newTile.areaID = oldTile.areaID;
+        maze.hallwayTileList[oldTile.areaID][oldIndex] = newTile;
 
         foreach (string NeedToConnectID in NeedToConnectIDList.Keys)
         {
@@ -1300,22 +1314,35 @@ public class MazeGenerator : MonoBehaviour
         public int length;
     }
 
-    AreaForRoom GetStartMazeArea()
+    AreaForRoom GetStartMazeArea(int boundarySize)
     {
         AreaForRoom area = new AreaForRoom();
-        area.left = 0;
-        area.top = level.mazeLength - 1;
-        area.right = level.mazeWidth - 1;
-        area.bot = 0;
-        area.width = level.mazeWidth;
-        area.length = level.mazeLength;
+        area.left = 0 + boundarySize;
+        area.top = level.mazeLength - 1 - boundarySize;
+        area.right = level.mazeWidth - 1 - boundarySize;
+        area.bot = 0 + boundarySize;
+        area.width = level.mazeWidth - (boundarySize * 2);
+        area.length = level.mazeLength - (boundarySize * 2);
 
         return area;
     }
 
-    string GetAreaID(AreaForRoom area)
+    enum AreaType
     {
-        return area.left + "," + area.top + "," + area.right + "," + area.bot;
+        Room,
+        Hallway
+    }
+
+    string GetAreaID(AreaForRoom area, AreaType areaType)
+    {
+        string id = area.left + "," + area.top + "," + area.right + "," + area.bot;
+
+        if (areaType == AreaType.Room)
+            id = "Room " + id;
+        else if (areaType == AreaType.Hallway)
+            id = "Hallway " + id;
+
+        return id;
     }
 
     List<AreaForRoom> UpdateRoomAreaList(List<AreaForRoom> areaList, Room room)
