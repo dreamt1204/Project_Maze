@@ -390,6 +390,10 @@ public class MazeGenerator : MonoBehaviour
     void GenerateRooms(Maze maze)
     {
         InitRoomData(maze);
+
+        if (maze.roomList.Count == 0)
+            return;
+
         AllocateRoom(maze.roomList, maze.allocatedRoomList, new List<AreaForRoom>() { GetStartMazeArea(roomDistance) });
         foreach (Room room in maze.allocatedRoomList)
         {
@@ -417,6 +421,8 @@ public class MazeGenerator : MonoBehaviour
         int width = 0;
         int length = 0;
 
+        newRoom.rot = Random.Range(0, 4);
+        
         foreach (Transform child in roomObj.transform)
         {
             GameObject tileObj = child.gameObject;
@@ -427,9 +433,9 @@ public class MazeGenerator : MonoBehaviour
             length = length < (Z + 1) ? (Z + 1) : length;
         }
 
-        newRoom.width = width;
+        newRoom.width = (newRoom.rot == 1 || newRoom.rot == 3) ? length : width;
         Utilities.TryCatchError(width > level.mazeWidth, "The width of room cannot be larger than the maze size.");
-        newRoom.length = length;
+        newRoom.length = (newRoom.rot == 1 || newRoom.rot == 3) ? width : length;
         Utilities.TryCatchError(length > level.mazeLength, "The length of room cannot be larger than the maze size.");
 
         return newRoom;
@@ -488,14 +494,14 @@ public class MazeGenerator : MonoBehaviour
         roomGroupObj.transform.parent = maze.mazeGroupObj.transform;
 
         GameObject rotObj = Instantiate(room.prefab);
-        int rot = Random.Range(0, 4);
+        int rot = room.rot;
         rotObj.transform.rotation = Quaternion.Euler(0, 90 * rot, 0);
         if (rot == 1)
-            rotObj.transform.position = new Vector3(0, 0, (room.width - 1) * 10);
+            rotObj.transform.position = new Vector3(0, 0, (room.length - 1) * 10);
         else if (rot == 2)
-            rotObj.transform.position = new Vector3((room.length - 1) * 10, 0, (room.width - 1) * 10);
+            rotObj.transform.position = new Vector3((room.width - 1) * 10, 0, (room.length - 1) * 10);
         else if (rot == 3)
-            rotObj.transform.position = new Vector3((room.length - 1) * 10, 0, 0);
+            rotObj.transform.position = new Vector3((room.width - 1) * 10, 0, 0);
 
         foreach (Transform child in rotObj.transform)
         {
@@ -541,7 +547,9 @@ public class MazeGenerator : MonoBehaviour
         // Generate areas for hallways
         List<AreaForRoom> hallwayAreaList = new List<AreaForRoom>();
         hallwayAreaList.Add(GetStartMazeArea(0));
-        hallwayAreaList = GetHallwayAreaList(maze.allocatedRoomList, hallwayAreaList);
+
+        if (maze.allocatedRoomList.Count > 0)
+            hallwayAreaList = GetHallwayAreaList(maze.allocatedRoomList, hallwayAreaList);
 
         // Generate Kruskal's algorithm maze for each area
         foreach (AreaForRoom area in hallwayAreaList)

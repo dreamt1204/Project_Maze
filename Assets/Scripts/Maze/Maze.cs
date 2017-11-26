@@ -44,6 +44,7 @@ public class Room
 
     public bool allocated;
 
+    public int rot;
     public int left;
     public int top;
     public int right;
