@@ -196,7 +196,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mazeGenerator: {fileID: 0}
-  finishedInitLevel: 0
+  finishedInit: 0
   tileStart: {fileID: 0}
   tileObjective: {fileID: 0}
   timer: 0
@@ -205,8 +205,8 @@ MonoBehaviour:
   mazeSetting: {fileID: 114690698242918930, guid: 917fe6d0109bb5942bfdb0a04e7f6396,
     type: 2}
   customMazeSize: 0
-  mazeWidth: 10
-  mazeLength: 10
+  width: 10
+  length: 10
   customMazeObject: {fileID: 0}
   timerStart: 300
   playerCharacterPrefab: {fileID: 1580977563646686, guid: b6007ed5a665c594f900229921919ff8,
@@ -323,55 +323,55 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4965354693859342, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -20272
+      value: -70
       objectReference: {fileID: 0}
     - target: {fileID: 4813124139774472, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 10166
+      value: 65
       objectReference: {fileID: 0}
     - target: {fileID: 4813124139774472, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 10166
+      value: 65
       objectReference: {fileID: 0}
     - target: {fileID: 4343765893331466, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -26
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 4343765893331466, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -30239
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4297120767566086, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -26
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 4297120767566086, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -30193
+      value: 47
       objectReference: {fileID: 0}
     - target: {fileID: 4137429860130042, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -20454
+      value: -228
       objectReference: {fileID: 0}
     - target: {fileID: 4137429860130042, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -47665
+      value: -523
       objectReference: {fileID: 0}
     - target: {fileID: 4378030469231412, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -26
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 4378030469231412, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -30119
+      value: 121
       objectReference: {fileID: 0}
     - target: {fileID: 4650900690296976, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -26
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 4650900690296976, guid: af57739e56be62c43aa85e6e8d11533f, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -12786
+      value: 551
       objectReference: {fileID: 0}
     - target: {fileID: 114234586029935656, guid: af57739e56be62c43aa85e6e8d11533f,
         type: 2}

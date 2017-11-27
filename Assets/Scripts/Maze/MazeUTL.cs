@@ -19,22 +19,22 @@ public static class MazeUTL {
     //---------------------------------------
     public static int GetMazeWidth()
     {
-        return LevelManager.instance.mazeWidth;
+        return LevelManager.instance.width;
     }
 
     public static int GetMazeLength()
     {
-        return LevelManager.instance.mazeLength;
+        return LevelManager.instance.length;
     }
 
     public static Tile[,] GetMazeTile()
     {
-        return LevelManager.instance.maze.mazeTile;
+        return LevelManager.instance.maze.tile;
     }
 
     public static List<Tile> GetMazeTileList()
     {
-        return LevelManager.instance.maze.mazeTileList;
+        return LevelManager.instance.maze.tileList;
     }
 
 
@@ -151,7 +151,7 @@ public static class MazeUTL {
             int X = int.Parse(XZ[0]);
             int Z = int.Parse(XZ[1]);
 
-            tileList.Add(LevelManager.instance.maze.mazeTile[X, Z]);
+            tileList.Add(LevelManager.instance.maze.tile[X, Z]);
         }
 
         return tileList;
@@ -225,23 +225,6 @@ public static class MazeUTL {
 
         return newList;
     }
-
-    public static Tile GetDeepestEmptyDeadEnd()
-    {
-        Tile tile;
-
-        SortedDictionary<int, List<Tile>> DeadEndList = LevelManager.instance.maze.DeadEndsWithItem;
-        List<int> levels = new List<int>(DeadEndList.Keys);
-
-        int index = levels.Count - 1;
-        tile = DeadEndList[index][Random.Range(0, DeadEndList[index].Count)];
-        DeadEndList[index].Remove(tile);
-        if (DeadEndList[index].Count <= 0)
-            DeadEndList.Remove(index);
-
-        return tile;
-    }
-
 
     //---------------------------------------
     //      Get tiles

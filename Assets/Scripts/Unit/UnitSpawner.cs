@@ -58,7 +58,7 @@ public static class UnitSpawner {
 			int Z = Mathf.FloorToInt(spawner.transform.position.z / 10);
 
 			Unit unit = GameObject.Instantiate(monster.gameObject, spawner.transform.position, Quaternion.Euler(0, 0, 0)).GetComponent<Unit>();
-            unit.Init(LevelManager.instance.maze.mazeTile[X, Z]);
+            unit.Init(LevelManager.instance.maze.tile[X, Z]);
         }
     }
 
@@ -72,7 +72,7 @@ public static class UnitSpawner {
         List<Tile> exclusiveTiles = new List<Tile>();
         exclusiveTiles.Add(LevelManager.instance.tileStart);
 
-		List<Tile> oldList = MazeUTL.UpdateTileListOutOfRange(LevelManager.instance.maze.mazeTileList, exclusiveTiles, distancePlayer);
+		List<Tile> oldList = MazeUTL.UpdateTileListOutOfRange(LevelManager.instance.maze.tileList, exclusiveTiles, distancePlayer);
 
         for (int i = 0; i < monsterNum; i++)
         {

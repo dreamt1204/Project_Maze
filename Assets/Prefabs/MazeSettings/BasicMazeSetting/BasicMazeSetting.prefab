@@ -62,16 +62,18 @@ MonoBehaviour:
   TileLayoutC:
   - {fileID: 1279900473387186, guid: ffd2d3ce27b1c3b4080d80e55026a741, type: 2}
   Rooms:
-  - {fileID: 1382902003763806, guid: 8d9aaa153f220c745962a7dc11a671f1, type: 2}
-  - {fileID: 1382902003763806, guid: 8d9aaa153f220c745962a7dc11a671f1, type: 2}
-  - {fileID: 1382902003763806, guid: 8d9aaa153f220c745962a7dc11a671f1, type: 2}
-  - {fileID: 1382902003763806, guid: 8d9aaa153f220c745962a7dc11a671f1, type: 2}
-  - {fileID: 1382902003763806, guid: 8d9aaa153f220c745962a7dc11a671f1, type: 2}
-  - {fileID: 1382902003763806, guid: 8d9aaa153f220c745962a7dc11a671f1, type: 2}
-  - {fileID: 1382902003763806, guid: 8d9aaa153f220c745962a7dc11a671f1, type: 2}
-  - {fileID: 1382902003763806, guid: 8d9aaa153f220c745962a7dc11a671f1, type: 2}
-  - {fileID: 1382902003763806, guid: 8d9aaa153f220c745962a7dc11a671f1, type: 2}
-  - {fileID: 1382902003763806, guid: 8d9aaa153f220c745962a7dc11a671f1, type: 2}
+  - {fileID: 1424463113756604, guid: a74cdd7781f490944a757ac49bd20521, type: 2}
+  - {fileID: 1424463113756604, guid: a74cdd7781f490944a757ac49bd20521, type: 2}
+  - {fileID: 1306746483604034, guid: 87ca2aca154a5dd4f9c7528134cfddb3, type: 2}
+  - {fileID: 1362799520341414, guid: 972216ab95a4a4b43b2233fdd0409ca9, type: 2}
+  - {fileID: 1362799520341414, guid: 972216ab95a4a4b43b2233fdd0409ca9, type: 2}
+  - {fileID: 1738916748261202, guid: 832a286ecd6e6cf4e815982c21d09fd1, type: 2}
+  - {fileID: 1738916748261202, guid: 832a286ecd6e6cf4e815982c21d09fd1, type: 2}
+  - {fileID: 1500218776199654, guid: 55a5d599be353c8498bc60f14eab22da, type: 2}
+  - {fileID: 1868166789487340, guid: 693c7837a6c0c0e499e1554d33c7e073, type: 2}
+  - {fileID: 1868166789487340, guid: 693c7837a6c0c0e499e1554d33c7e073, type: 2}
+  - {fileID: 1755901328083458, guid: e9293fc28c884cb4c8acb1b2574d6f8d, type: 2}
+  - {fileID: 1755901328083458, guid: e9293fc28c884cb4c8acb1b2574d6f8d, type: 2}
   SlimeElements:
   - {fileID: 114186557904494526, guid: 05ec69d8437a10c41bef153acb92c3c3, type: 2}
   bodyParts:

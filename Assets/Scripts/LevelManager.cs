@@ -15,29 +15,29 @@ public class LevelManager : MonoBehaviour {
     //=======================================
     //      Variables
     //=======================================
-	public static LevelManager instance = null;
+    public static LevelManager instance = null;
 
     // Helper classes instances
     public MazeGenerator mazeGenerator;
 
-	// Global variables
-	[HideInInspector] public bool finishedInitLevel = false;
-	[HideInInspector] public Maze maze;
-	[HideInInspector] public Tile tileStart;
-	[HideInInspector] public Tile tileObjective;
+    // Global variables
+    [HideInInspector] public bool finishedInit = false;
+    [HideInInspector] public Maze maze;
+    [HideInInspector] public Tile tileStart;
+    [HideInInspector] public Tile tileObjective;
     [HideInInspector] public float timer;
     [HideInInspector] public PlayerCharacter playerCharacter;
 
-	// Global variables in Inspector
+    // Global variables in Inspector
     [Header("Maze")]
-	[Range(1, 10)]
-	public int mazeDifficulty = 1;
+    [Range(1, 10)]
+    public int mazeDifficulty = 1;
     public MazeSetting mazeSetting;
 
     [Header("Custom Maze (Optional)")]
     public bool customMazeSize;
-    public int mazeWidth = 10;
-    public int mazeLength = 10;
+    public int width = 10;
+    public int length = 10;
     [Space(15)]
     public GameObject customMazeObject;
 
@@ -50,59 +50,88 @@ public class LevelManager : MonoBehaviour {
     public GameObject objectivePrefab;
     public GameObject HealthPackPrefab;
     public GameObject BodyPartChestPrefab;
-	public GameObject CompassPrefab;
+    public GameObject CompassPrefab;
 
     //=======================================
     //      Functions
     //=======================================   
-	void Awake()
+    void Awake()
     {
-		// This enforces our singleton pattern, meaning there can only ever be one instance of a LevelManager.
-		if (instance == null)
-			instance = this;
-		else if (instance != this)
-			Destroy(gameObject);
+        // This enforces our singleton pattern, meaning there can only ever be one instance of a LevelManager.
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(gameObject);
 
         // Get component reference to the attached script
-		mazeGenerator = gameObject.AddComponent<MazeGenerator>();
+        mazeGenerator = gameObject.AddComponent<MazeGenerator>();
 
-		Utilities.TryCatchError ((mazeSetting == null), "Maze Setting cannot be null");
+        Utilities.TryCatchError((mazeSetting == null), "Maze Setting cannot be null");
     }
 
-	void Start()
-	{
-		// Generate a maze
-		mazeGenerator.GenerateMaze();
-        
-		// Spawn player character
-		playerCharacter = UnitSpawner.SpawnPlayerCharacter(tileStart);
-
-        // Spawn Monster
-        UnitSpawner.SpawnMonsters();
-
-        // Setup timer
-        timer = timerStart;
-
-        // Set init flag to true
-        finishedInitLevel = true;
-	}
+    void Start()
+    {
+        StartCoroutine("InitLevel");
+    }
 
     void Update()
     {
-        if (!finishedInitLevel)
+        if (!finishedInit)
             return;
 
         // Update timer
+        UpdateTimer();
+    }
+
+    #region Initialization
+    //---------------------------------------
+    //      Initialization
+    //---------------------------------------
+    IEnumerator InitLevel()
+    {
+        InitMaze();
+        InitMonster();
+        InitPlayerCharacter();
+        InitGameMode();
+
+        finishedInit = true;
+        yield return null;
+    }
+
+    void InitMaze()
+    {
+        maze = mazeGenerator.GenerateMaze();
+    }
+
+    void InitMonster()
+    {
+        UnitSpawner.SpawnMonsters();
+    }
+
+    void InitPlayerCharacter()
+    {
+        playerCharacter = UnitSpawner.SpawnPlayerCharacter(tileStart);
+    }
+
+    void InitGameMode()
+    {
+        timer = timerStart;
+    }
+    #endregion
+
+    #region Game Mode
+    //---------------------------------------
+    //      Game Mode
+    //---------------------------------------
+    void UpdateTimer()
+    {
         if (timer > 0)
             timer = Mathf.Clamp(timer - Time.deltaTime, 0, timerStart);
     }
 
-    //---------------------------------------
-    //      Game Mode
-    //---------------------------------------
-	public void CheckLevelFailedCondition()
+    public void CheckLevelFailedCondition()
 	{
-		if (!finishedInitLevel)
+		if (!finishedInit)
 			return;
 
 		if (playerCharacter.Health > 0)
@@ -113,7 +142,7 @@ public class LevelManager : MonoBehaviour {
 
 	public bool CheckLevelPassedCondition()
 	{
-		if (!finishedInitLevel)
+		if (!finishedInit)
 			return false;
 
 		if (!playerCharacter.hasObjective)
@@ -134,4 +163,5 @@ public class LevelManager : MonoBehaviour {
 	{
 		Debug.Log("Level Failed...");  // Debug: tmp message 
 	}
+    #endregion
 }

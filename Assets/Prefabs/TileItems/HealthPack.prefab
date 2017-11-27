@@ -190,5 +190,5 @@ MonoBehaviour:
   itemType: 5
   bodyPart: {fileID: 0}
   slime: {fileID: 0}
-  healAmount: 20
+  healAmount: 10
   compassDuration: 0

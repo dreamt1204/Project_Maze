@@ -33,7 +33,7 @@ public static class Formula
 
     public static int CalculateHealthPackNum(int mazeDifficulty)
     {
-		return 16;
+		return 20;
     }
 
     public static int CalculateSlimeElementNum(int mazeDifficulty)

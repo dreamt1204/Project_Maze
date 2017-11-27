@@ -8,50 +8,59 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Maze  {
+public class Maze
+{
 	//=======================================
 	//      Variables
 	//=======================================
-	public int mazeWidth;
-	public int mazeLength;
-    public GameObject mazeGroupObj;
-	public Tile[,] mazeTile;
-    public List<Tile> mazeTileList;
-    public List<Room> roomList;
-    public Dictionary<string, List<Tile>> hallwayTileList = new Dictionary<string, List<Tile>>();
-    [HideInInspector] public List<Room> allocatedRoomList;
-    public SortedDictionary<int, List<Tile>> DeadEnds = new SortedDictionary<int, List<Tile>>();
-    public SortedDictionary<int, List<Tile>> DeadEndsWithItem = new SortedDictionary<int, List<Tile>>();
+	public int width;
+	public int length;
+    public GameObject groupObj;
+	public Tile[,] tile;
+    public List<Tile> tileList;
 
+    public Dictionary<string, Room> roomList;
+    public Dictionary<string, Hallway> hallwayList;
+    
     public List<string> detectRegions;
 
-	public Maze(int width, int length)
+    public SortedDictionary<int, List<Tile>> DeadEnds;
+    public SortedDictionary<int, List<Tile>> DeadEndsWithItem;
+
+    public Maze(int mazeWidth, int mazeLength)
 	{
-		mazeWidth = width;
-		mazeLength = length;
-        mazeGroupObj = new GameObject() { name = "Maze" };
-        mazeTile = new Tile[mazeWidth, mazeLength];
-		mazeTileList = new List<Tile>();
-        roomList = new List<Room>();
-        allocatedRoomList = new List<Room>();
+		width = mazeWidth;
+		length = mazeLength;
+        groupObj = new GameObject() { name = "Maze" };
+        tile = new Tile[width, length];
+		tileList = new List<Tile>();
+
+        roomList = new Dictionary<string, Room>();
+        hallwayList = new Dictionary<string, Hallway>();
+
         detectRegions = new List<string>();
-    }
+
+        DeadEnds = new SortedDictionary<int, List<Tile>>();
+        DeadEndsWithItem = new SortedDictionary<int, List<Tile>>();
+}
 }
 
 public class Room
 {
-    public GameObject prefab;
+    public List<Tile> tileList;
 
-    public bool allocated;
+    public Room()
+    {
+        tileList = new List<Tile>();
+    }
+}
 
-    public int rot;
-    public int left;
-    public int top;
-    public int right;
-    public int bot;
-    public int width;
-    public int length;
+public class Hallway
+{
+    public List<Tile> tileList;
 
-    public Tile[,] roomTile;
-    public List<Tile> roomTileList;
+    public Hallway()
+    {
+        tileList = new List<Tile>();
+    }
 }
