@@ -73,18 +73,18 @@ public class LevelManager : MonoBehaviour {
 	{
 		// Generate a maze
 		mazeGenerator.GenerateMaze();
-        /*
+        
 		// Spawn player character
 		playerCharacter = UnitSpawner.SpawnPlayerCharacter(tileStart);
 
-        // (DM) Test Monster
+        // Spawn Monster
         UnitSpawner.SpawnMonsters();
 
         // Setup timer
         timer = timerStart;
 
         // Set init flag to true
-        finishedInitLevel = true;*/
+        finishedInitLevel = true;
 	}
 
     void Update()
