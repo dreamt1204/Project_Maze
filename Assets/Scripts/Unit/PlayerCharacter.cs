@@ -104,7 +104,9 @@ public class PlayerCharacter : Unit {
     // Use this for initialization
     public override void Init (Tile spawnTile)
 	{
-		uiManager = UIManager.instance;
+        if (LevelManager.instance.playerCharacter == null)
+            LevelManager.instance.playerCharacter = this;
+        uiManager = UIManager.instance;
 
         // UI Delefate / Event
         UIManager.OnReplyed += WaitingForReply;

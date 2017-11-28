@@ -49,6 +49,14 @@ public class PlayerSlimeData
 
             if ((!unlocked) && (value >= 1))
                 unlocked = true;
+
+            for (int i = 0; i < value; i++)
+            {
+                if (slime.levelData[i].unlockAbility1)
+                    ability_1_unlocked = true;
+                if (slime.levelData[i].unlockAbility2)
+                    ability_2_unlocked = true;
+            }
         }
     }
 
