@@ -236,14 +236,7 @@ public class MazeGenerator : MonoBehaviour
             GameObject tileObj = GameObject.Instantiate(tilePrefab, new Vector3(X * 10, -0, Z * 10), Quaternion.Euler(0, 90 * rotCount, 0));
             tileObj.name = "Tile [" + X + "]" + "[" + Z + "] " + "(" + wallLayout + ")";
             Tile tile = tileObj.AddComponent<Tile>();
-
-            // Generate Tile class data
-            tile.X = X;
-            tile.Z = Z;
-            tile.wall = wall;
-            tile.wallLayout = wallLayout;
-            AssignWallFloorObjToTile(tile, wallLayout, rotCount);
-            tile.areaID = "Room " + room.left + "," + room.top + "," + room.right + "," + room.bot;
+            tile.InitTile(X, Z, wall, wallLayout, rotCount, "Room " + room.left + "," + room.top + "," + room.right + "," + room.bot);
 
             // Group tile
             tile.transform.parent = roomGroupObj.transform;
@@ -481,11 +474,7 @@ public class MazeGenerator : MonoBehaviour
         GameObject tileObj = GameObject.Instantiate(wallLayoutObj, new Vector3(X * 10, -0, Z * 10), Quaternion.Euler(0, 90 * rotCount, 0));
         tileObj.name = "Tile [" + X + "]" + "[" + Z + "] " + "(" + wallLayout + ")";
         Tile newTile = tileObj.AddComponent<Tile>();
-        newTile.X = X;
-        newTile.Z = Z;
-        newTile.wall = wall;
-        newTile.wallLayout = wallLayout;
-        AssignWallFloorObjToTile(newTile, wallLayout, rotCount);
+        newTile.InitTile(X, Z, wall, wallLayout, rotCount, oldTile.areaID);
 
         // Group tile
         newTile.transform.parent = oldTileObj.transform.parent;
@@ -911,11 +900,7 @@ public class MazeGenerator : MonoBehaviour
 
             // Generate Tile class data
             Tile tile = tileObj.GetComponent<Tile>();
-            tile.X = X;
-            tile.Z = Z;
-            tile.wall = wall;
-            tile.wallLayout = wallLayout;
-            AssignWallFloorObjToTile(tile, wallLayout, rotCount);
+            tile.InitTile(X, Z, wall, wallLayout, rotCount, "");
 
             // Group tile
             tile.transform.parent = mazeObj.transform;
@@ -974,11 +959,7 @@ public class MazeGenerator : MonoBehaviour
 
         // Generate Tile class data
         Tile tile = tileObj.GetComponent<Tile>();
-        tile.X = X;
-        tile.Z = Z;
-		tile.wall = wall;
-        tile.wallLayout = wallLayout;
-        AssignWallFloorObjToTile(tile, wallLayout, rotCount);
+        tile.InitTile(X, Z, wall, wallLayout, rotCount, "");
 
         return tile;
     }
@@ -1022,47 +1003,6 @@ public class MazeGenerator : MonoBehaviour
 
 		return count;
 	}
-
-    // Store wall object in tile class
-    void AssignWallFloorObjToTile(Tile tile, WallLayout wallLayout, int rotCount)
-    {
-		if (wallLayout == WallLayout.O)
-			return;
-
-		// Get wall objects / or assign floor object
-		Dictionary<int,GameObject> wall_obj_list = new Dictionary<int,GameObject>();
-
-		foreach (Transform child in tile.transform)
-        {
-            if (child.name.Contains("Wall_"))
-            {
-                int index = int.Parse(child.name.Substring(child.name.IndexOf('_') + 1)) - 1;
-                wall_obj_list.Add(index, child.gameObject);
-            }
-            else if (child.name.Contains("Floor"))
-            {
-                tile.floor_obj = child.gameObject;
-            }
-        }
-
-        // Assign wall objects to Tile class based on wall layout and rotation
-        int wallID = rotCount;
-		tile.wall_obj [wallID] = wall_obj_list [0];
-
-		if (wallLayout == WallLayout.II)
-		{
-			wallID = wallID + 2 < 4 ? (wallID + 2) : (wallID + 2 - 4);
-			tile.wall_obj [wallID] = wall_obj_list [1];
-		}
-		else
-		{
-			for (int i = 1; i < wall_obj_list.Count; i++)
-			{
-				wallID = wallID + 1 < 4 ? (wallID + 1) : (wallID + 1 - 4);
-				tile.wall_obj [wallID] = wall_obj_list [i];
-			}
-		}
-    }
 
     int GetWallCountFromObj(GameObject tileObj)
     {

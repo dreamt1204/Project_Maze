@@ -89,6 +89,59 @@ public class Tile : MonoBehaviour {
 		TryApplyHighlightPulse();
 	}
 
+    public void InitTile(int tileX, int tileZ, bool[] tileWall, WallLayout tileWallLayout, int rotCount, string tileAreaID)
+    {
+        X = tileX;
+        Z = tileZ;
+
+        wall = tileWall;
+        wallLayout = tileWallLayout;
+        AssignWallFloorObjToTile(rotCount);
+
+        areaID = tileAreaID;
+    }
+
+    // Store wall object in tile class
+    void AssignWallFloorObjToTile(int rotCount)
+    {
+        // Get wall objects / or assign floor object
+        Dictionary<int, GameObject> wall_obj_list = new Dictionary<int, GameObject>();
+
+        foreach (Transform child in transform)
+        {
+            if (child.name.Contains("Wall_"))
+            {
+                int index = int.Parse(child.name.Substring(child.name.IndexOf('_') + 1)) - 1;
+                wall_obj_list.Add(index, child.gameObject);
+            }
+            else if (child.name.Contains("Floor"))
+            {
+                floor_obj = child.gameObject;
+            }
+        }
+
+        if (wallLayout == WallLayout.O)
+            return;
+
+        // Assign wall objects to Tile class based on wall layout and rotation
+        int wallID = rotCount;
+        wall_obj[wallID] = wall_obj_list[0];
+
+        if (wallLayout == WallLayout.II)
+        {
+            wallID = wallID + 2 < 4 ? (wallID + 2) : (wallID + 2 - 4);
+            wall_obj[wallID] = wall_obj_list[1];
+        }
+        else
+        {
+            for (int i = 1; i < wall_obj_list.Count; i++)
+            {
+                wallID = wallID + 1 < 4 ? (wallID + 1) : (wallID + 1 - 4);
+                wall_obj[wallID] = wall_obj_list[i];
+            }
+        }
+    }
+
     //---------------------------------------
     //      Tile highlight
     //---------------------------------------
