@@ -55,6 +55,7 @@ MonoBehaviour:
   spriteName: test
   rangeData:
     range: 2
+    crossOnly: 1
     outOfRange: 0
     excludeOrigin: 0
     excludeTilesBetweenRange: 0

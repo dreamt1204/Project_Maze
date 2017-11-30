@@ -101,6 +101,68 @@ public static class MazeUTL {
         return (CheckTargetInRange(org, target, range) && CheckTargetInDetectRegion(org, target));
     }
 
+	public static bool CheckTragetInCrossDir(Tile org, Tile target)
+	{
+		bool onVertical = (Mathf.Abs(target.Z - org.Z) > 0);
+		bool onHorizontal = (Mathf.Abs(target.X - org.X) > 0);
+
+		if (onVertical && onHorizontal)
+			return false;
+
+		return true;
+	}
+
+	public static bool CheckTargetBlockedByWall(Tile org, Tile target)
+	{
+		int v_dis = target.Z - org.Z;
+		int h_dis = target.X - org.X;
+
+		Tile currentTile = org;
+		int dir = 0;
+
+		// Vertical
+		if (v_dis > 0)
+			dir = 0;
+		else
+			dir = 2;
+
+		v_dis = Mathf.Abs(v_dis);
+
+		for (int i = 0; i < v_dis; i++)
+		{
+			if (WallOnDir(currentTile, dir))
+				return true;
+			
+			currentTile = GetDirNeighborTile(currentTile, dir);
+
+			if (currentTile == null)
+				return true;
+		}
+
+		// Horizontal
+		currentTile = org;
+		if (h_dis > 0)
+			dir = 1;
+		else
+			dir = 3;
+
+		h_dis = Mathf.Abs(h_dis);
+
+		for (int i = 0; i < h_dis; i++)
+		{
+			if (WallOnDir(currentTile, dir))
+				return true;
+
+			currentTile = GetDirNeighborTile(currentTile, dir);
+
+			if (currentTile == null)
+				return true;
+		}
+
+		// Pass all condition
+		return false;
+	}
+
     //---------------------------------------
     //      Region functions
     //---------------------------------------

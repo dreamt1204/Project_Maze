@@ -58,11 +58,36 @@ MonoBehaviour:
   slimeSkinName: Slime_default
   slimeSplit: {fileID: 114472983391352266, guid: 4d5f6b42e8ee17346bf61a5ccaee5a83,
     type: 2}
-  Ability1: {fileID: 0}
+  Ability1: {fileID: 114000562487671760, guid: 9c65fc88cfacb044994bc4a56bdfa87b, type: 2}
   Ability2: {fileID: 0}
-  experienceData:
-  - 3
-  - 5
-  - 10
-  - 15
-  - 20
+  levelData:
+  - level: Level 1
+    requiredExp: 3
+    unlockAbility1: 1
+    unlockAbility2: 0
+    IncreaseHealth: 0
+    IncreaseMoveSpeed: 0
+  - level: Level 2
+    requiredExp: 5
+    unlockAbility1: 0
+    unlockAbility2: 0
+    IncreaseHealth: 0
+    IncreaseMoveSpeed: 0
+  - level: Level 3
+    requiredExp: 10
+    unlockAbility1: 0
+    unlockAbility2: 0
+    IncreaseHealth: 0
+    IncreaseMoveSpeed: 0
+  - level: Level 4
+    requiredExp: 15
+    unlockAbility1: 0
+    unlockAbility2: 0
+    IncreaseHealth: 0
+    IncreaseMoveSpeed: 0
+  - level: Level 5
+    requiredExp: 20
+    unlockAbility1: 0
+    unlockAbility2: 0
+    IncreaseHealth: 0
+    IncreaseMoveSpeed: 0

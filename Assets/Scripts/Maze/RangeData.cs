@@ -27,7 +27,9 @@ public class RangeData
     //      Variables
     //=======================================
     public int range = 0;
+	public bool crossOnly = false;
     public bool outOfRange = false;
+	public bool blockedByWall = false;
     public bool excludeOrigin = false;
     public bool excludeTilesBetweenRange = false;
     public List<Tile> targetTiles;
@@ -40,9 +42,16 @@ public class RangeData
         if (target == null)
             return false;
 
-        // Check target if target meets range requirement
+        // Check if target meets range requirement
         if (!MazeUTL.CheckTargetInRange(org, target, rangeData.range))
             return false;
+
+		// Check if target on cross direction
+		if (rangeData.crossOnly)
+		{
+			if (!MazeUTL.CheckTragetInCrossDir(org, target))
+				return false;
+		}
 
         // If target is org, check excludeOrigin
         if (org == target)
@@ -50,7 +59,7 @@ public class RangeData
             return !rangeData.excludeOrigin;
         }
 
-        // Check uf target is right on the range when excludeTilesBetweenRange is set
+        // Check if target is right on the range when excludeTilesBetweenRange is set
         if (rangeData.excludeTilesBetweenRange)
         {
             if (!MazeUTL.CheckTargetIsRightOnRange(org, target, rangeData.range))
@@ -63,6 +72,13 @@ public class RangeData
             if (!rangeData.targetTiles.Contains(target))
                 return false;
         }
+
+		// Check if target is blocked by wall
+		if (rangeData.blockedByWall)
+		{
+			if (MazeUTL.CheckTargetBlockedByWall(org, target))
+				return false;
+		}
 
         return true;
     }
